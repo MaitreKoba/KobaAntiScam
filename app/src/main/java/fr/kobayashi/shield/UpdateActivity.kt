@@ -20,9 +20,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
+import java.util.concurrent.TimeUnit
 
 class UpdateActivity : AppCompatActivity() {
     
@@ -69,8 +71,21 @@ class UpdateActivity : AppCompatActivity() {
         
         coroutineScope.launch {
             try {
+                val okHttpClient = OkHttpClient.Builder()
+                    .connectTimeout(30, TimeUnit.SECONDS)
+                    .readTimeout(30, TimeUnit.SECONDS)
+                    .addInterceptor { chain ->
+                        val request = chain.request().newBuilder()
+                            .addHeader("User-Agent", "Kobayashi AntiScan")
+                            .addHeader("Accept", "application/vnd.github+json")
+                            .build()
+                        chain.proceed(request)
+                    }
+                    .build()
+                
                 val retrofit = Retrofit.Builder()
                     .baseUrl("https://api.github.com/")
+                    .client(okHttpClient)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
                 
