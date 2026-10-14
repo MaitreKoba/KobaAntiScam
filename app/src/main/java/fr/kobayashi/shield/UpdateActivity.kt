@@ -63,7 +63,7 @@ class UpdateActivity : AppCompatActivity() {
     }
     
     private fun checkForUpdates() {
-        val githubRepo = "kobayashi/shield" // À configurer dans Settings
+        val githubRepo = "MaitreKoba/KobaAntiScam"
         
         binding.tvStatus.text = "Vérification en cours..."
         
@@ -75,7 +75,7 @@ class UpdateActivity : AppCompatActivity() {
                     .build()
                 
                 val service = retrofit.create(GitHubService::class.java)
-                val releases = service.getLatestRelease("kobayashi", "shield")
+                val releases = service.getLatestRelease("MaitreKoba", "KobaAntiScam")
                 
                 withContext(Dispatchers.Main) {
                     if (releases != null && releases.tag_name != null) {
@@ -123,7 +123,7 @@ class UpdateActivity : AppCompatActivity() {
             val request = DownloadManager.Request(downloadUri).apply {
                 setDestinationInExternalPublicDir(
                     Environment.DIRECTORY_DOWNLOADS,
-                    "shield-${latestRelease?.tag_name}.apk"
+                    "KobaAntiScan-${latestRelease?.tag_name}.apk"
                 )
                 setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
                 setTitle("Téléchargement de Kobayashi AntiScan ${latestRelease?.tag_name}")
@@ -139,7 +139,7 @@ class UpdateActivity : AppCompatActivity() {
     }
     
     private fun installUpdate() {
-        val fileName = "shield-${latestRelease?.tag_name}.apk"
+        val fileName = "KobaAntiScan-${latestRelease?.tag_name}.apk"
         val file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileName)
         
         if (file.exists()) {
