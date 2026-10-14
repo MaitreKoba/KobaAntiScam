@@ -51,6 +51,11 @@ class SettingsActivity : AppCompatActivity() {
         binding.btnManageNeutralList.setOnClickListener {
             showNeutralListDialog()
         }
+        
+        // Callback with ElevenLabs voice button
+        binding.btnToggleCallback.setOnClickListener {
+            toggleCallbackSetting()
+        }
     }
     
     @Suppress("DEPRECATION")
@@ -157,6 +162,17 @@ class SettingsActivity : AppCompatActivity() {
             .setMessage(message)
             .setPositiveButton("OK", null)
             .show()
+    }
+    
+    private fun toggleCallbackSetting() {
+        val isEnabled = ContactsHelper.isCallbackEnabled(this)
+        ContactsHelper.setCallbackEnabled(this, !isEnabled)
+        updateStatus()
+        Toast.makeText(
+            this,
+            if (!isEnabled) "Message vocal ElevenLabs ACTIVÉ" else "Message vocal ElevenLabs désactivé",
+            Toast.LENGTH_SHORT
+        ).show()
     }
     
     private fun updateStatus() {

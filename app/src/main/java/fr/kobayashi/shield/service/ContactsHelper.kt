@@ -12,6 +12,7 @@ object ContactsHelper {
     private const val PREFS_NAME = "shield"
     private const val KEY_STRICT_MODE = "strict_mode"
     private const val KEY_NEUTRAL_LIST = "neutral_list"
+    private const val KEY_CALLBACK_ENABLED = "callback_enabled"
     
     /**
      * Check if strict mode is enabled (block all except contacts)
@@ -27,6 +28,22 @@ object ContactsHelper {
     fun setStrictModeEnabled(context: Context, enabled: Boolean) {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         prefs.edit().putBoolean(KEY_STRICT_MODE, enabled).apply()
+    }
+    
+    /**
+     * Check if callback with ElevenLabs voice is enabled
+     */
+    fun isCallbackEnabled(context: Context): Boolean {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        return prefs.getBoolean(KEY_CALLBACK_ENABLED, true)
+    }
+    
+    /**
+     * Enable/disable callback with ElevenLabs voice
+     */
+    fun setCallbackEnabled(context: Context, enabled: Boolean) {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs.edit().putBoolean(KEY_CALLBACK_ENABLED, enabled).apply()
     }
     
     /**

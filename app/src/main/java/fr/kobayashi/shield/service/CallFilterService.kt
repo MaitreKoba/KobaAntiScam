@@ -1,10 +1,13 @@
 package fr.kobayashi.shield.service
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.telecom.CallScreeningService
 import android.telecom.Call
 import android.util.Log
+import kotlinx.coroutines.delay
 import fr.kobayashi.shield.model.LogEntry
 import fr.kobayashi.shield.model.LogType
 import fr.kobayashi.shield.model.RuleAction
@@ -80,7 +83,7 @@ class CallFilterService : CallScreeningService() {
             } else {
                 Log.d(tag, "STRICT MODE: $number is NOT in contacts or is neutral -> BLOCK")
                 logCall(number, RuleAction.BLOCK)
-                return blockResponse()
+                return blockResponse(number)
             }
         }
         
@@ -134,7 +137,7 @@ class CallFilterService : CallScreeningService() {
         
         return when (finalAction) {
             RuleAction.ALLOW -> allowResponse()
-            RuleAction.BLOCK -> blockResponse()
+            RuleAction.BLOCK -> blockResponse(number)
             RuleAction.SILENCE -> silenceResponse()
             RuleAction.VOICEMAIL -> voicemailResponse()
         }
@@ -151,14 +154,47 @@ class CallFilterService : CallScreeningService() {
             .build()
     }
     
-    private fun blockResponse(): CallScreeningService.CallResponse {
+    private fun blockResponse(phoneNumber: String? = null): CallScreeningService.CallResponse {
         Log.d(tag, "BLOCK: rejeter l'appel")
+        
+        // Trigger callback with ElevenLabs voice if enabled
+        if (phoneNumber != null && ContactsHelper.isCallbackEnabled(applicationContext)) {
+            startCallbackWithVoice(phoneNumber)
+        }
+        
         return CallScreeningService.CallResponse.Builder()
             .setDisallowCall(true)
             .setRejectCall(true)
             .setSkipCallLog(true)
             .setSkipNotification(true)
             .build()
+    }
+    
+    /**
+     * Start a callback call with ElevenLabs voice message
+     */
+    private fun startCallbackWithVoice(phoneNumber: String) {
+        Log.d(tag, "Starting callback with ElevenLabs voice for: $phoneNumber")
+        
+        coroutineScope.launch {
+            try {
+                // Small delay to ensure the original call is fully rejected
+                delay(2000)
+                
+                val intent = Intent(applicationContext, CallbackService::class.java).apply {
+                    putExtra("PHONE_NUMBER", phoneNumber)
+                }
+                
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    applicationContext.startForegroundService(intent)
+                } else {
+                    applicationContext.startService(intent)
+                }
+                
+            } catch (e: Exception) {
+                Log.e(tag, "Error starting callback service", e)
+            }
+        }
     }
     
     private fun silenceResponse(): CallScreeningService.CallResponse {

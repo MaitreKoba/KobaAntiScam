@@ -42,6 +42,8 @@
     <string name="settings_strict_mode_desc">Bloquer tous les numéros sauf vos contacts</string>
     <string name="settings_neutral_list">Liste Neutre</string>
     <string name="settings_neutral_list_desc">Numéros bloqués même s ils sont dans vos contacts</string>
+    <string name="settings_callback_voice">Message Vocal ElevenLabs</string>
+    <string name="settings_callback_voice_desc">Appel de rappel avec ta voix quand un appel est bloqué</string>
     
     <!-- Update -->
     <string name="update_title">Mise à jour</string>
