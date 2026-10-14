@@ -37,7 +37,7 @@
     <string name="settings_check_update">Vérifier les mises à jour</string>
     <string name="settings_auto_check">Vérifier automatiquement</string>
     <string name="settings_github_repo">Dépôt GitHub</string>
-    <string name="settings_repo_hint">ex: kobayashi/shield</string>
+    <string name="settings_repo_hint">ex: MaitreKoba/KobaAntiScam</string>
     
     <!-- Update -->
     <string name="update_title">Mise à jour</string>
