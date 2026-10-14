@@ -126,7 +126,7 @@ class UpdateActivity : AppCompatActivity() {
                     "shield-${latestRelease?.tag_name}.apk"
                 )
                 setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                setTitle("Téléchargement de SHIELD ${latestRelease?.tag_name}")
+                setTitle("Téléchargement de Kobayashi AntiScan ${latestRelease?.tag_name}")
                 setDescription("Mise à jour en cours...")
             }
             

@@ -1,4 +1,4 @@
-# CHANGELOG - SHIELD
+# CHANGELOG - Kobayashi AntiScan
 
 /**
  * FICHIER : CHANGELOG.md | CHEMIN : D:/Kobayashi/Developpement/shield/CHANGELOG.md
@@ -9,6 +9,11 @@
  */
 
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr-FR/1.0.0/).
+
+## [Unreleased]
+### ✨ Modifié
+- Application renommée de **SHIELD AntiScam** à **Kobayashi AntiScan**
+- Nom affiché mis à jour dans toutes les activités et ressources
 
 ## [1.0.0] - 2026-10-14
 

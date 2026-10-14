@@ -1,4 +1,4 @@
-# SHIELD - Anti-Scam pour Android
+# Kobayashi AntiScan - Protection contre les arnaques pour Android
 
 /**
  * FICHIER : README.md | CHEMIN : D:/Kobayashi/Developpement/shield/README.md
@@ -10,7 +10,7 @@
 
 ## Description
 
-SHIELD est une application Android de filtrage d'appels et SMS conçue pour protéger contre le démarchage téléphonique et les arnaques. Elle implémente un système de règles avancé pour bloquer, silencer ou rediriger les appels indésirables.
+**Kobayashi AntiScan** est une application Android de filtrage d'appels et SMS conçue pour protéger contre le démarchage téléphonique et les arnaques. Elle implémente un système de règles avancé pour bloquer, silencer ou rediriger les appels indésirables.
 
 ## Fonctionnalités
 
@@ -34,7 +34,7 @@ SHIELD est une application Android de filtrage d'appels et SMS conçue pour prot
 - **Activation/désactivation du système**: Désactivez temporairement le filtrage
 - **Gestion de l'allowlist**: Ajoutez/supprimez des numéros via l'interface ou deep link
 - **Seuils configurables**: Ajustez le seuil anti-rotation
-- **Deep link**: `kobashield://allow?num=+33123456789` pour ajouter un numéro
+- **Deep link**: `kobashield://allow?num=+33123456789` pour ajouter un numéro à Kobayashi AntiScan
 
 ### 🔄 Mise à jour
 - **Vérification automatique**: Vérifie les mises à jour via GitHub Releases
@@ -72,17 +72,17 @@ SHIELD est une application Android de filtrage d'appels et SMS conçue pour prot
 
 ### Filtrage d'appels
 1. Allez dans **Paramètres > Apps > Accès spécial > Filtrage des appels**
-2. Sélectionnez **SHIELD**
+2. Sélectionnez **Kobayashi AntiScan**
 3. Activez le service
 
 ### Accès aux notifications
 1. Allez dans **Paramètres > Apps > Accès spécial > Accès aux notifications**
-2. Trouvez **SHIELD** dans la liste
+2. Trouvez **Kobayashi AntiScan** dans la liste
 3. Activez l'accès
 
 ### Optimisation de la batterie
 1. Allez dans **Paramètres > Batterie > Optimisation de la batterie**
-2. Trouvez **SHIELD**
+2. Trouvez **Kobayashi AntiScan**
 3. Désactivez l'optimisation
 
 ## Deep Link

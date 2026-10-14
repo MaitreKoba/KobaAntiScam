@@ -1,14 +1,14 @@
-# STATE — SHIELD
+# STATE — Kobayashi AntiScan
 
 /**
  * FICHIER : STATE.md | CHEMIN : D:/Kobayashi/Developpement/shield/STATE.md
- * LIGNES : ~200 | RÔLE : État du développement | DATE : 2026-10-14
+ * LIGNES : ~250 | RÔLE : État du développement | DATE : 2026-10-14
  * VERSION : 1.0.0 | ORIGINE : Mise à jour | AUTEUR : Maitre Kobayashi (via agent)
  * STATUT : EN COURS | DÉPENDANCES : MEGA_PROMPT.md, AndroidManifest.xml, build.gradle.kts
- * LIEN : STATE.md | NOTES : État courant après implémentation des spécifications MEGA_PROMPT
+ * LIEN : STATE.md | NOTES : État courant après renommage en Kobayashi AntiScan
  */
 
-Dernière mise à jour : 2026-10-14 (implémentation complète selon MEGA_PROMPT)
+Dernière mise à jour : 2026-10-14 (14:30 UTC)
 
 ## 📊 Statut Global
 
@@ -24,10 +24,98 @@ Dernière mise à jour : 2026-10-14 (implémentation complète selon MEGA_PROMPT
 - [x] **Tests unitaires JVM** créés (RulesTest.kt)
 - [x] **Documentation** (README.md, CHANGELOG.md)
 - [x] Build + compilation réussie (BUILD SUCCESSFUL)
-- [ ] APK installé sur le téléphone (en attente du branchement USB)
+- [x] **Détection USB fonctionnelle** (Honor X7: A78H9K2411623626)
+- [x] **Dépôt GitHub créé** (MaitreKoba/KobaAntiScam - privé)
+- [x] **Code poussé vers GitHub** (69 fichiers, commit initial)
+- [x] **APK installé sur le téléphone** (fr.kobayashi.shield.debug, PID 23598)
+- [x] **Application renommée** en Kobayashi AntiScan
+- [x] **Rôle CALL_SCREENING attribué** (via adb)
+- [x] **Accès aux notifications attribué** (via adb)
+- [x] **Optimisation batterie désactivée** (via adb)
 - [ ] 3 scénarios de test validés sur Honor X7
 
+## 🎯 Prochaines étapes
+
+### Validation des scénarios de test
+Trois scénarios à valider selon MEGA_PROMPT § 4 :
+
+#### Scénario 1: Numéro dans l'allowlist → Sonne
+- **Test**: Appeler depuis un numéro dans l'allowlist
+- **Attendu**: L'appel sonne normalement
+- **Commande adb**: Simuler avec notification (adb ne simule pas un vrai appel)
+
+#### Scénario 2: Numéro ARCEP → Rejet
+- **Test**: Appeler depuis +33162xxxxxx (préfixe ARCEP)
+- **Attendu**: Appel rejeté automatiquement
+- **Vérification**: `adb logcat -s Shield` doit montrer REJECT
+
+#### Scénario 3: Numéro inconnu → Silence + messagerie
+- **Test**: Appeler depuis un numéro inconnu non dans l'allowlist
+- **Attendu**: Appel silencieux, redirigé vers messagerie Free
+- **Vérification**: `adb logcat -s Shield` doit montrer SILENCE
+
+### Commandes utiles pour les tests
+```bash
+# Lancer l'app
+adb shell am start -n fr.kobayashi.shield.debug/fr.kobayashi.shield.MainActivity
+
+# Voir les logs de l'app
+adb logcat -s SHIELD
+
+# Vérifier les permissions
+adb shell dumpsys package fr.kobayashi.shield.debug | grep -i permission
+
+# Vérifier les rôles
+adb shell dumpsys role | grep -A2 CALL_SCREENING
+
+# Envoyer une fausse notification SMS (pour tester SmsNotificationListener)
+adb shell cmd notification post -t "36105" shield_test "Code 1234"
+```
+
+### Actions manuelles requises
+- [ ] Accepter un appel entrant réel depuis un autre téléphone (adb ne simule pas)
+- [ ] Configurer la messagerie Free Mobile
+- [ ] Enregistrer l'accueil vocal
+- [ ] Créer les clés API (Groq, ntfy) pour le pipeline vocal
+
 ## ✅ Fait
+
+### Connexion USB
+- **Téléphone**: Honor X7 (CMA-LX1) détecté avec succès
+- **Device ID**: A78H9K2411623626
+- **Modèle**: HNCMA-Q
+- **Statut**: device (prêt pour adb)
+
+### Dépôt GitHub
+- **URL**: https://github.com/MaitreKoba/KobaAntiScam
+- **Type**: Privé
+- **Branche**: main
+- **Commit initial**: 477cac7 - "Initial commit - KobaAntiScam Android app"
+- **Fichiers poussés**: 69 fichiers
+- **Token utilisé**: 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 (à conserver pour les pushes futurs)
+- **URL SSH**: git@github.com:MaitreKoba/KobaAntiScam.git
+- **URL HTTPS**: https://github.com/MaitreKoba/KobaAntiScam.git
+
+### Installation sur le téléphone
+- **Package**: fr.kobayashi.shield.debug
+- **APK**: app/build/outputs/apk/debug/app-debug.apk (16 Mo)
+- **Process ID**: 23598 (en cours d'exécution)
+- **Device**: Honor X7 (CMA-LX1, A78H9K2411623626)
+
+### Permissions attribuées via adb
+- ✅ android.permission.READ_PHONE_STATE
+- ✅ android.permission.READ_CALL_LOG
+- ✅ android.permission.RECEIVE_SMS
+- ✅ android.permission.READ_SMS
+- ✅ android.permission.POST_NOTIFICATIONS
+- ✅ android.permission.REQUEST_INSTALL_PACKAGES
+
+### Rôles système attribués
+- ✅ android.app.role.CALL_SCREENING → fr.kobayashi.shield.debug
+- ✅ NotificationListener → fr.kobayashi.shield.debug.SmsNotificationListener
+
+### Optimisation batterie
+- ✅ Désactivée pour fr.kobayashi.shield.debug
 
 ### Chaîne de build
 - **JDK 17 Temurin**: `D:/Kobayashi/Developpement/Android/jdk17/jdk-17.0.20+8`

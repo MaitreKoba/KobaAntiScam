@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
  * Service pour intercepter les notifications SMS.
  * 
  * À activer manuellement dans les paramètres du téléphone :
- * Paramètres > Apps > Accès spécial > Accès aux notifications > SHIELD
+ * Paramètres > Apps > Accès spécial > Accès aux notifications > Kobayashi AntiScan
  */
 class SmsNotificationListener : NotificationListenerService() {
     
