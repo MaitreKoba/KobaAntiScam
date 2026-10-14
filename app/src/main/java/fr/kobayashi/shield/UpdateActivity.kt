@@ -53,6 +53,11 @@ class UpdateActivity : AppCompatActivity() {
         
         downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
         
+        // Set up click listener for install button
+        binding.btnInstall.setOnClickListener {
+            downloadUpdate()
+        }
+        
         registerReceiver(
             downloadCompleteReceiver,
             IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
