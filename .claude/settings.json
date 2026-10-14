@@ -1,0 +1,63 @@
+{
+  "allowedCommands": [
+    "gradlew",
+    "gradlew.bat",
+    "./gradlew.bat",
+    "D:/Kobayashi/Developpement/Android/sdk/platform-tools/adb.exe",
+    "adb",
+    "java",
+    "D:/Kobayashi/Developpement/Android/jdk17/jdk-17.0.20+8/bin/java.exe",
+    "logcat",
+    "pm grant",
+    "cmd role add-role-holder fr.kobayashi.shield",
+    "cmd notification allow_listener fr.kobayashi.shield",
+    "cmd notification post",
+    "am start -n fr.kobayashi.shield.debug",
+    "am start -n fr.kobayashi.shield",
+    "dumpsys deviceidle",
+    "./scripts/dev.ps1",
+    "./scripts/dev.sh"
+  ],
+  "blockedCommands": [
+    "adb uninstall",
+    "adb reboot",
+    "adb shell rm",
+    "pm clear",
+    "settings put",
+    "git push --force",
+    "rm -rf",
+    "git reset --hard",
+    "adb shell su",
+    "service call phone",
+    "am start -a android.intent.action.CALL",
+    "am start tel:",
+    "sendsms",
+    "adb shell reboot",
+    "fastboot",
+    "flash",
+    "oem unlock",
+    "pm disable",
+    "pm enable"
+  ],
+  "maxIterationsPerError": 5,
+  "autoAcceptDebugPrompt": false,
+  "allowedDirectories": [
+    "D:/Kobayashi/Developpement/shield",
+    "D:/Kobayashi/Developpement/Android/sdk",
+    "D:/Kobayashi/Developpement/Android/jdk17"
+  ],
+  "blockedDirectories": [
+    "C:/Windows",
+    "C:/Program Files",
+    "D:/"
+  ],
+  "network": {
+    "allowedHosts": [
+      "api.github.com",
+      "dl.google.com",
+      "services.gradle.org",
+      "repo1.maven.org"
+    ]
+  },
+  "notes": "Ce fichier configure les permissions pour Claude Code en mode autonome. Seules les commandes nécessaires au développement Android sont autorisées. Les commandes dangereuses (suppression, redémarrage, etc.) sont bloquées."
+}

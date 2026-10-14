@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+FICHIER : activity_stats.xml | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/res/layout/activity_stats.xml
+LIGNES : ~40 | RÔLE : Layout pour StatsActivity | DATE : 2026-10-14
+VERSION : 1.0.0 | ORIGINE : Création | AUTEUR : Maitre Kobayashi (via agent)
+STATUT : STABLE | DÉPENDANCES : aucun | LIEN : activity_stats.xml
+NOTES : Interface pour afficher les statistiques de filtrage
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#FFFFFF"
+    tools:context=".StatsActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Statistiques SHIELD"
+        android:textSize="24sp"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/totalText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total: 0 événements"
+        android:textSize="16sp"
+        android:textColor="#666666"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="16dp"/>
+
+    <ListView
+        android:id="@+id/statsList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="#E0E0E0"
+        android:dividerHeight="1dp"
+        android:padding="8dp" />
+
+</LinearLayout>

@@ -1,0 +1,83 @@
+# Android
+*.iml
+.gradle
+/local.properties
+/.AndroidStudio*\n/\n# Android: auto generated files
+build/
+generated/
+out/
+
+# Android: local history
+.idea/consoles/
+.idea/libraries/
+
+# Android: Crashlytics
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
+
+# Android: Google Services
+.google/volley/default.json
+
+# Android: Keystores
+*.jks
+*.keystore
+
+# Android: external native build
+.ndk
+
+# Android: NDK
+*.mk
+app/.externalNativeBuild
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Build
+build/
+
+# Gradle
+.gradle/
+
+# Local properties
+local.properties
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
+
+# APK
+*.apk
+*.aab
+
+# Test
+/test/
+
+# Backup
+*.bak
+
+# OS generated files
+.eclipse/
+.project
+.pydevproject
+.settings/
+bin/
+
+# Android Studio
+*.iml
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml

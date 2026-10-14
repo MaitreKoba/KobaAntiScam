@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+FICHIER : activity_allow.xml | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/res/layout/activity_allow.xml
+LIGNES : ~50 | RÔLE : Layout pour AllowActivity (deep link) | DATE : 2026-10-14
+VERSION : 1.0.0 | ORIGINE : Création | AUTEUR : Maitre Kobayashi (via agent)
+STATUT : STABLE | DÉPENDANCES : aucun | LIEN : activity_allow.xml
+NOTES : Interface pour ajouter un numéro à l'allowlist via deep link
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="#FFFFFF"
+    tools:context=".AllowActivity">
+
+    <TextView
+        android:id="@+id/appName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SHIELD"
+        android:textSize="24sp"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ajouter à l'allowlist"
+        android:textSize="18sp"
+        android:textColor="#666666"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="32dp"/>
+
+    <TextView
+        android:id="@+id/numberText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Numéro: "
+        android:textSize="16sp"
+        android:textColor="#000000"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/statusText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="En attente de confirmation..."
+        android:textSize="16sp"
+        android:textColor="#000000"
+        android:gravity="center"
+        android:layout_marginBottom="32dp"/>
+
+    <Button
+        android:id="@+id/btnConfirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ajouter à l'allowlist"
+        android:textSize="16sp"
+        android:backgroundTint="#6200EE"
+        android:textColor="#FFFFFF"
+        android:enabled="false"/>
+
+    <Button
+        android:id="@+id/btnCancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Retour"
+        android:textSize="16sp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="#9E9E9E"
+        android:textColor="#FFFFFF"/>
+
+</LinearLayout>
