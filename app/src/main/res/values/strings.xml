@@ -8,6 +8,11 @@
     <string name="nav_logs">Journal</string>
     <string name="nav_settings">Réglages</string>
     <string name="nav_update">Mise à jour</string>
+    <string name="system_active">Kobayashi AntiScam est ACTIF</string>
+    <string name="system_inactive">Kobayashi AntiScam est INACTIF</string>
+    <string name="system_ready">Kobayashi AntiScam est prêt</string>
+    <string name="toggle_system_off">Désactiver le système</string>
+    <string name="toggle_system_on">Activer le système</string>
     
     <!-- Rules -->
     <string name="rules_title">Gestion des règles</string>

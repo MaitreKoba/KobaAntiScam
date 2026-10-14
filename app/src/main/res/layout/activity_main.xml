@@ -55,13 +55,22 @@
         android:textAllCaps="false"
         app:layout_constraintTop_toBottomOf="@id/btnSettings" />
 
+    <Button
+        android:id="@+id/btnToggleSystem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Désactiver le système"
+        android:textAllCaps="false"
+        app:layout_constraintTop_toBottomOf="@id/btnUpdate" />
+
     <TextView
         android:id="@+id/statusText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="SHIELD est prêt"
+        android:layout_marginTop="16dp"
+        android:text="@string/system_ready"
         android:textAlignment="center"
-        app:layout_constraintTop_toBottomOf="@id/btnUpdate" />
+        app:layout_constraintTop_toBottomOf="@id/btnToggleSystem" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

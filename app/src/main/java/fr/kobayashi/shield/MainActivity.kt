@@ -16,6 +16,14 @@ class MainActivity : AppCompatActivity() {
         
         setupButtons()
         checkServices()
+        updateSystemToggle()
+    }
+    
+    private fun updateSystemToggle() {
+        val prefs = getSharedPreferences("shield", MODE_PRIVATE)
+        val isEnabled = prefs.getBoolean("system_enabled", true)
+        binding.btnToggleSystem.text = if (isEnabled) getString(R.string.toggle_system_off) else getString(R.string.toggle_system_on)
+        binding.statusText.text = if (isEnabled) getString(R.string.system_active) else getString(R.string.system_ready)
     }
     
     private fun setupButtons() {
@@ -34,6 +42,26 @@ class MainActivity : AppCompatActivity() {
         binding.btnUpdate.setOnClickListener {
             startActivity(Intent(this, UpdateActivity::class.java))
         }
+        
+        binding.btnToggleSystem.setOnClickListener {
+            toggleSystem()
+        }
+    }
+    
+    private fun toggleSystem() {
+        val prefs = getSharedPreferences("shield", MODE_PRIVATE)
+        val isEnabled = prefs.getBoolean("system_enabled", true)
+        prefs.edit().putBoolean("system_enabled", !isEnabled).apply()
+        
+        val newStatus = !isEnabled
+        binding.btnToggleSystem.text = if (newStatus) getString(R.string.toggle_system_off) else getString(R.string.toggle_system_on)
+        binding.statusText.text = if (newStatus) getString(R.string.system_active) else getString(R.string.system_inactive)
+        
+        android.widget.Toast.makeText(
+            this,
+            if (newStatus) "Système activé" else "Système désactivé",
+            android.widget.Toast.LENGTH_SHORT
+        ).show()
     }
     
     private fun checkServices() {
