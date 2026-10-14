@@ -51,7 +51,7 @@
         </service>
 
         <service
-            android:name=".service.CallbackService"
+            android:name=".service.VoicemailService"
             android:exported="false" />
 
         <receiver android:name=".receiver.SmsReceiver" android:exported="true">

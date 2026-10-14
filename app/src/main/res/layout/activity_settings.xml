@@ -182,12 +182,12 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Message Vocal ElevenLabs"
+            android:text="Message Vocal Personnalisé"
             android:textStyle="bold" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Appel de rappel avec ta voix quand un appel est bloqué"
+            android:text="Jouer un message personnalisé quand un appel est bloqué"
             android:layout_marginTop="4dp" />
         <Button
             android:id="@+id/btnToggleCallback"
@@ -196,6 +196,56 @@
             android:text="Activer le message vocal"
             android:textAllCaps="false"
             android:layout_marginTop="8dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="16dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Liste Blanche"
+            android:textStyle="bold" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Contacts qui n'auront PAS le message vocal (appels normaux)"
+            android:layout_marginTop="4dp" />
+        <Button
+            android:id="@+id/btnManageAllowlist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Gérer la liste blanche"
+            android:textAllCaps="false"
+            android:layout_marginTop="8dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp"
+        android:gravity="center">
+        
+        <Button
+            android:id="@+id/btnExport"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Exporter"
+            android:textAllCaps="false"
+            android:layout_marginRight="8dp" />
+        
+        <Button
+            android:id="@+id/btnImport"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Importer"
+            android:textAllCaps="false"
+            android:layout_marginLeft="8dp" />
     </LinearLayout>
 
 </LinearLayout>

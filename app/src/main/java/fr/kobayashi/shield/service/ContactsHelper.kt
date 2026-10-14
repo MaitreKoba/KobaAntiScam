@@ -12,7 +12,8 @@ object ContactsHelper {
     private const val PREFS_NAME = "shield"
     private const val KEY_STRICT_MODE = "strict_mode"
     private const val KEY_NEUTRAL_LIST = "neutral_list"
-    private const val KEY_CALLBACK_ENABLED = "callback_enabled"
+    private const val KEY_VOICEMAIL_ENABLED = "voicemail_enabled"
+    private const val KEY_ALLOWLIST = "allowlist"
     
     /**
      * Check if strict mode is enabled (block all except contacts)
@@ -31,19 +32,58 @@ object ContactsHelper {
     }
     
     /**
-     * Check if callback with ElevenLabs voice is enabled
+     * Check if custom voicemail message is enabled
      */
-    fun isCallbackEnabled(context: Context): Boolean {
+    fun isVoicemailEnabled(context: Context): Boolean {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        return prefs.getBoolean(KEY_CALLBACK_ENABLED, true)
+        return prefs.getBoolean(KEY_VOICEMAIL_ENABLED, true)
     }
     
     /**
-     * Enable/disable callback with ElevenLabs voice
+     * Enable/disable custom voicemail message
      */
-    fun setCallbackEnabled(context: Context, enabled: Boolean) {
+    fun setVoicemailEnabled(context: Context, enabled: Boolean) {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        prefs.edit().putBoolean(KEY_CALLBACK_ENABLED, enabled).apply()
+        prefs.edit().putBoolean(KEY_VOICEMAIL_ENABLED, enabled).apply()
+    }
+    
+    /**
+     * Get the allowlist (contacts that will NOT get the voicemail message)
+     */
+    fun getAllowlist(context: Context): Set<String> {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        return prefs.getStringSet(KEY_ALLOWLIST, mutableSetOf()) ?: mutableSetOf()
+    }
+    
+    /**
+     * Add a contact to allowlist (will NOT get voicemail message)
+     */
+    fun addToAllowlist(context: Context, number: String) {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val current = prefs.getStringSet(KEY_ALLOWLIST, mutableSetOf()) ?: mutableSetOf()
+        val normalized = Rules.normalize(number)
+        current.add(normalized)
+        prefs.edit().putStringSet(KEY_ALLOWLIST, current).apply()
+    }
+    
+    /**
+     * Remove a contact from allowlist
+     */
+    fun removeFromAllowlist(context: Context, number: String) {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val current = prefs.getStringSet(KEY_ALLOWLIST, mutableSetOf()) ?: mutableSetOf()
+        val normalized = Rules.normalize(number)
+        current.remove(normalized)
+        prefs.edit().putStringSet(KEY_ALLOWLIST, current).apply()
+    }
+    
+    /**
+     * Check if a number is in allowlist (should NOT get voicemail message)
+     */
+    fun isInAllowlist(context: Context, number: String): Boolean {
+        val normalizedNumber = Rules.normalize(number)
+        if (normalizedNumber.isBlank()) return false
+        return getAllowlist(context).contains(normalizedNumber)
     }
     
     /**

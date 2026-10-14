@@ -63,19 +63,49 @@ class CallFilterService : CallScreeningService() {
         val prefs = context.getSharedPreferences("shield", Context.MODE_PRIVATE)
         val systemEnabled = prefs.getBoolean("system_enabled", true)
         
+        // Check if voicemail mode is enabled
+        val voicemailEnabled = ContactsHelper.isVoicemailEnabled(context)
+        
         // Check if strict mode is enabled (block all except contacts)
         val strictMode = ContactsHelper.isStrictModeEnabled(context)
+        
+        // Check if number is in contacts
+        val isInContacts = ContactsHelper.getAllContactNumbers(context).contains(Rules.normalize(number))
+        
+        // Check if number is in neutral list (for strict mode testing)
+        val isInNeutralList = ContactsHelper.getNeutralList(context).contains(Rules.normalize(number))
         
         // Récupérer les règles depuis la base de données
         val activeCallRules = withContext(Dispatchers.IO) {
             RuleDatabase.getDatabase().ruleDao().getActiveRulesByType(RuleType.CALL)
         }
         
-        // Check if number is in contacts and not in neutral list
-        val isContactAndNotNeutral = ContactsHelper.isContactAndNotNeutral(context, number)
+        // ===== NOUVELLE LOGIQUE PERSONNALISÉE =====
+        // Si le système est désactivé, autoriser tout
+        if (!systemEnabled) {
+            Log.d(tag, "SYSTEM DISABLED: allowing all calls")
+            logCall(number, RuleAction.ALLOW)
+            return allowResponse()
+        }
         
+        // Si la messagerie vocale personnalisée est activée
+        if (voicemailEnabled) {
+            // Autoriser si le numéro est dans les contacts ET n'est PAS dans la neutral list
+            if (isInContacts && !isInNeutralList) {
+                Log.d(tag, "VOICEMAIL MODE: $number is in contacts -> ALLOW")
+                logCall(number, RuleAction.ALLOW)
+                return allowResponse()
+            }
+            // Bloquer avec messagerie pour les inconnus et ceux dans la neutral list
+            Log.d(tag, "VOICEMAIL MODE: $number -> BLOCK with voicemail")
+            logCall(number, RuleAction.BLOCK)
+            return blockResponse(number)
+        }
+        
+        // ===== MODE STRICT (ancien comportement) =====
         // In strict mode: block by default, allow only contacts (not in neutral list)
-        if (strictMode && systemEnabled) {
+        if (strictMode) {
+            val isContactAndNotNeutral = isInContacts && !isInNeutralList
             if (isContactAndNotNeutral) {
                 Log.d(tag, "STRICT MODE: $number is in contacts and not neutral -> ALLOW")
                 logCall(number, RuleAction.ALLOW)
@@ -157,31 +187,32 @@ class CallFilterService : CallScreeningService() {
     private fun blockResponse(phoneNumber: String? = null): CallScreeningService.CallResponse {
         Log.d(tag, "BLOCK: rejeter l'appel")
         
-        // Trigger callback with ElevenLabs voice if enabled
-        if (phoneNumber != null && ContactsHelper.isCallbackEnabled(applicationContext)) {
-            startCallbackWithVoice(phoneNumber)
+        // Jouer le message vocal personnalisé pour le caller
+        if (phoneNumber != null) {
+            playVoicemailMessage(phoneNumber)
         }
         
         return CallScreeningService.CallResponse.Builder()
             .setDisallowCall(true)
             .setRejectCall(true)
-            .setSkipCallLog(true)
+            .setSkipCallLog(false)
             .setSkipNotification(true)
             .build()
     }
     
     /**
-     * Start a callback call with ElevenLabs voice message
+     * Play custom voicemail message for the caller
+     * This creates an outgoing call and plays the MP3 message
      */
-    private fun startCallbackWithVoice(phoneNumber: String) {
-        Log.d(tag, "Starting callback with ElevenLabs voice for: $phoneNumber")
+    private fun playVoicemailMessage(phoneNumber: String) {
+        Log.d(tag, "Playing voicemail message for: $phoneNumber")
         
         coroutineScope.launch {
             try {
                 // Small delay to ensure the original call is fully rejected
                 delay(2000)
                 
-                val intent = Intent(applicationContext, CallbackService::class.java).apply {
+                val intent = Intent(applicationContext, VoicemailService::class.java).apply {
                     putExtra("PHONE_NUMBER", phoneNumber)
                 }
                 
@@ -192,7 +223,7 @@ class CallFilterService : CallScreeningService() {
                 }
                 
             } catch (e: Exception) {
-                Log.e(tag, "Error starting callback service", e)
+                Log.e(tag, "Error starting voicemail service", e)
             }
         }
     }

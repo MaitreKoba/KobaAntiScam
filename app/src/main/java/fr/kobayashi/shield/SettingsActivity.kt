@@ -6,11 +6,13 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AlertDialog
 import fr.kobayashi.shield.databinding.ActivitySettingsBinding
 import fr.kobayashi.shield.service.ContactsHelper
+import java.io.File
 
 class SettingsActivity : AppCompatActivity() {
     
@@ -52,9 +54,23 @@ class SettingsActivity : AppCompatActivity() {
             showNeutralListDialog()
         }
         
-        // Callback with ElevenLabs voice button
+        // Voicemail message button
         binding.btnToggleCallback.setOnClickListener {
-            toggleCallbackSetting()
+            toggleVoicemailSetting()
+        }
+        
+        // Allowlist button
+        binding.btnManageAllowlist.setOnClickListener {
+            showAllowlistDialog()
+        }
+        
+        // Export/Import buttons
+        binding.btnExport.setOnClickListener {
+            exportData()
+        }
+        
+        binding.btnImport.setOnClickListener {
+            importData()
         }
     }
     
@@ -164,13 +180,97 @@ class SettingsActivity : AppCompatActivity() {
             .show()
     }
     
-    private fun toggleCallbackSetting() {
-        val isEnabled = ContactsHelper.isCallbackEnabled(this)
-        ContactsHelper.setCallbackEnabled(this, !isEnabled)
+    private fun showAllowlistDialog() {
+        val items = arrayOf("Ajouter un contact", "Retirer un contact", "Voir la liste", "Ajouter tous les contacts")
+        
+        AlertDialog.Builder(this)
+            .setTitle("Liste Blanche (contacts sans message vocal)")
+            .setItems(items) { _, which ->
+                when (which) {
+                    0 -> showAddAllowlistDialog()
+                    1 -> showRemoveAllowlistDialog()
+                    2 -> showAllowlist()
+                    3 -> addAllContactsToAllowlist()
+                }
+            }
+            .setNegativeButton("Annuler", null)
+            .show()
+    }
+    
+    private fun showAddAllowlistDialog() {
+        val editText = android.widget.EditText(this)
+        editText.hint = "Numéro à ajouter (ex: +33612345678)"
+        
+        AlertDialog.Builder(this)
+            .setTitle("Ajouter à la liste blanche")
+            .setView(editText)
+            .setPositiveButton("Ajouter") { _, _ ->
+                val number = editText.text.toString()
+                if (number.isNotBlank()) {
+                    ContactsHelper.addToAllowlist(this, number)
+                    Toast.makeText(this, "Numéro ajouté à la liste blanche", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Numéro vide", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Annuler", null)
+            .show()
+    }
+    
+    private fun showRemoveAllowlistDialog() {
+        val allowlist = ContactsHelper.getAllowlist(this)
+        if (allowlist.isEmpty()) {
+            Toast.makeText(this, "Liste blanche vide", Toast.LENGTH_SHORT).show()
+            return
+        }
+        
+        AlertDialog.Builder(this)
+            .setTitle("Retirer de la liste blanche")
+            .setItems(allowlist.toTypedArray()) { _, which ->
+                val number = allowlist.elementAt(which)
+                ContactsHelper.removeFromAllowlist(this, number)
+                Toast.makeText(this, "Numéro retiré", Toast.LENGTH_SHORT).show()
+            }
+            .setNegativeButton("Annuler", null)
+            .show()
+    }
+    
+    private fun showAllowlist() {
+        val allowlist = ContactsHelper.getAllowlist(this)
+        if (allowlist.isEmpty()) {
+            Toast.makeText(this, "Liste blanche vide", Toast.LENGTH_SHORT).show()
+            return
+        }
+        
+        val message = allowlist.joinToString("\n")
+        AlertDialog.Builder(this)
+            .setTitle("Liste blanche (${allowlist.size} contacts)")
+            .setMessage(message)
+            .setPositiveButton("OK", null)
+            .show()
+    }
+    
+    private fun addAllContactsToAllowlist() {
+        val allContacts = ContactsHelper.getAllContactNumbers(this)
+        if (allContacts.isEmpty()) {
+            Toast.makeText(this, "Aucun contact trouvé", Toast.LENGTH_SHORT).show()
+            return
+        }
+        
+        for (number in allContacts) {
+            ContactsHelper.addToAllowlist(this, number)
+        }
+        
+        Toast.makeText(this, "Tous les contacts ajoutés à la liste blanche (${allContacts.size})", Toast.LENGTH_SHORT).show()
+    }
+    
+    private fun toggleVoicemailSetting() {
+        val isEnabled = ContactsHelper.isVoicemailEnabled(this)
+        ContactsHelper.setVoicemailEnabled(this, !isEnabled)
         updateStatus()
         Toast.makeText(
             this,
-            if (!isEnabled) "Message vocal ElevenLabs ACTIVÉ" else "Message vocal ElevenLabs désactivé",
+            if (!isEnabled) "Message vocal personnalisé ACTIVÉ" else "Message vocal personnalisé désactivé",
             Toast.LENGTH_SHORT
         ).show()
     }
@@ -192,20 +292,53 @@ class SettingsActivity : AppCompatActivity() {
         binding.btnDisableBatteryOptimization.text = if (!isBatteryOptimized) "Optimisation désactivée ✓" else "Désactiver"
     }
     
+    private fun exportData() {
+        try {
+            val allowlist = ContactsHelper.getAllowlist(this)
+            val neutralList = ContactsHelper.getNeutralList(this)
+            val strictMode = ContactsHelper.isStrictModeEnabled(this)
+            val voicemailEnabled = ContactsHelper.isVoicemailEnabled(this)
+            
+            // Créer un JSON simple
+            val json = StringBuilder().apply {
+                append("{\n")
+                append("  \"export_date\": ${System.currentTimeMillis()},\n")
+                append("  \"allowlist\": [")
+                append(allowlist.joinToString(", ") { "\"$it\"" })
+                append("],\n")
+                append("  \"neutral_list\": [")
+                append(neutralList.joinToString(", ") { "\"$it\"" })
+                append("],\n")
+                append("  \"strict_mode\": $strictMode,\n")
+                append("  \"voicemail_enabled\": $voicemailEnabled\n")
+                append("}")
+            }.toString()
+            
+            // Sauvegarder dans un fichier
+            val file = File(getExternalFilesDir(null), "shield_backup_${System.currentTimeMillis()}.json")
+            file.writeText(json)
+            
+            Toast.makeText(this, "Données exportées vers ${file.name}", Toast.LENGTH_LONG).show()
+            
+        } catch (e: Exception) {
+            Log.e("SettingsActivity", "Error exporting data", e)
+            Toast.makeText(this, "Erreur d'export: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+    
+    private fun importData() {
+        // TODO: Implémenter l'import
+        Toast.makeText(this, "Fonctionnalité d'import à venir", Toast.LENGTH_SHORT).show()
+    }
+    
     private fun isNotificationServiceEnabled(): Boolean {
         return try {
-            val flat = java.lang.reflect.Array.newInstance(
-                Class.forName("java.lang.String"),
-                1
-            ).apply {
-                java.lang.reflect.Array.set(this, 0, "fr.kobayashi.shield.service.SmsNotificationListener")
-            }
-            
+            val listenerName = "fr.kobayashi.shield.service.SmsNotificationListener"
             val cl = Class.forName("android.app.NotificationManager")
             val method = cl.getMethod("getEnabledNotificationListeners")
             val nm = getSystemService(NOTIFICATION_SERVICE) as android.app.NotificationManager
             val listeners = method.invoke(nm) as? Set<String>
-            listeners?.contains("fr.kobayashi.shield.service.SmsNotificationListener") ?: false
+            listeners?.contains(listenerName) ?: false
         } catch (e: Exception) {
             false
         }
