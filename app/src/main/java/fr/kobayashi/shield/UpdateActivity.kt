@@ -8,6 +8,7 @@ import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
@@ -32,6 +33,7 @@ class UpdateActivity : AppCompatActivity() {
     private lateinit var downloadManager: DownloadManager
     private var downloadId: Long = -1L
     private var latestRelease: GitHubService.Release? = null
+    private val tag = "UpdateActivity"
     
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
     
@@ -136,7 +138,18 @@ class UpdateActivity : AppCompatActivity() {
     }
     
     private fun downloadUpdate() {
-        latestRelease?.assets?.firstOrNull()?.let { asset ->
+        Log.d(tag, "downloadUpdate called, latestRelease=$latestRelease")
+        
+        if (latestRelease == null) {
+            binding.tvStatus.text = "Erreur: release introuvable"
+            Toast.makeText(this, "Erreur: release introuvable", Toast.LENGTH_SHORT).show()
+            return
+        }
+        
+        Log.d(tag, "Assets: ${latestRelease!!.assets.size}")
+        
+        latestRelease!!.assets.firstOrNull()?.let { asset ->
+            Log.d(tag, "Asset found: ${asset.name}, url=${asset.browser_download_url}")
             val downloadUri = Uri.parse(asset.browser_download_url)
             
             val request = DownloadManager.Request(downloadUri).apply {
