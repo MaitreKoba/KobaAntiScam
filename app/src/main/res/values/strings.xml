@@ -38,6 +38,10 @@
     <string name="settings_auto_check">Vérifier automatiquement</string>
     <string name="settings_github_repo">Dépôt GitHub</string>
     <string name="settings_repo_hint">ex: MaitreKoba/KobaAntiScam</string>
+    <string name="settings_strict_mode">Mode Strict</string>
+    <string name="settings_strict_mode_desc">Bloquer tous les numéros sauf vos contacts</string>
+    <string name="settings_neutral_list">Liste Neutre</string>
+    <string name="settings_neutral_list_desc">Numéros bloqués même s ils sont dans vos contacts</string>
     
     <!-- Update -->
     <string name="update_title">Mise à jour</string>

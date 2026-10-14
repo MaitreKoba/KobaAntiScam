@@ -125,4 +125,53 @@
         android:text="@string/settings_auto_check"
         android:layout_marginTop="8dp" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="16dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mode Strict"
+            android:textStyle="bold" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Bloquer tous les numéros sauf ceux dans vos contacts"
+            android:layout_marginTop="4dp" />
+        <Button
+            android:id="@+id/btnStrictMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Activer le mode strict"
+            android:textAllCaps="false"
+            android:layout_marginTop="8dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="16dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Liste Neutre"
+            android:textStyle="bold" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Numéros bloqués même s'ils sont dans vos contacts (pour tester)"
+            android:layout_marginTop="4dp" />
+        <Button
+            android:id="@+id/btnManageNeutralList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Gérer la liste neutre"
+            android:textAllCaps="false"
+            android:layout_marginTop="8dp" />
+    </LinearLayout>
+
 </LinearLayout>

@@ -8,7 +8,9 @@ import android.os.Bundle
 import android.provider.Settings
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AlertDialog
 import fr.kobayashi.shield.databinding.ActivitySettingsBinding
+import fr.kobayashi.shield.service.ContactsHelper
 
 class SettingsActivity : AppCompatActivity() {
     
@@ -39,6 +41,16 @@ class SettingsActivity : AppCompatActivity() {
         binding.btnCheckUpdate.setOnClickListener {
             startActivity(Intent(this, UpdateActivity::class.java))
         }
+        
+        // Strict mode button
+        binding.btnStrictMode.setOnClickListener {
+            toggleStrictMode()
+        }
+        
+        // Neutral list button
+        binding.btnManageNeutralList.setOnClickListener {
+            showNeutralListDialog()
+        }
     }
     
     @Suppress("DEPRECATION")
@@ -64,6 +76,87 @@ class SettingsActivity : AppCompatActivity() {
             intent.data = Uri.parse("package:$packageName")
             startActivity(intent)
         }
+    }
+    
+    private fun toggleStrictMode() {
+        val isEnabled = ContactsHelper.isStrictModeEnabled(this)
+        ContactsHelper.setStrictModeEnabled(this, !isEnabled)
+        updateStatus()
+        Toast.makeText(
+            this,
+            if (!isEnabled) "Mode strict ACTIVÉ: bloquer tous sauf contacts" else "Mode strict désactivé",
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+    
+    private fun showNeutralListDialog() {
+        val neutralList = ContactsHelper.getNeutralList(this).toMutableList()
+        val items = arrayOf("Ajouter un numéro", "Retirer un numéro", "Voir la liste")
+        
+        AlertDialog.Builder(this)
+            .setTitle("Liste neutre (bloqués même s'ils sont dans les contacts)")
+            .setItems(items) { _, which ->
+                when (which) {
+                    0 -> showAddNeutralDialog()
+                    1 -> showRemoveNeutralDialog()
+                    2 -> showNeutralList()
+                }
+            }
+            .setNegativeButton("Annuler", null)
+            .show()
+    }
+    
+    private fun showAddNeutralDialog() {
+        val editText = android.widget.EditText(this)
+        editText.hint = "Numéro à bloquer (ex: +33612345678)"
+        
+        AlertDialog.Builder(this)
+            .setTitle("Ajouter à la liste neutre")
+            .setView(editText)
+            .setPositiveButton("Ajouter") { _, _ ->
+                val number = editText.text.toString()
+                if (number.isNotBlank()) {
+                    ContactsHelper.addToNeutralList(this, number)
+                    Toast.makeText(this, "Numéro ajouté à la liste neutre", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Numéro vide", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Annuler", null)
+            .show()
+    }
+    
+    private fun showRemoveNeutralDialog() {
+        val neutralList = ContactsHelper.getNeutralList(this)
+        if (neutralList.isEmpty()) {
+            Toast.makeText(this, "Liste neutre vide", Toast.LENGTH_SHORT).show()
+            return
+        }
+        
+        AlertDialog.Builder(this)
+            .setTitle("Retirer de la liste neutre")
+            .setItems(neutralList.toTypedArray()) { _, which ->
+                val number = neutralList.elementAt(which)
+                ContactsHelper.removeFromNeutralList(this, number)
+                Toast.makeText(this, "Numéro retiré", Toast.LENGTH_SHORT).show()
+            }
+            .setNegativeButton("Annuler", null)
+            .show()
+    }
+    
+    private fun showNeutralList() {
+        val neutralList = ContactsHelper.getNeutralList(this)
+        if (neutralList.isEmpty()) {
+            Toast.makeText(this, "Liste neutre vide", Toast.LENGTH_SHORT).show()
+            return
+        }
+        
+        val message = neutralList.joinToString("\n")
+        AlertDialog.Builder(this)
+            .setTitle("Liste neutre (${neutralList.size} numéros)")
+            .setMessage(message)
+            .setPositiveButton("OK", null)
+            .show()
     }
     
     private fun updateStatus() {

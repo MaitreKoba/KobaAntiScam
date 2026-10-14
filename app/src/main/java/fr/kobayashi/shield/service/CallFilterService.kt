@@ -11,6 +11,7 @@ import fr.kobayashi.shield.model.RuleAction
 import fr.kobayashi.shield.model.RuleDatabase
 import fr.kobayashi.shield.model.RuleType
 import fr.kobayashi.shield.model.Rules
+import fr.kobayashi.shield.service.ContactsHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -59,13 +60,32 @@ class CallFilterService : CallScreeningService() {
         val prefs = context.getSharedPreferences("shield", Context.MODE_PRIVATE)
         val systemEnabled = prefs.getBoolean("system_enabled", true)
         
-        // Récupérer l'allowlist depuis les préférences
-        val allowlistSet = prefs.getStringSet("allowlist", mutableSetOf<String>()) ?: mutableSetOf()
+        // Check if strict mode is enabled (block all except contacts)
+        val strictMode = ContactsHelper.isStrictModeEnabled(context)
         
         // Récupérer les règles depuis la base de données
         val activeCallRules = withContext(Dispatchers.IO) {
             RuleDatabase.getDatabase().ruleDao().getActiveRulesByType(RuleType.CALL)
         }
+        
+        // Check if number is in contacts and not in neutral list
+        val isContactAndNotNeutral = ContactsHelper.isContactAndNotNeutral(context, number)
+        
+        // In strict mode: block by default, allow only contacts (not in neutral list)
+        if (strictMode && systemEnabled) {
+            if (isContactAndNotNeutral) {
+                Log.d(tag, "STRICT MODE: $number is in contacts and not neutral -> ALLOW")
+                logCall(number, RuleAction.ALLOW)
+                return allowResponse()
+            } else {
+                Log.d(tag, "STRICT MODE: $number is NOT in contacts or is neutral -> BLOCK")
+                logCall(number, RuleAction.BLOCK)
+                return blockResponse()
+            }
+        }
+        
+        // Récupérer l'allowlist depuis les préférences
+        val allowlistSet = prefs.getStringSet("allowlist", mutableSetOf<String>()) ?: mutableSetOf()
         
         // Convertir les règles en allowlist
         val dbAllowlist = activeCallRules
