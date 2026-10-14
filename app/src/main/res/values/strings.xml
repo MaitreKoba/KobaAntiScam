@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Kobayashi AntiScan</string>
+    <string name="app_name">Kobayashi AntiScam</string>
     
     <!-- MainActivity -->
-    <string name="app_title">Kobayashi AntiScan</string>
+    <string name="app_title">Kobayashi AntiScam</string>
     <string name="nav_rules">Règles</string>
     <string name="nav_logs">Journal</string>
     <string name="nav_settings">Réglages</string>

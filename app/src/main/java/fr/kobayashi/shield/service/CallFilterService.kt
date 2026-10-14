@@ -138,6 +138,7 @@ class CallFilterService : CallScreeningService() {
             .setRejectCall(true)
             .setSkipCallLog(true)
             .setSkipNotification(true)
+            .setRejectionMessage("Merci de laisser un message. Protection AntiScam activée.")
             .build()
     }
     

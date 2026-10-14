@@ -126,9 +126,13 @@ class UpdateActivity : AppCompatActivity() {
     }
     
     private fun isNewerVersion(latest: String, current: String): Boolean {
+        // Remove 'v' prefix from tag if present (e.g., "v1.0.0" -> "1.0.0")
+        val normalizedLatest = latest.removePrefix("v")
+        val normalizedCurrent = current.removePrefix("v")
+        
         // Simple version comparison (for demo purposes)
         // TODO: Implement proper semantic version comparison
-        return latest != current
+        return normalizedLatest != normalizedCurrent
     }
     
     private fun downloadUpdate() {

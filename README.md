@@ -1,4 +1,4 @@
-# Kobayashi AntiScan - Protection contre les arnaques pour Android
+# Kobayashi AntiScam - Protection contre les arnaques pour Android
 
 /**
  * FICHIER : README.md | CHEMIN : D:/Kobayashi/Developpement/shield/README.md

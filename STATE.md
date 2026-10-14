@@ -1,11 +1,11 @@
-# STATE — Kobayashi AntiScan
+# STATE — Kobayashi AntiScam
 
 /**
  * FICHIER : STATE.md | CHEMIN : D:/Kobayashi/Developpement/shield/STATE.md
  * LIGNES : ~250 | RÔLE : État du développement | DATE : 2026-10-14
  * VERSION : 1.0.0 | ORIGINE : Mise à jour | AUTEUR : Maitre Kobayashi (via agent)
  * STATUT : EN COURS | DÉPENDANCES : MEGA_PROMPT.md, AndroidManifest.xml, build.gradle.kts
- * LIEN : STATE.md | NOTES : État courant après renommage en Kobayashi AntiScan
+ * LIEN : STATE.md | NOTES : État courant après renommage en Kobayashi AntiScam
  */
 
 Dernière mise à jour : 2026-10-14 (14:30 UTC)
@@ -28,7 +28,7 @@ Dernière mise à jour : 2026-10-14 (14:30 UTC)
 - [x] **Dépôt GitHub créé** (MaitreKoba/KobaAntiScam - privé)
 - [x] **Code poussé vers GitHub** (69 fichiers, commit initial)
 - [x] **APK installé sur le téléphone** (fr.kobayashi.shield.debug, PID 23598)
-- [x] **Application renommée** en Kobayashi AntiScan
+- [x] **Application renommée** en Kobayashi AntiScam
 - [x] **Rôle CALL_SCREENING attribué** (via adb)
 - [x] **Accès aux notifications attribué** (via adb)
 - [x] **Optimisation batterie désactivée** (via adb)
