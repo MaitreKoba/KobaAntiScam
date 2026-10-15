@@ -10,6 +10,20 @@
 
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr-FR/1.0.0/).
 
+## [1.6.0] - 2026-10-15
+### Ajouté
+- Interface refaite avec la charte de kobacraft.net : palette crème, pêche, orange et rouge, cartes en verre dépoli, polices Fredoka et Nunito embarquées, mode sombre repris du site.
+- Écran Apparence (tuile et bouton 🎨 de l'accueil) : mode clair, sombre ou système ; 7 couleurs principales ; taille du texte ; coins carrés, doux, arrondis ou bulles ; cartes verre, pleines ou teintées ; fond dégradé ou uni ; police Kobacraft ou système ; animations ; accueil en grille ou en liste ; carte d'état des services affichée ou masquée ; retour au thème Kobacraft.
+- Accueil : carte d'état en dégradé avec interrupteur du système, tuiles (Règles, Journal, Statistiques, Réglages, Apparence, Mise à jour), état réel des services (rôle de filtrage, accès aux notifications, optimisation batterie).
+- `BaseActivity` : toutes les activités appliquent l'apparence choisie et se recréent quand elle change.
+
+### Modifié
+- Couleurs codées en dur retirées de `activity_allow.xml`, `activity_stats.xml`, `item_log.xml`, `item_rule.xml`.
+- Détection de l'accès aux notifications via `NotificationManagerCompat` (l'ancienne réflexion comparait un nom de classe au lieu du paquet).
+
+### Connu
+- `RulesTest.kt` ne compile pas (antérieur à 1.6.0) : `getSlice` privé dans `Rules`, `prefix123456` inexistant.
+
 ## [Unreleased]
 ### ✨ Modifié
 - Application renommée de **SHIELD AntiScam** à **Kobayashi AntiScan**

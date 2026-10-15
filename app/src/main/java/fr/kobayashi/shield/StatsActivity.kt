@@ -19,7 +19,7 @@ import kotlinx.coroutines.withContext
  * LIEN : StatsActivity.kt | NOTES : Affiche les statistiques d'appels et SMS filtrés
  */
 
-class StatsActivity : AppCompatActivity() {
+class StatsActivity : BaseActivity() {
     
     private lateinit var binding: ActivityStatsBinding
     private val coroutineScope = CoroutineScope(Dispatchers.IO)

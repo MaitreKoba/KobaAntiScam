@@ -14,7 +14,7 @@ import fr.kobayashi.shield.databinding.ActivitySettingsBinding
 import fr.kobayashi.shield.service.ContactsHelper
 import java.io.File
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity : BaseActivity() {
     
     private lateinit var binding: ActivitySettingsBinding
     

@@ -27,7 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 import java.util.concurrent.TimeUnit
 
-class UpdateActivity : AppCompatActivity() {
+class UpdateActivity : BaseActivity() {
     
     private lateinit var binding: ActivityUpdateBinding
     private lateinit var downloadManager: DownloadManager

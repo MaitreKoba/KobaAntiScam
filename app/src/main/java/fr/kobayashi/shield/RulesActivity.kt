@@ -20,7 +20,7 @@ import fr.kobayashi.shield.model.RuleDatabase
 import fr.kobayashi.shield.model.RuleType
 import kotlinx.coroutines.launch
 
-class RulesActivity : AppCompatActivity() {
+class RulesActivity : BaseActivity() {
     
     private lateinit var binding: ActivityRulesBinding
     private lateinit var ruleAdapter: RuleAdapter

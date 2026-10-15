@@ -74,4 +74,26 @@
     <string name="action_delete">Supprimer</string>
     <string name="action_edit">Modifier</string>
     <string name="action_refresh">Rafraîchir</string>
+
+    <!-- Accueil et apparence (1.6.0) -->
+    <string name="accueil_sous_titre">Bouclier anti-arnaques</string>
+    <string name="accueil_raccourcis">Raccourcis</string>
+    <string name="accueil_services">État des services</string>
+    <string name="nav_stats">Statistiques</string>
+    <string name="nav_apparence">Apparence</string>
+    <string name="tuile_regles">Autoriser, bloquer, silence</string>
+    <string name="tuile_journal">Appels et SMS filtrés</string>
+    <string name="tuile_stats">Bilan de la protection</string>
+    <string name="tuile_reglages">Permissions et options</string>
+    <string name="tuile_apparence">Couleurs, coins, police</string>
+    <string name="tuile_maj">Nouvelle version</string>
+    <string name="etat_actif_desc">Appels et SMS filtrés selon tes règles</string>
+    <string name="etat_inactif_desc">Tout passe : aucun filtrage en cours</string>
+    <string name="retour">Retour</string>
+    <string name="oui">Oui</string>
+    <string name="annuler">Annuler</string>
+    <string name="apercu_titre">Aperçu de ton thème</string>
+    <string name="apercu_texte">Les changements s\'appliquent à toute l\'application</string>
+    <string name="apparence_reinitialiser">Revenir au thème Kobacraft</string>
+    <string name="apparence_reinitialiser_q">Remettre tous les réglages d\'apparence par défaut ?</string>
 </resources>

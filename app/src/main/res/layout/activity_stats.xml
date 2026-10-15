@@ -12,7 +12,7 @@ NOTES : Interface pour afficher les statistiques de filtrage
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="#FFFFFF"
+    android:background="@android:color/transparent"
     tools:context=".StatsActivity">
 
     <TextView
@@ -20,7 +20,7 @@ NOTES : Interface pour afficher les statistiques de filtrage
         android:layout_height="wrap_content"
         android:text="Statistiques SHIELD"
         android:textSize="24sp"
-        android:textColor="#000000"
+        android:textColor="?android:attr/textColorPrimary"
         android:textStyle="bold"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="8dp"/>
@@ -31,7 +31,7 @@ NOTES : Interface pour afficher les statistiques de filtrage
         android:layout_height="wrap_content"
         android:text="Total: 0 événements"
         android:textSize="16sp"
-        android:textColor="#666666"
+        android:textColor="?android:attr/textColorSecondary"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="16dp"/>
 

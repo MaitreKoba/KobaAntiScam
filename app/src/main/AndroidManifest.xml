@@ -96,5 +96,6 @@
         <activity android:name=".LogsActivity" android:exported="false" />
         <activity android:name=".StatsActivity" android:exported="false" />
         <activity android:name=".UpdateActivity" android:exported="false" />
+        <activity android:name=".AppearanceActivity" android:exported="false" />
     </application>
 </manifest>

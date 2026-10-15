@@ -1,13 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- FICHIER : themes.xml | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/res/values/themes.xml | LIGNES : 190
+     RÔLE : Thème Kobacraft (charte de kobacraft.net) et surcouches réglables dans l'écran Apparence : accent, coins, cartes,
+            fond, police, animations | DATE : 2026-10-15 | VERSION : 1.6.0 | ORIGINE : Refonte UI | AUTEUR : Maitre Kobayashi
+     STATUT : STABLE | DÉPENDANCES : colors.xml, attrs.xml, font/, Apparence.kt | LIEN : AppearanceActivity.kt
+     NOTES : chaque surcouche est appliquée par BaseActivity avant setContentView -->
 <resources>
     <style name="Theme.Shield" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryContainer">@color/colorPrimary</item>
-        <item name="colorOnPrimaryContainer">@color/colorOnPrimary</item>
-        <item name="colorSecondary">@color/colorAccent</item>
-        <item name="colorOnSecondary">@color/colorOnPrimary</item>
-        <item name="colorError">@color/colorError</item>
-        <item name="colorOnError">@color/colorOnError</item>
-        <item name="android:windowBackground">@color/colorBackground</item>
+        <item name="colorPrimary">@color/orange</item>
+        <item name="colorOnPrimary">@color/blanc</item>
+        <item name="colorPrimaryContainer">@color/tag_fond</item>
+        <item name="colorOnPrimaryContainer">@color/ink</item>
+        <item name="accentFonce">@color/red</item>
+        <item name="colorSecondary">@color/red</item>
+        <item name="colorOnSecondary">@color/blanc</item>
+        <item name="colorSecondaryContainer">@color/gold</item>
+        <item name="colorOnSecondaryContainer">@color/ink</item>
+        <item name="colorTertiary">@color/amber</item>
+        <item name="colorError">@color/red</item>
+        <item name="colorOnError">@color/blanc</item>
+        <item name="android:colorBackground">@color/cream</item>
+        <item name="colorOnBackground">@color/ink</item>
+        <item name="colorSurface">@color/cream</item>
+        <item name="colorOnSurface">@color/ink</item>
+        <item name="colorSurfaceVariant">@color/peach</item>
+        <item name="colorOnSurfaceVariant">@color/ink2</item>
+        <item name="colorSurfaceContainerLowest">@color/surface_plein</item>
+        <item name="colorSurfaceContainerLow">@color/surface_plein</item>
+        <item name="colorSurfaceContainer">@color/surface_plein</item>
+        <item name="colorSurfaceContainerHigh">@color/surface_plein</item>
+        <item name="colorSurfaceContainerHighest">@color/peach</item>
+        <item name="colorOutline">@color/ink3</item>
+        <item name="colorOutlineVariant">@color/peach</item>
+        <item name="android:textColorPrimary">@color/ink</item>
+        <item name="android:textColorSecondary">@color/ink3</item>
+        <item name="android:windowBackground">@drawable/bg_kobacraft</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@color/cream</item>
+        <item name="android:windowLightStatusBar">@bool/barres_claires</item>
+        <item name="android:windowLightNavigationBar">@bool/barres_claires</item>
+        <item name="android:fontFamily">@font/nunito</item>
+        <item name="fontFamily">@font/nunito</item>
+        <item name="policeTitre">@font/fredoka</item>
+        <item name="carteFond">@color/glass_strong</item>
+        <item name="carteBord">@color/glass_border</item>
+        <item name="rayonCarte">20dp</item>
+        <item name="rayonBouton">26dp</item>
+        <item name="textAppearanceHeadlineMedium">@style/Texte.Shield.Titre</item>
+        <item name="textAppearanceTitleLarge">@style/Texte.Shield.SousTitre</item>
+        <item name="textAppearanceTitleMedium">@style/Texte.Shield.Section</item>
+        <item name="materialButtonStyle">@style/Widget.Shield.Bouton</item>
+        <item name="materialButtonOutlinedStyle">@style/Widget.Shield.Bouton.Contour</item>
+        <item name="materialCardViewStyle">@style/Widget.Shield.Carte</item>
+        <item name="cardViewStyle">@style/Widget.Shield.CarteCompat</item>
+        <item name="chipStyle">@style/Widget.Shield.Puce</item>
+        <item name="android:windowAnimationStyle">@style/Anim.Shield</item>
     </style>
+
+    <!-- Textes -->
+    <style name="Texte.Shield.Titre" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="fontFamily">?attr/policeTitre</item>
+        <item name="android:fontFamily">?attr/policeTitre</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/ink</item>
+    </style>
+    <style name="Texte.Shield.SousTitre" parent="TextAppearance.Material3.TitleLarge">
+        <item name="fontFamily">?attr/policeTitre</item>
+        <item name="android:fontFamily">?attr/policeTitre</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="Texte.Shield.Section" parent="TextAppearance.Material3.TitleMedium">
+        <item name="fontFamily">?attr/policeTitre</item>
+        <item name="android:fontFamily">?attr/policeTitre</item>
+        <item name="android:textColor">@color/ink2</item>
+    </style>
+
+    <!-- Composants -->
+    <style name="Widget.Shield.Bouton" parent="Widget.Material3.Button">
+        <item name="android:fontFamily">?attr/policeTitre</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:minHeight">52dp</item>
+        <item name="cornerRadius">?attr/rayonBouton</item>
+        <item name="android:insetTop">4dp</item>
+        <item name="android:insetBottom">4dp</item>
+    </style>
+    <style name="Widget.Shield.Bouton.Contour" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:fontFamily">?attr/policeTitre</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="cornerRadius">?attr/rayonBouton</item>
+        <item name="strokeColor">?attr/colorPrimary</item>
+    </style>
+    <style name="Widget.Shield.Carte" parent="Widget.Material3.CardView.Filled">
+        <item name="cardBackgroundColor">?attr/carteFond</item>
+        <item name="strokeColor">?attr/carteBord</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="cardElevation">0dp</item>
+        <item name="cardCornerRadius">?attr/rayonCarte</item>
+    </style>
+    <style name="Widget.Shield.CarteCompat" parent="CardView">
+        <item name="cardBackgroundColor">?attr/carteFond</item>
+        <item name="cardCornerRadius">?attr/rayonCarte</item>
+        <item name="cardElevation">0dp</item>
+    </style>
+    <style name="Widget.Shield.Puce" parent="Widget.Material3.Chip.Filter">
+        <item name="android:fontFamily">?attr/policeTitre</item>
+        <item name="chipCornerRadius">?attr/rayonBouton</item>
+    </style>
+    <style name="Anim.Shield" parent="@android:style/Animation.Activity" />
+
+    <!-- Surcouches : couleur d'accent -->
+    <style name="Accent.Orange" parent="">
+        <item name="colorPrimary">#FF7E00</item><item name="colorPrimaryContainer">#33FF7E00</item><item name="accentFonce">#E8433A</item>
+    </style>
+    <style name="Accent.Rouge" parent="">
+        <item name="colorPrimary">#E8433A</item><item name="colorPrimaryContainer">#33E8433A</item><item name="accentFonce">#A8241D</item>
+    </style>
+    <style name="Accent.Ambre" parent="">
+        <item name="colorPrimary">#F6AD37</item><item name="colorPrimaryContainer">#33F6AD37</item><item name="accentFonce">#D9731B</item>
+    </style>
+    <style name="Accent.Dragon" parent="">
+        <item name="colorPrimary">#3FAE6A</item><item name="colorPrimaryContainer">#333FAE6A</item><item name="accentFonce">#23704A</item>
+    </style>
+    <style name="Accent.Ocean" parent="">
+        <item name="colorPrimary">#2F80ED</item><item name="colorPrimaryContainer">#332F80ED</item><item name="accentFonce">#1C4FA1</item>
+    </style>
+    <style name="Accent.Lilas" parent="">
+        <item name="colorPrimary">#8E5CF7</item><item name="colorPrimaryContainer">#338E5CF7</item><item name="accentFonce">#5B2FC2</item>
+    </style>
+    <style name="Accent.Sakura" parent="">
+        <item name="colorPrimary">#EC5D9C</item><item name="colorPrimaryContainer">#33EC5D9C</item><item name="accentFonce">#B83A72</item>
+    </style>
+
+    <!-- Surcouches : coins -->
+    <style name="Coins.Carre" parent=""><item name="rayonCarte">6dp</item><item name="rayonBouton">8dp</item></style>
+    <style name="Coins.Doux" parent=""><item name="rayonCarte">14dp</item><item name="rayonBouton">16dp</item></style>
+    <style name="Coins.Arrondi" parent=""><item name="rayonCarte">20dp</item><item name="rayonBouton">26dp</item></style>
+    <style name="Coins.Bulle" parent=""><item name="rayonCarte">30dp</item><item name="rayonBouton">40dp</item></style>
+
+    <!-- Surcouches : cartes -->
+    <style name="Cartes.Verre" parent=""><item name="carteFond">@color/glass_strong</item><item name="carteBord">@color/glass_border</item></style>
+    <style name="Cartes.Pleines" parent=""><item name="carteFond">@color/surface_plein</item><item name="carteBord">@color/peach</item></style>
+    <style name="Cartes.Teintees" parent=""><item name="carteFond">@color/tag_fond</item><item name="carteBord">@color/glass_border</item></style>
+
+    <!-- Surcouches : fond -->
+    <style name="Fond.Degrade" parent=""><item name="android:windowBackground">@drawable/bg_kobacraft</item></style>
+    <style name="Fond.Uni" parent=""><item name="android:windowBackground">@color/cream</item></style>
+
+    <!-- Surcouches : police -->
+    <style name="Police.Kobacraft" parent="">
+        <item name="android:fontFamily">@font/nunito</item><item name="fontFamily">@font/nunito</item><item name="policeTitre">@font/fredoka</item>
+    </style>
+    <style name="Police.Systeme" parent="">
+        <item name="android:fontFamily">sans-serif</item><item name="fontFamily">sans-serif</item><item name="policeTitre">@font/nunito</item>
+    </style>
+
+    <!-- Surcouches : animations -->
+    <style name="Animations.Normales" parent=""><item name="android:windowAnimationStyle">@style/Anim.Shield</item></style>
+    <style name="Animations.Aucune" parent=""><item name="android:windowAnimationStyle">@null</item></style>
 </resources>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- FICHIER : colors.xml | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/res/values-night/colors.xml | LIGNES : 19
+     RÔLE : Palette sombre reprise du mode sombre de kobacraft.net | DATE : 2026-10-15 | VERSION : 1.6.0 | ORIGINE : Refonte UI
+     AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : values/colors.xml | LIEN : themes.xml | NOTES : seules les teintes qui changent -->
+<resources>
+    <color name="cream">#22160D</color>
+    <color name="peach">#4A2F17</color>
+    <color name="gold">#3B2A12</color>
+    <color name="ink">#FBE9D5</color>
+    <color name="ink2">#DCC3A4</color>
+    <color name="ink3">#AD9172</color>
+    <color name="glass">#9E2C1E12</color>
+    <color name="glass_strong">#D93A2818</color>
+    <color name="glass_border">#24FFC482</color>
+    <color name="surface_plein">#2C1E12</color>
+    <color name="tag_fond">#40FF9D3D</color>
+</resources>

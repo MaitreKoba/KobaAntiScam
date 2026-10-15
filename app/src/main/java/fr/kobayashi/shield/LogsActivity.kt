@@ -9,7 +9,7 @@ import fr.kobayashi.shield.model.LogEntry
 import fr.kobayashi.shield.model.RuleDatabase
 import kotlinx.coroutines.launch
 
-class LogsActivity : AppCompatActivity() {
+class LogsActivity : BaseActivity() {
     
     private lateinit var binding: ActivityLogsBinding
     private lateinit var logAdapter: LogAdapter

@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
  * LIEN : AllowActivity.kt | NOTES : Ajoute un numéro à l'allowlist via deep link
  */
 
-class AllowActivity : AppCompatActivity() {
+class AllowActivity : BaseActivity() {
     
     private lateinit var binding: ActivityAllowBinding
     private val coroutineScope = CoroutineScope(Dispatchers.IO)

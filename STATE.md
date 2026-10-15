@@ -8,7 +8,16 @@
  * LIEN : STATE.md | NOTES : État courant après renommage en Kobayashi AntiScam
  */
 
-Dernière mise à jour : 2026-10-14 (14:30 UTC)
+Dernière mise à jour : 2026-10-15
+
+## 🎨 1.6.0 (2026-10-15) : refonte UI kobacraft.net
+- [x] Thème Kobacraft clair et sombre, polices Fredoka et Nunito, fond dégradé
+- [x] Écran Apparence (10 réglages) + BaseActivity
+- [x] Accueil refait (carte d'état, tuiles, état des services)
+- [x] `assembleDebug` OK (APK 1.6.0, versionCode 8)
+- [ ] Installation et vérification visuelle sur le Honor X7 (non branché le 15/10)
+- [ ] `RulesTest.kt` à réparer (ne compile pas, antérieur)
+
 
 ## 📊 Statut Global
 

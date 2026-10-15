@@ -20,6 +20,7 @@ class ShieldApp : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+        Apparence.appliquerModeNuit(this)
         
         // Initialiser la base de données des règles
         RuleDatabase.init(this)

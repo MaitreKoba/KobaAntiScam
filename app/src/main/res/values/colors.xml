@@ -1,12 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- FICHIER : colors.xml | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/res/values/colors.xml | LIGNES : 38
+     RÔLE : Palette claire reprise de kobacraft.net (variables CSS du site) | DATE : 2026-10-15 | VERSION : 1.6.0
+     ORIGINE : Refonte UI | AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : themes.xml
+     LIEN : values-night/colors.xml | NOTES : les anciens noms (colorPrimary...) restent pour les layouts existants -->
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#03DAC6</color>
-    <color name="colorBackground">#FFFFFF</color>
-    <color name="colorSurface">#FFFFFF</color>
-    <color name="colorError">#B00020</color>
-    <color name="colorOnPrimary">#FFFFFF</color>
-    <color name="colorOnSurface">#000000</color>
-    <color name="colorOnError">#FFFFFF</color>
+    <color name="cream">#FFF7EC</color>
+    <color name="peach">#FFE2B8</color>
+    <color name="gold">#FEF0C0</color>
+    <color name="orange">#FF7E00</color>
+    <color name="orange_soft">#FF9D3D</color>
+    <color name="amber">#F6AD37</color>
+    <color name="red">#E8433A</color>
+    <color name="ink">#4A2E0A</color>
+    <color name="ink2">#63421B</color>
+    <color name="ink3">#85633B</color>
+    <color name="glass">#94FFFFFF</color>
+    <color name="glass_strong">#CCFFFFFF</color>
+    <color name="glass_border">#B3FFFFFF</color>
+    <color name="surface_plein">#FFFDF8</color>
+    <color name="blanc">#FFFFFF</color>
+    <color name="succes">#2E9E5B</color>
+    <color name="alerte">#F08A00</color>
+    <color name="info">#2F80ED</color>
+    <color name="tag_fond">#33FF7E00</color>
+
+    <color name="colorPrimary">@color/orange</color>
+    <color name="colorPrimaryDark">@color/red</color>
+    <color name="colorAccent">@color/amber</color>
+    <color name="colorBackground">@color/cream</color>
+    <color name="colorSurface">@color/glass_strong</color>
+    <color name="colorError">@color/red</color>
+    <color name="colorOnPrimary">@color/blanc</color>
+    <color name="colorOnSurface">@color/ink</color>
+    <color name="colorOnError">@color/blanc</color>
 </resources>
