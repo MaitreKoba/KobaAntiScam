@@ -1,282 +1,91 @@
+/*
+ * FICHIER : CallFilterService.kt | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/java/fr/kobayashi/shield/service/CallFilterService.kt
+ * LIGNES : 110 | RÔLE : Filtrage des appels entrants : applique le verdict de Decision et l'inscrit au journal avec sa raison
+ * DATE : 2026-10-16 | VERSION : 1.7.0 | ORIGINE : Réécriture (le rappel sous 3 min était toujours vrai, contacts mal reconnus)
+ * AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : CallScreeningService, Decision.kt, RuleDatabase
+ * LIEN : LogsActivity.kt | NOTES : plus de lecture du MP3 au rejet : il sortait du haut-parleur du téléphone, pas dans l'appel
+ */
 package fr.kobayashi.shield.service
 
-import android.content.Context
-import android.content.Intent
 import android.net.Uri
-import android.os.Build
-import android.telecom.CallScreeningService
 import android.telecom.Call
+import android.telecom.CallScreeningService
 import android.util.Log
-import kotlinx.coroutines.delay
+import fr.kobayashi.shield.model.Decision
 import fr.kobayashi.shield.model.LogEntry
 import fr.kobayashi.shield.model.LogType
 import fr.kobayashi.shield.model.RuleAction
 import fr.kobayashi.shield.model.RuleDatabase
-import fr.kobayashi.shield.model.RuleType
 import fr.kobayashi.shield.model.Rules
-import fr.kobayashi.shield.service.ContactsHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-
-/**
- * FICHIER : CallFilterService.kt | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/java/fr/kobayashi/shield/service/CallFilterService.kt
- * LIGNES : ~140 | RÔLE : Service de filtrage d'appels entrants | DATE : 2026-10-14
- * VERSION : 1.0.0 | ORIGINE : Création selon MEGA_PROMPT | AUTEUR : Maitre Kobayashi (via agent)
- * STATUT : STABLE | DÉPENDANCES : CallScreeningService, Rules, RuleDatabase
- * LIEN : CallFilterService.kt | NOTES : Implémente l'ordre de priorité des règles
- */
 
 class CallFilterService : CallScreeningService() {
-    
+
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
-    private val tag = "CallFilterService"
-    
-    // Cache pour les timestamps des derniers appels (anti-spam)
-    private val lastCallTimestamps = mutableMapOf<String, Long>()
-    
+    private val tag = "Shield"
+
     override fun onScreenCall(details: Call.Details) {
-        val number = extractNumber(details.handle)
-        Log.d(tag, "onScreenCall: $number, direction=${details.callDirection}")
-        
-        // Stocker le timestamp
-        if (number.isNotEmpty()) {
-            lastCallTimestamps[number] = System.currentTimeMillis()
+        if (details.callDirection != Call.Details.DIRECTION_INCOMING) {
+            respondToCall(details, reponse(Decision.Action.SONNE))
+            return
         }
-        
+        val brut = extractNumber(details.handle)
+
         coroutineScope.launch {
-            val response = handleCall(details)
-            respondToCall(details, response)
-        }
-    }
-    
-    private suspend fun handleCall(details: Call.Details): CallScreeningService.CallResponse {
-        val number = extractNumber(details.handle)
-        
-        if (number.isEmpty()) {
-            Log.w(tag, "Numéro vide, autoriser par défaut")
-            return allowResponse()
-        }
-        
-        val context = applicationContext
-        val prefs = context.getSharedPreferences("shield", Context.MODE_PRIVATE)
-        val systemEnabled = prefs.getBoolean("system_enabled", true)
-        
-        // Check if voicemail mode is enabled
-        val voicemailEnabled = ContactsHelper.isVoicemailEnabled(context)
-        
-        // Check if strict mode is enabled (block all except contacts)
-        val strictMode = ContactsHelper.isStrictModeEnabled(context)
-        
-        // Check if number is in contacts
-        val isInContacts = ContactsHelper.getAllContactNumbers(context).contains(Rules.normalize(number))
-        
-        // Check if number is in neutral list (for strict mode testing)
-        val isInNeutralList = ContactsHelper.getNeutralList(context).contains(Rules.normalize(number))
-        
-        // Récupérer les règles depuis la base de données
-        val activeCallRules = withContext(Dispatchers.IO) {
-            RuleDatabase.getDatabase().ruleDao().getActiveRulesByType(RuleType.CALL)
-        }
-        
-        // ===== NOUVELLE LOGIQUE PERSONNALISÉE =====
-        // Si le système est désactivé, autoriser tout
-        if (!systemEnabled) {
-            Log.d(tag, "SYSTEM DISABLED: allowing all calls")
-            logCall(number, RuleAction.ALLOW)
-            return allowResponse()
-        }
-        
-        // Si la messagerie vocale personnalisée est activée
-        if (voicemailEnabled) {
-            // Autoriser si le numéro est dans les contacts ET n'est PAS dans la neutral list
-            if (isInContacts && !isInNeutralList) {
-                Log.d(tag, "VOICEMAIL MODE: $number is in contacts -> ALLOW")
-                logCall(number, RuleAction.ALLOW)
-                return allowResponse()
-            }
-            // Bloquer avec messagerie pour les inconnus et ceux dans la neutral list
-            Log.d(tag, "VOICEMAIL MODE: $number -> BLOCK with voicemail")
-            logCall(number, RuleAction.BLOCK)
-            return blockResponse(number)
-        }
-        
-        // ===== MODE STRICT (ancien comportement) =====
-        // In strict mode: block by default, allow only contacts (not in neutral list)
-        if (strictMode) {
-            val isContactAndNotNeutral = isInContacts && !isInNeutralList
-            if (isContactAndNotNeutral) {
-                Log.d(tag, "STRICT MODE: $number is in contacts and not neutral -> ALLOW")
-                logCall(number, RuleAction.ALLOW)
-                return allowResponse()
-            } else {
-                Log.d(tag, "STRICT MODE: $number is NOT in contacts or is neutral -> BLOCK")
-                logCall(number, RuleAction.BLOCK)
-                return blockResponse(number)
-            }
-        }
-        
-        // Récupérer l'allowlist depuis les préférences
-        val allowlistSet = prefs.getStringSet("allowlist", mutableSetOf<String>()) ?: mutableSetOf()
-        
-        // Convertir les règles en allowlist
-        val dbAllowlist = activeCallRules
-            .filter { it.action == RuleAction.ALLOW }
-            .map { it.pattern }
-            .toSet()
-        
-        // Fusionner les allowlists
-        val fullAllowlist = allowlistSet + dbAllowlist
-        
-        // Récupérer les règles de blocage
-        val blockRules = activeCallRules
-            .filter { it.action == RuleAction.BLOCK }
-            .map { it.pattern }
-        
-        val silenceRules = activeCallRules
-            .filter { it.action == RuleAction.SILENCE || it.action == RuleAction.VOICEMAIL }
-            .map { it.pattern }
-        
-        // Appliquer l'ordre de priorité des règles (MEGA_PROMPT § Ordre des règles d'appel)
-        val rulesAction = Rules.getAction(
-            context = context,
-            number = number,
-            systemEnabled = systemEnabled,
-            allowlist = fullAllowlist,
-            lastCallTimestamps = lastCallTimestamps.toMap(),
-            recentBlocked = setOf()
-        )
-        
-        // Mapper Rules.CallAction vers RuleAction
-        val action = when (rulesAction) {
-            Rules.CallAction.ALLOW -> RuleAction.ALLOW
-            Rules.CallAction.BLOCK -> RuleAction.BLOCK
-            Rules.CallAction.SILENCE -> RuleAction.SILENCE
-            Rules.CallAction.SILENCE_VOICEMAIL -> RuleAction.VOICEMAIL
-        }
-        
-        // Vérifier aussi les règles de la base de données
-        val dbRule = activeCallRules.find { it.matches(number) }
-        val finalAction = dbRule?.action ?: action
-        
-        Log.d(tag, "Decision: $number -> $finalAction (rules=$rulesAction, db=$dbRule)")
-        
-        // Log dans la base de données
-        logCall(number, finalAction)
-        
-        return when (finalAction) {
-            RuleAction.ALLOW -> allowResponse()
-            RuleAction.BLOCK -> blockResponse(number)
-            RuleAction.SILENCE -> silenceResponse()
-            RuleAction.VOICEMAIL -> voicemailResponse()
-        }
-    }
-    
-    private fun allowResponse(): CallScreeningService.CallResponse {
-        Log.d(tag, "ALLOW: autoriser l'appel")
-        return CallScreeningService.CallResponse.Builder()
-            .setDisallowCall(false)
-            .setRejectCall(false)
-            .setSilenceCall(false)
-            .setSkipCallLog(false)
-            .setSkipNotification(false)
-            .build()
-    }
-    
-    private fun blockResponse(phoneNumber: String? = null): CallScreeningService.CallResponse {
-        Log.d(tag, "BLOCK: rejeter l'appel")
-        
-        // Jouer le message vocal personnalisé pour le caller
-        if (phoneNumber != null) {
-            playVoicemailMessage(phoneNumber)
-        }
-        
-        return CallScreeningService.CallResponse.Builder()
-            .setDisallowCall(true)
-            .setRejectCall(true)
-            .setSkipCallLog(false)
-            .setSkipNotification(true)
-            .build()
-    }
-    
-    /**
-     * Play custom voicemail message for the caller
-     * This creates an outgoing call and plays the MP3 message
-     */
-    private fun playVoicemailMessage(phoneNumber: String) {
-        Log.d(tag, "Playing voicemail message for: $phoneNumber")
-        
-        coroutineScope.launch {
-            try {
-                // Small delay to ensure the original call is fully rejected
-                delay(2000)
-                
-                val intent = Intent(applicationContext, VoicemailService::class.java).apply {
-                    putExtra("PHONE_NUMBER", phoneNumber)
-                }
-                
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    applicationContext.startForegroundService(intent)
-                } else {
-                    applicationContext.startService(intent)
-                }
-                
+            val verdict = try {
+                Decision.decider(applicationContext, brut)
             } catch (e: Exception) {
-                Log.e(tag, "Error starting voicemail service", e)
+                Log.e(tag, "Erreur de décision, l'appel sonne", e)
+                Decision.Verdict(Decision.Action.SONNE, "Erreur interne, appel laissé passer")
             }
+            Log.d(tag, "Appel ${brut.ifBlank { "masqué" }} -> ${verdict.action} (${verdict.raison})")
+            respondToCall(details, reponse(verdict.action))
+            journaliser(brut, verdict)
         }
     }
-    
-    private fun silenceResponse(): CallScreeningService.CallResponse {
-        Log.d(tag, "SILENCE: mettre en silencieux")
-        return CallScreeningService.CallResponse.Builder()
-            .setDisallowCall(false)
-            .setRejectCall(false)
-            .setSilenceCall(true)
-            .setSkipNotification(true)
-            .build()
+
+    private fun reponse(action: Decision.Action): CallResponse = when (action) {
+        Decision.Action.SONNE -> CallResponse.Builder()
+            .setDisallowCall(false).setRejectCall(false).setSilenceCall(false)
+            .setSkipCallLog(false).setSkipNotification(false).build()
+        Decision.Action.REJET -> CallResponse.Builder()
+            .setDisallowCall(true).setRejectCall(true)
+            .setSkipCallLog(false).setSkipNotification(true).build()
+        Decision.Action.MESSAGERIE -> CallResponse.Builder()
+            .setDisallowCall(true).setRejectCall(false)
+            .setSkipCallLog(false).setSkipNotification(false).build()
+        Decision.Action.SILENCE -> CallResponse.Builder()
+            .setDisallowCall(false).setRejectCall(false).setSilenceCall(true)
+            .setSkipCallLog(false).setSkipNotification(false).build()
     }
-    
-    private fun voicemailResponse(): CallScreeningService.CallResponse {
-        Log.d(tag, "VOICEMAIL: silencieux + messagerie")
-        return CallScreeningService.CallResponse.Builder()
-            .setDisallowCall(true)
-            .setRejectCall(false)
-            .setSkipCallLog(false)
-            .setSkipNotification(false)
-            .build()
-    }
-    
-    private fun logCall(number: String, action: RuleAction) {
-        coroutineScope.launch {
-            try {
-                val logType = when (action) {
-                    RuleAction.ALLOW -> LogType.CALL_INCOMING
-                    RuleAction.BLOCK -> LogType.CALL_BLOCKED
-                    RuleAction.SILENCE -> LogType.CALL_SILENCED
-                    RuleAction.VOICEMAIL -> LogType.CALL_VOICEMAIL
-                }
-                
-                RuleDatabase.getDatabase().logDao().insert(
-                    LogEntry(
-                        type = logType,
-                        phoneNumber = number,
-                        action = action,
-                        message = "Appel $action"
-                    )
+
+    private suspend fun journaliser(brut: String, verdict: Decision.Verdict) {
+        val (type, action) = when (verdict.action) {
+            Decision.Action.SONNE -> LogType.CALL_INCOMING to RuleAction.ALLOW
+            Decision.Action.REJET -> LogType.CALL_BLOCKED to RuleAction.BLOCK
+            Decision.Action.MESSAGERIE -> LogType.CALL_VOICEMAIL to RuleAction.VOICEMAIL
+            Decision.Action.SILENCE -> LogType.CALL_SILENCED to RuleAction.SILENCE
+        }
+        try {
+            RuleDatabase.getDatabase().logDao().insert(
+                LogEntry(
+                    type = type,
+                    action = action,
+                    phoneNumber = brut.ifBlank { null },
+                    message = verdict.nom,
+                    details = verdict.raison
                 )
-                Log.d(tag, "Logged: $number -> $action")
-            } catch (e: Exception) {
-                Log.e(tag, "Error logging call", e)
-            }
+            )
+        } catch (e: Exception) {
+            Log.e(tag, "Journal indisponible", e)
         }
     }
-    
+
     private fun extractNumber(handle: Uri?): String {
-        if (handle == null) return ""
-        val schemeSpecificPart = handle.schemeSpecificPart
-        // Normaliser le numéro
-        return Rules.normalize(schemeSpecificPart)
+        val partie = handle?.schemeSpecificPart ?: return ""
+        if (partie.none { it.isDigit() }) return ""
+        return Rules.normalize(partie)
     }
 }

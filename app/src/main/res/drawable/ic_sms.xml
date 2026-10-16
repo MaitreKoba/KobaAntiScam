@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- FICHIER : ic_sms.xml | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/res/drawable/ic_sms.xml | LIGNES : 7
+     RÔLE : Icône Material Round « sms » | DATE : 2026-10-16 | VERSION : 1.7.0 | ORIGINE : Material Icons (Apache 2.0)
+     AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : aucune | LIEN : activity_main.xml | NOTES : teinte posée par app:tint -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+    <path android:fillColor="@android:color/white" android:pathData="M 20 2H 4c -1.1 0 -2 .9 -2 2v 18l 4 -4h 14c 1.1 0 2 -.9 2 -2V 4c 0 -1.1 -.9 -2 -2 -2zM 9 11H 7V 9h 2v 2zm 4 0h -2V 9h 2v 2zm 4 0h -2V 9h 2v 2z" />
+</vector>

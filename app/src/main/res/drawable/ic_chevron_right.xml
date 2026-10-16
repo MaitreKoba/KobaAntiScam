@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- FICHIER : ic_chevron_right.xml | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/res/drawable/ic_chevron_right.xml | LIGNES : 7
+     RÔLE : Icône Material Round « chevron_right » | DATE : 2026-10-16 | VERSION : 1.7.0 | ORIGINE : Material Icons (Apache 2.0)
+     AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : aucune | LIEN : activity_main.xml | NOTES : teinte posée par app:tint -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+    <path android:fillColor="@android:color/white" android:pathData="M 9.29 6.71a .996 .996 0 0 0 0 1.41L 13.17 12l -3.88 3.88a .996 .996 0 1 0 1.41 1.41l 4.59 -4.59a .996 .996 0 0 0 0 -1.41L 10.7 6.7c -.38 -.38 -1.02 -.38 -1.41 .01z" />
+</vector>

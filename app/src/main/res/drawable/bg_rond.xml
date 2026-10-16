@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- FICHIER : bg_rond.xml | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/res/drawable/bg_rond.xml | LIGNES : 9
+     RÔLE : Fond rond des icônes (teinté par le code) | DATE : 2026-10-16 | VERSION : 1.7.0 | ORIGINE : Refonte accueil et journal
+     AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : colors.xml | LIEN : item_log.xml | NOTES : teinte via backgroundTint -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
+    <solid android:color="#FFFFFF" />
+</shape>

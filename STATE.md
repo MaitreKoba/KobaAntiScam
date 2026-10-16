@@ -10,6 +10,12 @@
 
 Dernière mise à jour : 2026-10-16
 
+## 1.7.0 (2026-10-16) : filtrage fiable, historique avec raisons, accueil sans emojis
+- [x] Decision.kt (ordre des règles, raison par appel), CallFilterService réécrit, MP3 plus joué
+- [x] Historique et accueil refaits, icônes Material vectorielles (res/drawable/ic_*.xml)
+- [x] RulesTest.kt réparé : 9 tests OK
+- [ ] Vérification sur le Honor (mise à jour sans USB depuis l'app, puis appels de test)
+
 ## 1.6.1 (2026-10-16) : correctif de la mise à jour intégrée
 - [x] Cause : plantage `FileProvider` (racines en double dans file_paths.xml) à la fin du téléchargement. La release v1.5.0 contenait en plus un APK compilé en 1.4.3 (versionCode 6).
 - [x] UpdateActivity réécrite : dossier privé, contrôle paquet et versionCode, SemVer, RECEIVER_EXPORTED
@@ -22,7 +28,7 @@ Dernière mise à jour : 2026-10-16
 - [x] Accueil refait (carte d'état, tuiles, état des services)
 - [x] `assembleDebug` OK (APK 1.6.0, versionCode 8)
 - [ ] Installation et vérification visuelle sur le Honor X7 (non branché le 15/10)
-- [ ] `RulesTest.kt` à réparer (ne compile pas, antérieur)
+- [x] `RulesTest.kt` réparé en 1.7.0
 
 
 ## 📊 Statut Global

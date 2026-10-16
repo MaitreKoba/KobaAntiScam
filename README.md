@@ -1,235 +1,77 @@
-# Kobayashi AntiScam - Protection contre les arnaques pour Android
+<!--
+FICHIER : README.md | CHEMIN : D:/Kobayashi/Developpement/shield/README.md | LIGNES : 95
+RÔLE : Page d'accueil du dépôt GitHub | DATE : 2026-10-16 | VERSION : 1.7.0 | ORIGINE : Réécriture
+AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : docs/ | LIEN : CHANGELOG.md
+NOTES : en-tête en commentaire HTML pour rester invisible sur GitHub
+-->
 
-/**
- * FICHIER : README.md | CHEMIN : D:/Kobayashi/Developpement/shield/README.md
- * LIGNES : ~150 | RÔLE : Documentation principale | DATE : 2026-10-14
- * VERSION : 1.0.0 | ORIGINE : Création | AUTEUR : Maitre Kobayashi
- * STATUT : STABLE | DÉPENDANCES : aucun | LIEN : README.md
- * NOTES : Documentation utilisateur et technique
- */
+<p align="center">
+  <img src="docs/tohru_stare.png" width="140" alt="Tohru" />
+</p>
 
-## Description
+<h1 align="center">Kobayashi AntiScam</h1>
 
-**Kobayashi AntiScan** est une application Android de filtrage d'appels et SMS conçue pour protéger contre le démarchage téléphonique et les arnaques. Elle implémente un système de règles avancé pour bloquer, silencer ou rediriger les appels indésirables.
+<p align="center">
+  Filtre d'appels et de SMS pour Android, pensé pour Free Mobile.<br>
+  Les démarcheurs sont rejetés, les inconnus partent en messagerie, tes proches et ton travail sonnent normalement.
+</p>
 
-## Fonctionnalités
+<p align="center">
+  <img alt="Version" src="https://img.shields.io/github/v/release/MaitreKoba/KobaAntiScam?label=version&color=ff7e00">
+  <img alt="Android" src="https://img.shields.io/badge/Android-10%2B-3fae6a">
+  <img alt="Kotlin" src="https://img.shields.io/badge/Kotlin-1.9-8e5cf7">
+</p>
 
-### 📞 Filtrage d'appels
-- **Blocage des numéros ARCEP**: Rejette automatiquement les appels des préfixes de démarchage français
-- **Allowlist**: Autorise les numéros de contacts et les numéros explicitement autorisés
-- **Détection des rappels**: Autorise un numéro inconnu s'il rappelle dans les 3 minutes
-- **Compteur anti-rotation**: Bloque les tranches de 8 chiffres qui dépassent un seuil configurable
-- **Messagerie vocale**: Redirige les appels indésirables vers la messagerie
+<p align="center">
+  <img src="docs/accueil.png" width="260" alt="Accueil" />
+  &nbsp;&nbsp;
+  <img src="docs/historique.png" width="260" alt="Historique" />
+</p>
 
-### 📱 Gestion des SMS
-- **Notification Listener**: Intercepte et annule les notifications SMS des expéditeurs bloqués
-- **Détection de liens**: Identifie les SMS contenant des liens potentiellement dangereux
+## Ce que fait l'application
 
-### 📊 Statistiques et Journal
-- **Journal des événements**: Historique complet des appels et SMS traités
-- **Statistiques**: Compteurs d'appels autorisés, bloqués, silencieux, SMS filtrés
-- **Export**: Possibilité d'exporter les logs
+Chaque appel entrant passe par une suite de règles, dans cet ordre. La première qui s'applique décide, et sa raison est écrite dans l'historique.
 
-### ⚙️ Configuration
-- **Activation/désactivation du système**: Désactivez temporairement le filtrage
-- **Gestion de l'allowlist**: Ajoutez/supprimez des numéros via l'interface ou deep link
-- **Seuils configurables**: Ajustez le seuil anti-rotation
-- **Deep link**: `kobashield://allow?num=+33123456789` pour ajouter un numéro à Kobayashi AntiScan
+| Situation | Résultat |
+|---|---|
+| Protection coupée | Sonne |
+| Règle que tu as créée | Ce que dit la règle |
+| Contact du téléphone | Sonne, avec son nom dans l'historique |
+| Liste blanche | Sonne |
+| Numéro que tu as déjà appelé | Sonne (patrons, collègues, livreurs rappelés) |
+| Préfixe de démarchage ARCEP (09 48, 01 62, 03 77...) | Rejeté |
+| Même inconnu qui rappelle en moins de 3 minutes | Sonne, c'est sûrement une vraie personne |
+| Pays connus pour l'arnaque au rappel (+225, +223, +243...) | Rejeté |
+| Plus de 5 numéros différents d'une même tranche en 24 h | Rejeté (rotation de numéros) |
+| Inconnu ou numéro masqué | Messagerie, sans sonner |
 
-### 🔄 Mise à jour
-- **Vérification automatique**: Vérifie les mises à jour via GitHub Releases
-- **Installation manuelle**: Télécharge et installe les nouvelles versions
+Un inconnu n'est jamais rejeté sur un simple soupçon : il arrive sur ta messagerie Free et peut laisser un message. Depuis l'historique, un appui sur la ligne permet de l'autoriser, de le bloquer ou de le rappeler.
 
-## Prérequis
-
-- **Android 9+** (API 28+, mais recommandé API 29+ pour le filtrage d'appels)
-- **Permissions**: 
-  - `READ_PHONE_STATE`
-  - `READ_CALL_LOG`
-  - `RECEIVE_SMS`
-  - `READ_SMS`
-  - `BIND_CALL_SCREENING_SERVICE` (pour le filtrage d'appels)
-  - `BIND_NOTIFICATION_LISTENER_SERVICE` (pour l'interception SMS)
-  - `POST_NOTIFICATIONS` (Android 13+)
-  - `REQUEST_INSTALL_PACKAGES` (pour les mises à jour)
-  - `READ_CONTACTS` (pour détecter les contacts)
-
-- **Rôles système** (Android 10+):
-  - Rôle `CALL_SCREENING` pour le filtrage d'appels
-  - Accès aux notifications pour l'interception SMS
+Côté SMS, la notification des expéditeurs bloqués par une règle est masquée. Le message reste lisible dans l'application Messages, car Android réserve le blocage réel à l'application SMS par défaut. Le désarmement des liens et le signalement au 33700 sont prévus.
 
 ## Installation
 
-1. **Télécharger l'APK**: Récupérez le dernier APK depuis les releases GitHub
-2. **Installer**: Activez "Sources inconnues" et installez l'APK
-3. **Configurer**:
-   - Activez le débogage USB (pour le développement)
-   - Attribuez les permissions via `adb shell pm grant`
-   - Activez les rôles dans les paramètres du téléphone
-4. **Lancer**: Ouvrez l'application et configurez vos règles
+1. Télécharger `app-debug.apk` depuis la [dernière release](https://github.com/MaitreKoba/KobaAntiScam/releases/latest).
+2. L'installer en autorisant les sources inconnues.
+3. Dans l'application, ouvrir Réglages et accorder le rôle de filtrage d'appels, l'accès aux notifications et l'exclusion de l'optimisation batterie (indispensable sur Honor).
 
-## Configuration du téléphone (Honor MagicOS)
+Les versions suivantes s'installent depuis l'application : Accueil, puis Mise à jour.
 
-### Filtrage d'appels
-1. Allez dans **Paramètres > Apps > Accès spécial > Filtrage des appels**
-2. Sélectionnez **Kobayashi AntiScan**
-3. Activez le service
+## Annonce personnalisée
 
-### Accès aux notifications
-1. Allez dans **Paramètres > Apps > Accès spécial > Accès aux notifications**
-2. Trouvez **Kobayashi AntiScan** dans la liste
-3. Activez l'accès
+Une application Android ne peut pas diffuser de son dans un appel téléphonique. Pour que l'appelant entende ton message, il faut le mettre en annonce d'accueil de la messagerie Free : espace abonné, Messagerie vocale, envoi d'un fichier audio (45 secondes et 2 Mo au maximum). Tous les appels envoyés en messagerie par l'application l'entendront.
 
-### Optimisation de la batterie
-1. Allez dans **Paramètres > Batterie > Optimisation de la batterie**
-2. Trouvez **Kobayashi AntiScan**
-3. Désactivez l'optimisation
+## Données personnelles
 
-## Deep Link
-
-Pour ajouter un numéro à l'allowlist via un lien:
-```
-kobashield://allow?num=+33123456789
-```
-
-Cela ouvrira l'application et proposera d'ajouter le numéro à l'allowlist.
-
-## Ordre de priorité des règles d'appel
-
-Les règles sont évaluées dans cet ordre:
-
-1. **Système désactivé** → Tout sonne
-2. **Contact** → Sonne
-3. **Allowlist** (numéro ou préfixe) → Sonne
-4. **Numéro déjà appelé** par l'utilisateur → Sonne
-5. **Préfixes ARCEP** → **Rejet**
-6. **Même inconnu qui rappelle sous 3 minutes** → Sonne
-7. **Autres inconnus et numéros masqués** → Silence + messagerie
-
-## Préfixes ARCEP bloqués
-
-Les préfixes suivants sont automatiquement rejetés:
-- 162, 163 (Numéros surtaxés - services audiotex)
-- 270, 271 (Numéros surtaxés)
-- 377, 378 (Numéros surtaxés)
-- 424, 425 (Numéros surtaxés)
-- 568, 569 (Numéros surtaxés)
-- 948, 949 (Numéros surtaxés)
-
-## Compteur anti-rotation
-
-Le système détecte les numéros qui tournent leurs chiffres pour contourner le blocage:
-- Chaque tranche de **8 chiffres** est comptée
-- Si une tranche dépasse **5 appels en 24h** (configurable), elle est bloquée
-- Le compteur se réinitialise après 24h
-
-## Structure du projet
-
-```
-shield/
-├── app/
-│   ├── src/
-│   │   ├── main/
-│   │   │   ├── java/fr/kobayashi/shield/
-│   │   │   │   ├── model/          # Modèles et bases de données
-│   │   │   │   │   ├── Rule.kt       # Règles de filtrage
-│   │   │   │   │   ├── Rules.kt      # Moteur de règles
-│   │   │   │   │   ├── Slice.kt      # Anti-rotation
-│   │   │   │   │   └── ...
-│   │   │   │   ├── service/        # Services Android
-│   │   │   │   │   ├── CallFilterService.kt
-│   │   │   │   │   └── SmsNotificationListener.kt
-│   │   │   │   ├── receiver/       # Broadcast Receivers
-│   │   │   │   │   └── SmsReceiver.kt
-│   │   │   │   └── ...            # Activités
-│   │   └── test/                # Tests unitaires
-│   │       └── java/fr/kobayashi/shield/model/
-│   │           └── RulesTest.kt
-├── scripts/
-│   ├── dev.ps1              # Script PowerShell
-│   └── dev.sh               # Script Bash
-├── .claude/
-│   └── settings.json        # Configuration Claude Code
-├── CLAUDE.md
-├── MEGA_PROMPT.md
-├── STATE.md
-├── README.md
-└── CHANGELOG.md
-```
+L'historique, la liste blanche et les règles restent sur le téléphone. Aucune donnée n'est envoyée ailleurs, à part la vérification des mises à jour auprès de GitHub.
 
 ## Développement
 
-### Prérequis
-- JDK 17
-- Android SDK (API 35)
-- Gradle 8.9
-- adb (Android Debug Bridge)
-
-### Build
 ```bash
-# Windows
-cd D:/Kobayashi/Developpement/shield
-set JAVA_HOME=D:/Kobayashi/Developpement/Android/jdk17/jdk-17.0.20+8
-./gradlew.bat assembleDebug
-
-# Linux/Mac
-./gradlew assembleDebug
-```
-
-### Installation
-```bash
+./gradlew assembleDebug          # compiler
+./gradlew testDebugUnitTest      # tests unitaires
 adb install -r app/build/outputs/apk/debug/app-debug.apk
+adb logcat -s Shield             # verdict de chaque appel
 ```
 
-### Script de développement
-```bash
-# PowerShell
-./scripts/dev.ps1
-
-# Bash
-./scripts/dev.sh
-```
-
-Le script:
-- Compile l'application
-- Installe l'APK
-- Attribue les permissions
-- Tente d'attribuer les rôles système
-- Lance l'application
-- Affiche les logs
-
-### Tests
-```bash
-./gradlew testDebugUnitTest
-```
-
-## Contribution
-
-1. Fork le dépôt
-2. Crée une branche (`git checkout -b feature/nouvelle-fonctionnalité`)
-3. Commit tes changements (`git commit -m 'Ajout: nouvelle fonctionnalité'`)
-4. Push vers la branche (`git push origin feature/nouvelle-fonctionnalité`)
-5. Ouvre une Pull Request
-
-## Licence
-
-Ce projet est sous licence propriétaire - Maitre Kobayashi. Toute utilisation commerciale nécessite une autorisation explicite.
-
-## Confidentialité
-
-- **Aucune télémétrie**: Aucune donnée n'est envoyée à des serveurs externes
-- **Données locales**: Les règles, logs et configurations restent sur l'appareil
-- **Pas de collection de données**: Aucune information personnelle n'est collectée
-
-## Remerciements
-
-- Android et le SDK Android
-- Room pour la persistance
-- Retrofit pour les appels API
-- Kotlin pour le développement moderne
-
----
-
-**Auteur**: Maitre Kobayashi  
-**Version**: 1.0.0  
-**Date**: 2026-10-14
+Le moteur de décision est dans `app/src/main/java/fr/kobayashi/shield/model/Decision.kt`. L'historique des versions est dans [CHANGELOG.md](CHANGELOG.md).

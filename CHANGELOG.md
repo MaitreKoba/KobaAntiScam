@@ -10,6 +10,21 @@
 
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr-FR/1.0.0/).
 
+## [1.7.0] - 2026-10-16
+### Ajouté
+- Moteur de décision `Decision.kt` : chaque appel reçoit une action et une raison lisible, enregistrées dans l'historique. Ordre : protection coupée, règle perso, contact (avec son nom), liste blanche, numéro déjà appelé, démarchage ARCEP (rejet), rappel en moins de 3 min (sonne), pays connus pour l'arnaque au rappel (rejet), rotation de numéros (plus de 5 numéros différents d'une même tranche en 24 h, rejet), inconnu ou masqué (messagerie).
+- Historique refait : icône et couleur par verdict, nom du contact ou numéro au format 06 95 12 34 56, raison de la décision, heure relative, filtres (Rejetés, Messagerie, Ont sonné, SMS). Touche un appel pour l'autoriser, le bloquer, le rappeler ou copier le numéro.
+- Accueil refait : icônes vectorielles Material au lieu des emojis, compteurs du jour dans la carte d'état, bloc « Dernière activité » avec les raisons, tuiles colorées avec chevron, état des services avec icônes.
+
+### Corrigé
+- La règle « rappel sous 3 min » était toujours vraie (l'heure était enregistrée avant la décision) : tous les inconnus sonnaient.
+- Contacts mal reconnus (recherche sur `3695...` alors que le contact est enregistré en `06 95...`) : recherche par `PhoneLookup`.
+- Numéro masqué : était autorisé par défaut, part maintenant en messagerie.
+- Mode messagerie (activé par défaut) : rejetait tous les non-contacts et jouait le MP3 sur le haut-parleur du téléphone. Les inconnus partent maintenant en messagerie Free sans rejet, et le MP3 n'est plus joué.
+- `normalize` : indicatif `00` (00225... devient +225...), chaîne sans chiffre vide. `normalizePrefix("162")` donne `+33162`.
+- Tranche anti-rotation : prenait les 8 derniers chiffres (le numéro lui-même) au lieu des 8 premiers ; compteurs persistants.
+- `RulesTest.kt` compile et passe (9 tests).
+
 ## [1.6.1] - 2026-10-16
 ### Corrigé
 - Mise à jour intégrée : l'app plantait à la fin du téléchargement (`FileProvider` : « Failed to find configured root »), car deux racines de `file_paths.xml` portaient le même nom `external_files`. Résultat : rien ne s'installait et l'app restait sur l'ancienne version.

@@ -104,7 +104,7 @@ class AllowActivity : BaseActivity() {
                     )
                     
                     runOnUiThread {
-                        binding.statusText.text = "✓ Numéro ajouté à l'allowlist"
+                        binding.statusText.text = "Numéro ajouté à la liste blanche"
                         binding.statusText.setTextColor(
                             android.graphics.Color.parseColor("#4CAF50")
                         )

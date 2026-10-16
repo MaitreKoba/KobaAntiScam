@@ -182,18 +182,18 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Message Vocal Personnalisé"
+            android:text="Inconnus et numéros masqués"
             android:textStyle="bold" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Jouer un message personnalisé quand un appel est bloqué"
+            android:text="Activé : ils partent en messagerie Free sans sonner. Désactivé : ça ne sonne pas mais l'appel reste affiché."
             android:layout_marginTop="4dp" />
         <Button
             android:id="@+id/btnToggleCallback"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Activer le message vocal"
+            android:text="Messagerie directe ou sonnerie coupée"
             android:textAllCaps="false"
             android:layout_marginTop="8dp" />
     </LinearLayout>
@@ -211,7 +211,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Contacts qui n'auront PAS le message vocal (appels normaux)"
+            android:text="Numéros qui sonnent toujours, même inconnus"
             android:layout_marginTop="4dp" />
         <Button
             android:id="@+id/btnManageAllowlist"

@@ -8,7 +8,7 @@ import java.util.regex.Pattern
 /**
  * FICHIER : Rules.kt | CHEMIN : /D:/Kobayashi/Developpement/shield/app/src/main/java/fr/kobayashi/shield/model/Rules.kt
  * LIGNES : ~200 | RÔLE : Moteur de règles de filtrage d'appels et SMS | DATE : 2026-10-14
- * VERSION : 1.0.0 | ORIGINE : Création | AUTEUR : Maitre Kobayashi (via agent)
+ * VERSION : 1.7.0 | ORIGINE : Création, affichage() et indicatif 00 en 1.7.0 | AUTEUR : Maitre Kobayashi (via agent)
  * STATUT : STABLE | DÉPENDANCES : android.content.Context | LIEN : Rules.kt
  * NOTES : Implémente l'ordre de priorité des règles selon MEGA_PROMPT.md
  */
@@ -42,7 +42,12 @@ object Rules {
         
         // Supprimer tous les caractères non-chiffres
         val digitsOnly = number.replace("[^\\d]".toRegex(), "")
-        
+        if (digitsOnly.isEmpty()) return ""
+
+        if (digitsOnly.startsWith("00") && digitsOnly.length > 4) {
+            return "+${digitsOnly.substring(2)}"
+        }
+
         // Si commence par 0 (France), ajouter +33
         if (digitsOnly.startsWith("0") && digitsOnly.length > 1) {
             return "+33${digitsOnly.substring(1)}"
@@ -61,21 +66,27 @@ object Rules {
         return if (digitsOnly.startsWith("+")) digitsOnly else "+$digitsOnly"
     }
     
+    /** Format lisible : +33695123456 devient 06 95 12 34 56, les autres numéros restent en international */
+    fun affichage(number: String): String {
+        val n = normalize(number)
+        if (n.startsWith("+33") && n.length == 12) {
+            return ("0" + n.substring(3)).chunked(2).joinToString(" ")
+        }
+        return n
+    }
+
     /**
      * Normalise un préfixe pour comparaison avec les numéros
      * Ajoute +33 si nécessaire pour correspondre au format normalisé
      */
     fun normalizePrefix(prefix: String): String {
-        val normalized = normalize(prefix)
-        // Pour les préfixes ARCEP (sans le +33), on les formate correctement
-        if (normalized.startsWith("+") && normalized.length > 3) {
-            return normalized
+        val brut = prefix.trim()
+        val chiffres = brut.filter { it.isDigit() }
+        if (chiffres.isEmpty()) return ""
+        if (!brut.startsWith("+") && !chiffres.startsWith("0") && !chiffres.startsWith("33")) {
+            return "+33$chiffres"
         }
-        // Si c'est un préfixe sans indicatif
-        if (!normalized.startsWith("+") && normalized.length >= 3) {
-            return "+33$normalized"
-        }
-        return normalized
+        return normalize(brut)
     }
     
     /**

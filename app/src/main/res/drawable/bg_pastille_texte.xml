@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- FICHIER : bg_pastille_texte.xml | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/res/drawable/bg_pastille_texte.xml | LIGNES : 10
+     RÔLE : Fond des étiquettes de verdict (Rejeté, Messagerie...) | DATE : 2026-10-16 | VERSION : 1.7.0 | ORIGINE : Refonte accueil et journal
+     AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : colors.xml | LIEN : item_log.xml | NOTES : teinte via backgroundTint -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#FFFFFF" />
+    <corners android:radius="999dp" />
+    <padding android:left="9dp" android:top="2dp" android:right="9dp" android:bottom="3dp" />
+</shape>

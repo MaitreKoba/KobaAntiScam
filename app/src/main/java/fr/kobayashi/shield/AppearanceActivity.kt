@@ -36,16 +36,16 @@ class AppearanceActivity : BaseActivity() {
                 .show()
         }
 
-        section("🌗 Mode", "Clair, sombre ou comme le téléphone", "mode", Apparence.MODES)
-        section("🎨 Couleur principale", "Boutons, carte d'état, interrupteurs", "accent", Apparence.ACCENTS)
-        section("🔠 Taille du texte", "S'ajoute au réglage du téléphone", "taille", Apparence.TAILLES)
-        section("⬛ Coins", "Arrondi des cartes et des boutons", "coins", Apparence.COINS)
-        section("🪟 Cartes", "Verre dépoli comme sur kobacraft.net, pleines ou teintées", "cartes", Apparence.CARTES)
-        section("🌅 Fond", "Dégradé crème et pêche, ou couleur unie", "fond", Apparence.FONDS)
-        section("✒️ Police", "Fredoka et Nunito (kobacraft.net) ou police du téléphone", "police", Apparence.POLICES)
-        section("✨ Animations", "Transitions entre les écrans", "animations", Apparence.ANIMATIONS)
-        section("🏠 Accueil", "Raccourcis en grille ou en liste", "accueil", Apparence.ACCUEIL)
-        section("🩺 État des services", "Afficher la carte sur l'accueil", "services",
+        section("Mode", "Clair, sombre ou comme le téléphone", "mode", Apparence.MODES)
+        section("Couleur principale", "Boutons, carte d'état, interrupteurs", "accent", Apparence.ACCENTS)
+        section("Taille du texte", "S'ajoute au réglage du téléphone", "taille", Apparence.TAILLES)
+        section("Coins", "Arrondi des cartes et des boutons", "coins", Apparence.COINS)
+        section("Cartes", "Verre dépoli comme sur kobacraft.net, pleines ou teintées", "cartes", Apparence.CARTES)
+        section("Fond", "Dégradé crème et pêche, ou couleur unie", "fond", Apparence.FONDS)
+        section("Police", "Fredoka et Nunito (kobacraft.net) ou police du téléphone", "police", Apparence.POLICES)
+        section("Animations", "Transitions entre les écrans", "animations", Apparence.ANIMATIONS)
+        section("Accueil", "Raccourcis en grille ou en liste", "accueil", Apparence.ACCUEIL)
+        section("État des services", "Afficher la carte sur l'accueil", "services",
             listOf(Apparence.Option("oui", "Afficher"), Apparence.Option("non", "Masquer")))
     }
 

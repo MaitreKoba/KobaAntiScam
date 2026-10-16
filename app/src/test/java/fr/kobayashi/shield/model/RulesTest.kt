@@ -1,15 +1,14 @@
+/*
+ * FICHIER : RulesTest.kt | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/test/java/fr/kobayashi/shield/model/RulesTest.kt
+ * LIGNES : 140 | RÔLE : Tests unitaires de Rules et Decision | DATE : 2026-10-16
+ * VERSION : 1.7.0 | ORIGINE : Création 1.0.0, réparé en 1.7.0 (ne compilait plus) | AUTEUR : Maitre Kobayashi
+ * STATUT : STABLE | DÉPENDANCES : org.junit, Rules, Decision | LIEN : Rules.kt
+ * NOTES : normalize, normalizePrefix, affichage, ARCEP, fenêtre de rappel, tranche anti-rotation
+ */
 package fr.kobayashi.shield.model
 
 import org.junit.Test
 import org.junit.Assert.*
-
-/**
- * FICHIER : RulesTest.kt | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/test/java/fr/kobayashi/shield/model/RulesTest.kt
- * LIGNES : ~100 | RÔLE : Tests unitaires pour Rules | DATE : 2026-10-14
- * VERSION : 1.0.0 | ORIGINE : Création | AUTEUR : Maitre Kobayashi (via agent)
- * STATUT : STABLE | DÉPENDANCES : org.junit, Rules | LIEN : RulesTest.kt
- * NOTES : Tests de normalize, normalizePrefix, ARCEP, fenêtre de rappel
- */
 
 class RulesTest {
     
@@ -69,8 +68,8 @@ class RulesTest {
         val arcpPrefixes = listOf("162", "163", "270", "271", "377", "378", "424", "425", "568", "569", "948", "949")
         
         for (prefix in arcpPrefixes) {
-            assertTrue("Préfixe $prefix devrait être ARCEP", Rules.isArcpPrefix("+33$prefix123456"))
-            assertTrue("Préfixe $prefix devrait être ARCEP", Rules.isArcpPrefix("0$prefix123456"))
+            assertTrue("Préfixe $prefix devrait être ARCEP", Rules.isArcpPrefix("+33${prefix}123456"))
+            assertTrue("Préfixe $prefix devrait être ARCEP", Rules.isArcpPrefix("0${prefix}123456"))
         }
         
         // Numéros non ARCEP
@@ -100,29 +99,22 @@ class RulesTest {
     }
     
     @Test
-    fun testSlice() {
-        // Test extraction de tranche de 8 chiffres
-        assertEquals("12345678", Rules.getSlice("+33123456789"))
-        assertEquals("12345678", Rules.getSlice("0123456789"))
-        
-        // Numéro avec moins de 8 chiffres
-        assertEquals("12345", Rules.getSlice("012345"))
+    fun testNormalizeIndicatif00() {
+        assertEquals("+22507123456", Rules.normalize("00225 07 12 34 56"))
+        assertEquals("+33695123456", Rules.normalize("0033 6 95 12 34 56"))
     }
-    
+
     @Test
-    fun testSliceCounter() {
-        // Réinitialiser les compteurs pour le test
-        // Note: En réalité, on ne peut pas accéder aux membres privés
-        // mais on peut tester la logique via les méthodes publiques
-        
-        // Ce test vérifie que la logique de tranche fonctionne
-        val slice1 = Rules.getSlice("+33123456789")
-        val slice2 = Rules.getSlice("+33234567891")
-        
-        assertNotEquals("Les tranches devraient être différentes", slice1, slice2)
-        
-        // Même tranche pour des numéros qui partagent les 8 derniers chiffres
-        val slice3 = Rules.getSlice("+33112345678")
-        assertEquals("Les tranches devraient être les mêmes", slice1, slice3)
+    fun testAffichage() {
+        assertEquals("06 95 12 34 56", Rules.affichage("+33695123456"))
+        assertEquals("09 48 12 34 56", Rules.affichage("0948123456"))
+        assertEquals("+22507123456", Rules.affichage("+22507123456"))
+    }
+
+    @Test
+    fun testTranche() {
+        assertEquals("06951234", Decision.tranche("+33695123456"))
+        assertEquals(Decision.tranche("+33695123456"), Decision.tranche("0695123499"))
+        assertNotEquals(Decision.tranche("+33695123456"), Decision.tranche("+33695124456"))
     }
 }

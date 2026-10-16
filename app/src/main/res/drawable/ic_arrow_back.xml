@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- FICHIER : ic_arrow_back.xml | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/res/drawable/ic_arrow_back.xml | LIGNES : 7
+     RÔLE : Icône Material Round « arrow_back » | DATE : 2026-10-16 | VERSION : 1.7.0 | ORIGINE : Material Icons (Apache 2.0)
+     AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : aucune | LIEN : activity_main.xml | NOTES : teinte posée par app:tint -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+    <path android:fillColor="@android:color/white" android:pathData="M 19 11H 7.83l 4.88 -4.88c .39 -.39 .39 -1.03 0 -1.42a .996 .996 0 0 0 -1.41 0l -6.59 6.59a .996 .996 0 0 0 0 1.41l 6.59 6.59a .996 .996 0 1 0 1.41 -1.41L 7.83 13H 19c .55 0 1 -.45 1 -1s -.45 -1 -1 -1z" />
+</vector>

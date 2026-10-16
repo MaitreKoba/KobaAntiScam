@@ -24,8 +24,8 @@ data class Rule(
             } else if (pattern.startsWith("prefix:")) {
                 Pattern.compile("^${Pattern.quote(pattern.substring(7))}.*")
             } else {
-                // Exact match or ends with
-                Pattern.compile(".*${Pattern.quote(pattern)}.*")
+                val cible = if (pattern.any { it.isLetter() }) pattern else Rules.normalize(pattern)
+                Pattern.compile(".*${Pattern.quote(cible)}.*")
             }
             regex.matcher(number).matches()
         } catch (e: Exception) {

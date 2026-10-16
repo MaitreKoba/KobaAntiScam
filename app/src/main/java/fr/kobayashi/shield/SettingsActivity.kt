@@ -270,7 +270,7 @@ class SettingsActivity : BaseActivity() {
         updateStatus()
         Toast.makeText(
             this,
-            if (!isEnabled) "Message vocal personnalisé ACTIVÉ" else "Message vocal personnalisé désactivé",
+            if (!isEnabled) "Inconnus envoyés directement en messagerie" else "Inconnus : sonnerie coupée, l'appel reste affiché",
             Toast.LENGTH_SHORT
         ).show()
     }
@@ -285,11 +285,11 @@ class SettingsActivity : BaseActivity() {
         
         // Notification Access
         val hasNotificationAccess = isNotificationServiceEnabled()
-        binding.btnRequestNotificationAccess.text = if (hasNotificationAccess) "Accès activé ✓" else "Activer l'accès"
+        binding.btnRequestNotificationAccess.text = if (hasNotificationAccess) "Accès activé" else "Activer l'accès"
         
         // Battery Optimization
         val isBatteryOptimized = isBatteryOptimized()
-        binding.btnDisableBatteryOptimization.text = if (!isBatteryOptimized) "Optimisation désactivée ✓" else "Désactiver"
+        binding.btnDisableBatteryOptimization.text = if (!isBatteryOptimized) "Optimisation désactivée" else "Désactiver"
     }
     
     private fun exportData() {

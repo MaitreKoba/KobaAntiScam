@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- FICHIER : ic_check_circle.xml | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/res/drawable/ic_check_circle.xml | LIGNES : 7
+     RÔLE : Icône Material Round « check_circle » | DATE : 2026-10-16 | VERSION : 1.7.0 | ORIGINE : Material Icons (Apache 2.0)
+     AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : aucune | LIEN : activity_main.xml | NOTES : teinte posée par app:tint -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+    <path android:fillColor="@android:color/white" android:pathData="M 12 2C 6.48 2 2 6.48 2 12s 4.48 10 10 10 10 -4.48 10 -10S 17.52 2 12 2zM 9.29 16.29 5.7 12.7a .996 .996 0 1 1 1.41 -1.41L 10 14.17l 6.88 -6.88a .996 .996 0 1 1 1.41 1.41l -7.59 7.59a .996 .996 0 0 1 -1.41 0z" />
+</vector>

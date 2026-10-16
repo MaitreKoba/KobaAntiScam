@@ -1,48 +1,154 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- FICHIER : activity_logs.xml | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/res/layout/activity_logs.xml | LIGNES : 140
+     RÔLE : Historique : en-tête, filtres, liste des appels et SMS avec la raison de chaque décision
+     DATE : 2026-10-16 | VERSION : 1.7.0 | ORIGINE : Refonte journal | AUTEUR : Maitre Kobayashi | STATUT : STABLE
+     DÉPENDANCES : item_log.xml, themes.xml | LIEN : LogsActivity.kt | NOTES : appui sur une ligne d'appel = actions -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/racine"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
+    android:orientation="vertical"
+    android:paddingHorizontal="18dp"
+    android:paddingTop="12dp"
     tools:context=".LogsActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btnRetour"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Retour"
+            android:src="@drawable/ic_arrow_back"
+            app:tint="?android:attr/textColorPrimary" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/logsTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Historique"
+                android:textAppearance="?attr/textAppearanceHeadlineMedium"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/tvResume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btnClearLogs"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Effacer l'historique"
+            android:src="@drawable/ic_delete_sweep"
+            app:tint="?android:attr/textColorSecondary" />
+    </LinearLayout>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:scrollbars="none">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/filtres"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:checkedChip="@id/fTous"
+            app:selectionRequired="true"
+            app:singleLine="true"
+            app:singleSelection="true">
+
+            <com.google.android.material.chip.Chip android:id="@+id/fTous" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tout" />
+            <com.google.android.material.chip.Chip android:id="@+id/fRejets" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Rejetés" />
+            <com.google.android.material.chip.Chip android:id="@+id/fMessagerie" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Messagerie" />
+            <com.google.android.material.chip.Chip android:id="@+id/fSonne" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Ont sonné" />
+            <com.google.android.material.chip.Chip android:id="@+id/fSms" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="SMS" />
+        </com.google.android.material.chip.ChipGroup>
+    </HorizontalScrollView>
+
     <TextView
-        android:id="@+id/logsTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/logs_title"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="8dp"
+        android:text="Touche un appel pour l'autoriser, le bloquer ou rappeler."
+        android:textColor="?android:attr/textColorSecondary"
+        android:textSize="12sp" />
 
-    <Button
-        android:id="@+id/btnClearLogs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Effacer"
-        android:textAllCaps="false"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/logsRecyclerView"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/logsTitle" />
+        android:layout_weight="1">
 
-    <TextView
-        android:id="@+id/emptyLogsText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/logs_empty"
-        android:textAlignment="center"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/logsRecyclerView"
-        app:layout_constraintTop_toTopOf="@id/logsRecyclerView" />
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/carteListe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/logsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:paddingVertical="4dp" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout
+            android:id="@+id/emptyLogsText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:background="@drawable/bg_rond"
+                android:backgroundTint="@color/tag_fond"
+                android:contentDescription="@null"
+                android:padding="18dp"
+                android:src="@drawable/ic_history"
+                app:tint="?attr/colorPrimary" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:fontFamily="?attr/policeTitre"
+                android:text="Rien pour l'instant"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:text="Chaque appel filtré apparaîtra ici avec la raison de la décision."
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="13sp" />
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- FICHIER : activity_main.xml | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/res/layout/activity_main.xml
-     LIGNES : 200 | RÔLE : Accueil façon kobacraft.net : en-tête, carte d'état (interrupteur du système), tuiles, état des services
-     DATE : 2026-10-15 | VERSION : 1.6.0 | ORIGINE : Refonte UI | AUTEUR : Maitre Kobayashi | STATUT : STABLE
-     DÉPENDANCES : themes.xml, bg_hero.xml, MainActivity.kt | LIEN : MainActivity.kt | NOTES : la grille passe en liste selon Apparence -->
+     LIGNES : 300 | RÔLE : Accueil : en-tête, carte d'état (interrupteur, compteurs du jour), dernière activité avec raisons,
+     raccourcis à icônes, état des services | DATE : 2026-10-16 | VERSION : 1.7.0 | ORIGINE : Refonte accueil sans emojis
+     AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : themes.xml, bg_hero.xml, item_tuile.xml, item_log.xml
+     LIEN : MainActivity.kt | NOTES : la grille passe en liste selon Apparence -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -28,8 +29,8 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="52dp"
-                android:layout_height="52dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:contentDescription="@null"
                 android:src="@mipmap/ic_launcher_round" />
 
@@ -46,31 +47,35 @@
                     android:layout_height="wrap_content"
                     android:text="@string/app_name"
                     android:textAppearance="?attr/textAppearanceHeadlineMedium"
-                    android:textSize="24sp" />
+                    android:textSize="22sp" />
 
                 <TextView
+                    android:id="@+id/tvSalut"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/accueil_sous_titre"
                     android:textColor="?android:attr/textColorSecondary"
-                    android:textSize="14sp" />
+                    android:textSize="13sp" />
             </LinearLayout>
 
-            <Button
+            <ImageButton
                 android:id="@+id/btnApparenceRapide"
-                style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/bg_rond"
+                android:backgroundTint="?attr/colorPrimaryContainer"
                 android:contentDescription="@string/nav_apparence"
-                android:text="🎨"
-                android:textSize="18sp" />
+                android:padding="11dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_palette"
+                app:tint="?attr/colorPrimary" />
         </LinearLayout>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/carteEtat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="18dp"
             app:strokeWidth="0dp">
 
             <LinearLayout
@@ -78,50 +83,221 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_hero"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="20dp">
-
-                <TextView
-                    android:id="@+id/iconeEtat"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="🛡️"
-                    android:textSize="40sp" />
+                android:orientation="vertical"
+                android:padding="18dp">
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="14dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/titreEtat"
+                    <ImageView
+                        android:id="@+id/iconeEtat"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:background="@drawable/bg_verre_blanc"
+                        android:contentDescription="@null"
+                        android:padding="13dp"
+                        android:src="@drawable/ic_verified_user"
+                        app:tint="@color/blanc" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="14dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/titreEtat"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="?attr/policeTitre"
+                            android:text="@string/system_active"
+                            android:textColor="@color/blanc"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/statusText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:alpha="0.9"
+                            android:text="@string/system_ready"
+                            android:textColor="@color/blanc"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        android:id="@+id/switchSystem"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="?attr/policeTitre"
-                        android:text="@string/system_active"
-                        android:textColor="@color/blanc"
-                        android:textSize="21sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/statusText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:alpha="0.92"
-                        android:text="@string/system_ready"
-                        android:textColor="@color/blanc"
-                        android:textSize="13sp" />
+                        android:contentDescription="@string/toggle_system_off" />
                 </LinearLayout>
 
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    android:id="@+id/switchSystem"
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="@string/toggle_system_off" />
+                    android:layout_marginTop="16dp"
+                    android:alpha="0.8"
+                    android:letterSpacing="0.08"
+                    android:text="AUJOURD'HUI"
+                    android:textColor="@color/blanc"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_verre_blanc"
+                        android:orientation="vertical"
+                        android:paddingHorizontal="12dp"
+                        android:paddingVertical="10dp">
+
+                        <TextView
+                            android:id="@+id/nbRejets"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="?attr/policeTitre"
+                            android:text="0"
+                            android:textColor="@color/blanc"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:alpha="0.9"
+                            android:text="Rejetés"
+                            android:textColor="@color/blanc"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_verre_blanc"
+                        android:orientation="vertical"
+                        android:paddingHorizontal="12dp"
+                        android:paddingVertical="10dp">
+
+                        <TextView
+                            android:id="@+id/nbMessagerie"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="?attr/policeTitre"
+                            android:text="0"
+                            android:textColor="@color/blanc"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:alpha="0.9"
+                            android:text="Messagerie"
+                            android:textColor="@color/blanc"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_verre_blanc"
+                        android:orientation="vertical"
+                        android:paddingHorizontal="12dp"
+                        android:paddingVertical="10dp">
+
+                        <TextView
+                            android:id="@+id/nbSonne"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="?attr/policeTitre"
+                            android:text="0"
+                            android:textColor="@color/blanc"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:alpha="0.9"
+                            android:text="Ont sonné"
+                            android:textColor="@color/blanc"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="6dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_weight="1"
+                android:text="Dernière activité"
+                android:textAppearance="?attr/textAppearanceTitleMedium" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnToutVoir"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="36dp"
+                android:text="Tout voir"
+                android:textAllCaps="false"
+                app:icon="@drawable/ic_chevron_right"
+                app:iconGravity="end"
+                app:iconPadding="2dp" />
+        </LinearLayout>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingVertical="4dp">
+
+                <LinearLayout
+                    android:id="@+id/listeRecente"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <TextView
+                    android:id="@+id/tvAucuneActivite"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="18dp"
+                    android:text="Aucun appel filtré pour l'instant. Chaque décision s'affichera ici avec sa raison."
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -141,8 +317,8 @@
             android:columnCount="2"
             android:useDefaultMargins="false">
 
-            <include android:id="@+id/btnRules" layout="@layout/item_tuile" />
             <include android:id="@+id/btnLogs" layout="@layout/item_tuile" />
+            <include android:id="@+id/btnRules" layout="@layout/item_tuile" />
             <include android:id="@+id/btnStats" layout="@layout/item_tuile" />
             <include android:id="@+id/btnSettings" layout="@layout/item_tuile" />
             <include android:id="@+id/btnApparence" layout="@layout/item_tuile" />
@@ -171,7 +347,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp" />
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="8dp" />
         </com.google.android.material.card.MaterialCardView>
 
         <TextView
