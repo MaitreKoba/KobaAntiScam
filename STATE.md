@@ -14,7 +14,9 @@ Dernière mise à jour : 2026-10-16
 - [x] Decision.kt (ordre des règles, raison par appel), CallFilterService réécrit, MP3 plus joué
 - [x] Historique et accueil refaits, icônes Material vectorielles (res/drawable/ic_*.xml)
 - [x] RulesTest.kt réparé : 9 tests OK
-- [ ] Vérification sur le Honor (mise à jour sans USB depuis l'app, puis appels de test)
+- [x] 7 scénarios validés sur émulateur Android 13 (AVD shieldtest, `adb emu gsm call`) : contact, contact au format +33, déjà appelé, ARCEP, inconnu, rappel sous 3 min, +225
+- [x] Release v1.7.0 publiée
+- [ ] Sur le Honor : mise à jour depuis l'app sans USB, vrai appel d'un inconnu, annonce MP3 envoyée dans l'espace abonné Free
 
 ## 1.6.1 (2026-10-16) : correctif de la mise à jour intégrée
 - [x] Cause : plantage `FileProvider` (racines en double dans file_paths.xml) à la fin du téléchargement. La release v1.5.0 contenait en plus un APK compilé en 1.4.3 (versionCode 6).
