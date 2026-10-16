@@ -64,14 +64,14 @@ en demandant à l'humain d'appeler depuis un autre téléphone.
 
 | Rôle | Chemin |
 |------|--------|
-| Projet | `D:\Kobayashi\Developpement\shield` |
+| Projet | `D:\Kobayashi\Developpement\KobayashiAntiScam` |
 | ANDROID_HOME (SDK) | `D:\Kobayashi\Developpement\Android\sdk` |
 | Gradle | `D:\Kobayashi\Developpement\Android\gradle-8.9` |
 | JDK 17 | `C:\Program Files\Eclipse Adoptium\jdk-17.x` (ou Temurin user-scope) |
 | Package Android | `fr.kobayashi.shield` |
 
 Chemins déjà créés :
-`D:\Kobayashi\Developpement\shield`, `...\shield\scripts`, `...\shield\.claude`.
+`D:\Kobayashi\Developpement\KobayashiAntiScam`, `...\KobayashiAntiScam\scripts`, `...\KobayashiAntiScam\.claude`.
 
 ---
 
@@ -176,7 +176,7 @@ App Android **Kotlin**, Gradle, package `fr.kobayashi.shield`.
 
 ## 5. BUILD + INSTALLATION (boucle adb)
 
-Depuis `D:\Kobayashi\Developpement\shield` :
+Depuis `D:\Kobayashi\Developpement\KobayashiAntiScam` :
 
 ```powershell
 .\gradlew.bat assembleDebug
