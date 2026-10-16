@@ -1,5 +1,5 @@
 /*
- * FICHIER : BaseActivity.kt | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/java/fr/kobayashi/shield/BaseActivity.kt
+ * FICHIER : BaseActivity.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/BaseActivity.kt
  * LIGNES : 45 | RÔLE : Activité de base : applique l'apparence choisie (surcouches, taille du texte, barres système)
  *          et se recrée quand elle change | DATE : 2026-10-15 | VERSION : 1.6.0 | ORIGINE : Refonte UI
  * AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : Apparence.kt | LIEN : themes.xml | NOTES : toutes les activités en héritent

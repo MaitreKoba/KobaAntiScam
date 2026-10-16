@@ -1,5 +1,5 @@
 /*
- * FICHIER : Classement.kt | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/java/fr/kobayashi/shield/repondeur/Classement.kt
+ * FICHIER : Classement.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/repondeur/Classement.kt
  * LIGNES : 110 | RÔLE : Fonctions pures du répondeur : catégorie d'un message d'après les mots prononcés,
  *          extraction du numéro de l'appelant dans l'e-mail d'OVH | DATE : 2026-10-16 | VERSION : 1.9.0
  * ORIGINE : Création | AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : Rules.kt

@@ -1,5 +1,5 @@
 /*
- * FICHIER : MessagesVocaux.kt | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/java/fr/kobayashi/shield/repondeur/MessagesVocaux.kt
+ * FICHIER : MessagesVocaux.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/repondeur/MessagesVocaux.kt
  * LIGNES : 115 | RÔLE : Modèle d'un message vocal reçu par e-mail et stockage local (messages_vocaux.json + fichiers audio)
  * DATE : 2026-10-16 | VERSION : 1.9.0 | ORIGINE : Création | AUTEUR : Maitre Kobayashi | STATUT : STABLE
  * DÉPENDANCES : org.json (Android) | LIEN : Synchro.kt, MessagesActivity.kt

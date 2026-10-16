@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- FICHIER : colors.xml | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/res/values/colors.xml | LIGNES : 38
+<!-- FICHIER : colors.xml | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/res/values/colors.xml | LIGNES : 38
      RÔLE : Palette claire reprise de kobacraft.net (variables CSS du site) | DATE : 2026-10-15 | VERSION : 1.6.0
      ORIGINE : Refonte UI | AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : themes.xml
      LIEN : values-night/colors.xml | NOTES : les anciens noms (colorPrimary...) restent pour les layouts existants -->

@@ -1,5 +1,5 @@
 <!--
-FICHIER : REPONDEUR_OVH.md | CHEMIN : D:/Kobayashi/Developpement/shield/docs/REPONDEUR_OVH.md | LIGNES : 75
+FICHIER : REPONDEUR_OVH.md | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/docs/REPONDEUR_OVH.md | LIGNES : 75
 RÔLE : Guide de mise en place du répondeur OVH (ligne Découverte, renvois Free, écran Répondeur de l'app)
 DATE : 2026-10-16 | VERSION : 1.9.0 | ORIGINE : Création | AUTEUR : Maitre Kobayashi | STATUT : STABLE
 DÉPENDANCES : aucune | LIEN : README.md | NOTES : aucune donnée personnelle ni mot de passe dans ce fichier

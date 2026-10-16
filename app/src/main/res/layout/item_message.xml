@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- FICHIER : item_message.xml | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/res/layout/item_message.xml | LIGNES : 120
+<!-- FICHIER : item_message.xml | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/res/layout/item_message.xml | LIGNES : 120
      RÔLE : Ligne d'un message vocal : icône de catégorie, appelant, heure, pastilles catégorie et confiance,
      transcription, boutons Écouter, Rappeler et menu | DATE : 2026-10-16 | VERSION : 1.9.0 | ORIGINE : Création
      AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : bg_rond.xml, bg_pastille_texte.xml | LIEN : MessagesActivity.kt

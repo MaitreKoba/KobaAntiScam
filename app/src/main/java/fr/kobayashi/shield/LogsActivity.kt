@@ -1,5 +1,5 @@
 /*
- * FICHIER : LogsActivity.kt | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/java/fr/kobayashi/shield/LogsActivity.kt
+ * FICHIER : LogsActivity.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/LogsActivity.kt
  * LIGNES : 95 | RÔLE : Historique des appels et SMS filtrés, avec filtres et raison de chaque décision
  * DATE : 2026-10-16 | VERSION : 1.7.0 | ORIGINE : Refonte journal | AUTEUR : Maitre Kobayashi | STATUT : STABLE
  * DÉPENDANCES : activity_logs.xml, LogAdapter.kt, LogDao | LIEN : JournalVue.kt | NOTES : effacement confirmé par dialogue

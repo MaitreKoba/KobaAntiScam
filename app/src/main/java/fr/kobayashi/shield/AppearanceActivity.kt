@@ -1,5 +1,5 @@
 /*
- * FICHIER : AppearanceActivity.kt | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/java/fr/kobayashi/shield/AppearanceActivity.kt
+ * FICHIER : AppearanceActivity.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/AppearanceActivity.kt
  * LIGNES : 110 | RÔLE : Personnalisation de l'interface : mode, couleur, coins, cartes, fond, police, taille du texte,
  *          animations, disposition de l'accueil, état des services | DATE : 2026-10-15 | VERSION : 1.6.0 | ORIGINE : Création
  * AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : Apparence.kt, activity_appearance.xml | LIEN : themes.xml

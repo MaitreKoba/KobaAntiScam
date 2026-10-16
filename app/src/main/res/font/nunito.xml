@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- FICHIER : nunito.xml | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/res/font/nunito.xml | LIGNES : 9
+<!-- FICHIER : nunito.xml | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/res/font/nunito.xml | LIGNES : 9
      RÔLE : Famille Nunito (texte, charte kobacraft.net) | DATE : 2026-10-15 | VERSION : 1.6.0 | ORIGINE : Création
      AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : nunito_semibold.ttf, nunito_extrabold.ttf | LIEN : themes.xml | NOTES : licence OFL -->
 <font-family xmlns:android="http://schemas.android.com/apk/res/android">

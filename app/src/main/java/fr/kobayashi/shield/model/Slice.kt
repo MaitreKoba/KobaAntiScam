@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import java.util.concurrent.ConcurrentHashMap
 
 /**
- * FICHIER : Slice.kt | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/java/fr/kobayashi/shield/model/Slice.kt
+ * FICHIER : Slice.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/model/Slice.kt
  * LIGNES : ~100 | RÔLE : Module anti-rotation (tranche de 8 chiffres) | DATE : 2026-10-14
  * VERSION : 1.0.0 | ORIGINE : Création | AUTEUR : Maitre Kobayashi (via agent)
  * STATUT : STABLE | DÉPENDANCES : android.content.Context

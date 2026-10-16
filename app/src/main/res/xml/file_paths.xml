@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  FICHIER : file_paths.xml | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/res/xml/file_paths.xml
+  FICHIER : file_paths.xml | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/res/xml/file_paths.xml
   LIGNES : 14 | RÔLE : Racines exposées par le FileProvider | DATE : 2026-10-16 | VERSION : 1.6.1
   ORIGINE : Correctif mise à jour | AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : AndroidManifest.xml
   LIEN : UpdateActivity.kt | NOTES : un nom unique par racine, sinon la dernière écrase les précédentes

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- FICHIER : bg_kobacraft.xml | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/res/drawable/bg_kobacraft.xml | LIGNES : 23
+<!-- FICHIER : bg_kobacraft.xml | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/res/drawable/bg_kobacraft.xml | LIGNES : 23
      RÔLE : Fond dégradé de kobacraft.net (crème, halos pêche et or) | DATE : 2026-10-15 | VERSION : 1.6.0 | ORIGINE : Création
      AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : colors.xml | LIEN : themes.xml | NOTES : suit le mode sombre -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">

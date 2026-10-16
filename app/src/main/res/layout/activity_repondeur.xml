@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- FICHIER : activity_repondeur.xml | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/res/layout/activity_repondeur.xml | LIGNES : 260
+<!-- FICHIER : activity_repondeur.xml | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/res/layout/activity_repondeur.xml | LIGNES : 260
      RÔLE : Réglages du répondeur OVH : boîte mail, numéro OVH, transcription, renvois Free, mise en place chez OVH
      DATE : 2026-10-16 | VERSION : 1.9.0 | ORIGINE : Création | AUTEUR : Maitre Kobayashi | STATUT : STABLE
      DÉPENDANCES : themes.xml | LIEN : RepondeurActivity.kt | NOTES : les lignes de renvoi sont ajoutées par le code -->

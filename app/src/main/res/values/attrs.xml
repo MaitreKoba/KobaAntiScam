@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- FICHIER : attrs.xml | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/res/values/attrs.xml | LIGNES : 13
+<!-- FICHIER : attrs.xml | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/res/values/attrs.xml | LIGNES : 13
      RÔLE : Attributs de thème réglables depuis l'écran Apparence | DATE : 2026-10-15 | VERSION : 1.6.0 | ORIGINE : Création
      AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : themes.xml, Apparence.kt | LIEN : themes.xml | NOTES : -->
 <resources>

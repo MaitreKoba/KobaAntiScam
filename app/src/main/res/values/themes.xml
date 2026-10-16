@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- FICHIER : themes.xml | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/res/values/themes.xml | LIGNES : 190
+<!-- FICHIER : themes.xml | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/res/values/themes.xml | LIGNES : 190
      RÔLE : Thème Kobacraft (charte de kobacraft.net) et surcouches réglables dans l'écran Apparence : accent, coins, cartes,
             fond, police, animations | DATE : 2026-10-15 | VERSION : 1.6.0 | ORIGINE : Refonte UI | AUTEUR : Maitre Kobayashi
      STATUT : STABLE | DÉPENDANCES : colors.xml, attrs.xml, font/, Apparence.kt | LIEN : AppearanceActivity.kt

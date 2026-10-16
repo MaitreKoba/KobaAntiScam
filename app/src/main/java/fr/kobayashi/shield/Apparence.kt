@@ -1,5 +1,5 @@
 /*
- * FICHIER : Apparence.kt | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/java/fr/kobayashi/shield/Apparence.kt
+ * FICHIER : Apparence.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/Apparence.kt
  * LIGNES : 110 | RÔLE : Réglages d'apparence (mode, accent, coins, cartes, fond, police, taille du texte, animations,
  *          disposition de l'accueil) et application des surcouches de thème | DATE : 2026-10-15 | VERSION : 1.6.0
  * ORIGINE : Refonte UI | AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : themes.xml, BaseActivity.kt

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- FICHIER : activity_logs.xml | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/res/layout/activity_logs.xml | LIGNES : 140
+<!-- FICHIER : activity_logs.xml | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/res/layout/activity_logs.xml | LIGNES : 140
      RÔLE : Historique : en-tête, filtres, liste des appels et SMS avec la raison de chaque décision
      DATE : 2026-10-16 | VERSION : 1.7.0 | ORIGINE : Refonte journal | AUTEUR : Maitre Kobayashi | STATUT : STABLE
      DÉPENDANCES : item_log.xml, themes.xml | LIEN : LogsActivity.kt | NOTES : appui sur une ligne d'appel = actions -->

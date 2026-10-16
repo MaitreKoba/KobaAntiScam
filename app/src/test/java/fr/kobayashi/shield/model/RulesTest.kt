@@ -1,5 +1,5 @@
 /*
- * FICHIER : RulesTest.kt | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/test/java/fr/kobayashi/shield/model/RulesTest.kt
+ * FICHIER : RulesTest.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/test/java/fr/kobayashi/shield/model/RulesTest.kt
  * LIGNES : 140 | RÔLE : Tests unitaires de Rules et Decision | DATE : 2026-10-16
  * VERSION : 1.7.0 | ORIGINE : Création 1.0.0, réparé en 1.7.0 (ne compilait plus) | AUTEUR : Maitre Kobayashi
  * STATUT : STABLE | DÉPENDANCES : org.junit, Rules, Decision | LIEN : Rules.kt

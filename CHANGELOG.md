@@ -1,7 +1,7 @@
 # CHANGELOG - Kobayashi AntiScan
 
 /**
- * FICHIER : CHANGELOG.md | CHEMIN : D:/Kobayashi/Developpement/shield/CHANGELOG.md
+ * FICHIER : CHANGELOG.md | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/CHANGELOG.md
  * LIGNES : ~100 | RÔLE : Historique des versions | DATE : 2026-10-14
  * VERSION : 1.0.0 | ORIGINE : Création | AUTEUR : Maitre Kobayashi
  * STATUT : STABLE | DÉPENDANCES : aucun | LIEN : CHANGELOG.md

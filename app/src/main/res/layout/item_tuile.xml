@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- FICHIER : item_tuile.xml | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/res/layout/item_tuile.xml | LIGNES : 60
+<!-- FICHIER : item_tuile.xml | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/res/layout/item_tuile.xml | LIGNES : 60
      RÔLE : Tuile de navigation de l'accueil (icône vectorielle teintée, titre, sous-titre, chevron) | DATE : 2026-10-16
      VERSION : 1.7.0 | ORIGINE : Refonte sans emojis | AUTEUR : Maitre Kobayashi | STATUT : STABLE
      DÉPENDANCES : themes.xml, bg_carre_icone.xml | LIEN : activity_main.xml | NOTES : contenu posé par MainActivity -->

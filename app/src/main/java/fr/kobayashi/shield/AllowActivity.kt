@@ -17,7 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 /**
- * FICHIER : AllowActivity.kt | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/java/fr/kobayashi/shield/AllowActivity.kt
+ * FICHIER : AllowActivity.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/AllowActivity.kt
  * LIGNES : ~80 | RÔLE : Gestion du deep link kobashield://allow?num=... | DATE : 2026-10-14
  * VERSION : 1.0.0 | ORIGINE : Création | AUTEUR : Maitre Kobayashi (via agent)
  * STATUT : STABLE | DÉPENDANCES : ActivityAllowBinding, Rules, RuleDatabase

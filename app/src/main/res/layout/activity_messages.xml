@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- FICHIER : activity_messages.xml | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/res/layout/activity_messages.xml | LIGNES : 175
+<!-- FICHIER : activity_messages.xml | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/res/layout/activity_messages.xml | LIGNES : 175
      RÔLE : Écran Répondeur : en-tête, actualisation, réglages, filtres par catégorie, liste des messages vocaux
      DATE : 2026-10-16 | VERSION : 1.9.0 | ORIGINE : Création | AUTEUR : Maitre Kobayashi | STATUT : STABLE
      DÉPENDANCES : item_message.xml, themes.xml | LIEN : MessagesActivity.kt | NOTES : carte de configuration tant que la boîte n'est pas réglée -->

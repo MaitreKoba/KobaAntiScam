@@ -1,7 +1,7 @@
 # Guide pour personnaliser l'icône de l'application
 
 /**
- * FICHIER : ICON_GUIDE.md | CHEMIN : D:/Kobayashi/Developpement/shield/ICON_GUIDE.md
+ * FICHIER : ICON_GUIDE.md | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/ICON_GUIDE.md
  * LIGNES : ~100 | RÔLE : Guide de personnalisation d'icône | DATE : 2026-10-14
  * VERSION : 1.0.0 | ORIGINE : Création | AUTEUR : Maitre Kobayashi
  * STATUT : STABLE | DÉPENDANCES : Aucun | LIEN : ICON_GUIDE.md

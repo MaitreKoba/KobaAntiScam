@@ -6,7 +6,7 @@ import android.util.Log
 import java.util.regex.Pattern
 
 /**
- * FICHIER : Rules.kt | CHEMIN : /D:/Kobayashi/Developpement/shield/app/src/main/java/fr/kobayashi/shield/model/Rules.kt
+ * FICHIER : Rules.kt | CHEMIN : /D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/model/Rules.kt
  * LIGNES : ~200 | RÔLE : Moteur de règles de filtrage d'appels et SMS | DATE : 2026-10-14
  * VERSION : 1.7.0 | ORIGINE : Création, affichage() et indicatif 00 en 1.7.0 | AUTEUR : Maitre Kobayashi (via agent)
  * STATUT : STABLE | DÉPENDANCES : android.content.Context | LIEN : Rules.kt

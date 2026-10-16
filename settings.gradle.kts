@@ -22,5 +22,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "shield"
+rootProject.name = "KobayashiAntiScam"
 include(":app")

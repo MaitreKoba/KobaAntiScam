@@ -1,5 +1,5 @@
 /*
- * FICHIER : JournalVue.kt | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/java/fr/kobayashi/shield/JournalVue.kt
+ * FICHIER : JournalVue.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/JournalVue.kt
  * LIGNES : 150 | RÔLE : Présentation d'une entrée du journal (icône, couleur, verdict, étiquette Spam / Sûr / Inconnu,
  *          titre, numéro, raison, heure) et menu
  *          d'actions (autoriser, bloquer, appeler, copier) partagés par l'accueil et l'historique

@@ -1,5 +1,5 @@
 /*
- * FICHIER : MessagesActivity.kt | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/java/fr/kobayashi/shield/MessagesActivity.kt
+ * FICHIER : MessagesActivity.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/MessagesActivity.kt
  * LIGNES : 250 | RÔLE : Écran Répondeur : messages vocaux reçus par e-mail (ligne OVH), filtrés par catégorie,
  *          écoute, transcription, rappel, liste blanche, spam | DATE : 2026-10-16 | VERSION : 1.9.0 | ORIGINE : Création
  * AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : activity_messages.xml, item_message.xml, paquet repondeur

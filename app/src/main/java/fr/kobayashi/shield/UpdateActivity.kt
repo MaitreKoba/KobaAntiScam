@@ -1,5 +1,5 @@
 /*
- * FICHIER : UpdateActivity.kt | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/java/fr/kobayashi/shield/UpdateActivity.kt
+ * FICHIER : UpdateActivity.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/UpdateActivity.kt
  * LIGNES : 260 | RÔLE : Mise à jour depuis la dernière release GitHub (vérification, téléchargement, contrôle de l'APK, installation)
  *          | DATE : 2026-10-16 | VERSION : 1.6.1 | ORIGINE : Correctif mise à jour
  * AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : GitHubService.kt, file_paths.xml, REQUEST_INSTALL_PACKAGES

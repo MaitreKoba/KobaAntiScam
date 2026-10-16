@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- FICHIER : item_log.xml | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/res/layout/item_log.xml | LIGNES : 89
+<!-- FICHIER : item_log.xml | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/res/layout/item_log.xml | LIGNES : 89
      RÔLE : Ligne du journal : icône dans un rond teinté, numéro ou nom, étiquette de verdict, étiquette Spam / Sûr / Inconnu, raison, heure
      DATE : 2026-10-16 | VERSION : 1.8.0 | ORIGINE : Refonte journal, étiquette de confiance en 1.8.0 | AUTEUR : Maitre Kobayashi | STATUT : STABLE
      DÉPENDANCES : bg_rond.xml, bg_pastille_texte.xml | LIEN : JournalVue.kt | NOTES : utilisée par l'historique et l'accueil -->

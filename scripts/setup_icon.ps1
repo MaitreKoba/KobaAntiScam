@@ -16,7 +16,7 @@
 
 <#
 .FICHIER : setup_icon.ps1
-.CHEMIN : D:/Kobayashi/Developpement/shield/scripts/setup_icon.ps1
+.CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/scripts/setup_icon.ps1
 .LIGNES : ~200
 .RÔLE : Script de configuration d'icône personnalisée
 .DATE : 2026-10-14

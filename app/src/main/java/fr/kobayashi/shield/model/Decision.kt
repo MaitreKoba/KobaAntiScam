@@ -1,5 +1,5 @@
 /*
- * FICHIER : Decision.kt | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/java/fr/kobayashi/shield/model/Decision.kt
+ * FICHIER : Decision.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/model/Decision.kt
  * LIGNES : 250 | RÔLE : Décision pour un appel entrant (action + raison lisible pour le journal), dans l'ordre :
  *          système coupé, règle perso, contact, liste blanche, déjà appelé, démarchage ARCEP, rappel sous 3 min,
  *          pays d'arnaque au rappel, rotation de numéros, inconnu ou masqué | DATE : 2026-10-16 | VERSION : 1.9.0

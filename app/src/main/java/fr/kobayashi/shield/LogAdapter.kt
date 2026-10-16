@@ -1,5 +1,5 @@
 /*
- * FICHIER : LogAdapter.kt | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/java/fr/kobayashi/shield/LogAdapter.kt
+ * FICHIER : LogAdapter.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/LogAdapter.kt
  * LIGNES : 38 | RÔLE : Adaptateur de la liste de l'historique | DATE : 2026-10-16 | VERSION : 1.7.0
  * ORIGINE : Refonte journal | AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : item_log.xml, JournalVue.kt
  * LIEN : LogsActivity.kt | NOTES : le rendu d'une ligne est dans JournalVue.lier

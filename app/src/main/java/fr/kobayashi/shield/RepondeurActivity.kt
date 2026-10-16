@@ -1,5 +1,5 @@
 /*
- * FICHIER : RepondeurActivity.kt | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/java/fr/kobayashi/shield/RepondeurActivity.kt
+ * FICHIER : RepondeurActivity.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/RepondeurActivity.kt
  * LIGNES : 170 | RÔLE : Réglages du répondeur OVH : boîte mail (test de connexion), numéro OVH (liste blanche),
  *          transcription Groq, codes de renvoi conditionnel Free prêts à composer | DATE : 2026-10-16 | VERSION : 1.9.0
  * ORIGINE : Création | AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : activity_repondeur.xml, paquet repondeur

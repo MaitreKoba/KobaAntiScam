@@ -1,5 +1,5 @@
 /*
- * FICHIER : RepondeurConfig.kt | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/java/fr/kobayashi/shield/repondeur/RepondeurConfig.kt
+ * FICHIER : RepondeurConfig.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/repondeur/RepondeurConfig.kt
  * LIGNES : 75 | RÔLE : Réglages du répondeur OVH : boîte mail IMAP, numéro de la ligne OVH, clé Groq facultative
  * DATE : 2026-10-16 | VERSION : 1.9.0 | ORIGINE : Création | AUTEUR : Maitre Kobayashi | STATUT : STABLE
  * DÉPENDANCES : androidx.security:security-crypto | LIEN : RepondeurActivity.kt, Synchro.kt

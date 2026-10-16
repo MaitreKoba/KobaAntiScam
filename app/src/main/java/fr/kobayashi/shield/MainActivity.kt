@@ -1,5 +1,5 @@
 /*
- * FICHIER : MainActivity.kt | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/java/fr/kobayashi/shield/MainActivity.kt
+ * FICHIER : MainActivity.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/MainActivity.kt
  * LIGNES : 175 | RÔLE : Accueil : interrupteur du système, compteurs du jour, dernière activité avec raisons, tuiles,
  *          état des services (rôle de filtrage, accès aux notifications, batterie) | DATE : 2026-10-16 | VERSION : 1.9.0
  * ORIGINE : Refonte accueil sans emojis, tuile Répondeur en 1.9.0 | AUTEUR : Maitre Kobayashi | STATUT : STABLE

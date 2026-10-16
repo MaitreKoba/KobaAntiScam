@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-FICHIER : activity_allow.xml | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/res/layout/activity_allow.xml
+FICHIER : activity_allow.xml | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/res/layout/activity_allow.xml
 LIGNES : ~50 | RÔLE : Layout pour AllowActivity (deep link) | DATE : 2026-10-14
 VERSION : 1.0.0 | ORIGINE : Création | AUTEUR : Maitre Kobayashi (via agent)
 STATUT : STABLE | DÉPENDANCES : aucun | LIEN : activity_allow.xml

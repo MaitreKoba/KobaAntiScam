@@ -1,5 +1,5 @@
 /*
- * FICHIER : CallFilterService.kt | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/java/fr/kobayashi/shield/service/CallFilterService.kt
+ * FICHIER : CallFilterService.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/service/CallFilterService.kt
  * LIGNES : 110 | RÔLE : Filtrage des appels entrants : applique le verdict de Decision et l'inscrit au journal avec sa raison
  * DATE : 2026-10-16 | VERSION : 1.7.0 | ORIGINE : Réécriture (le rappel sous 3 min était toujours vrai, contacts mal reconnus)
  * AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : CallScreeningService, Decision.kt, RuleDatabase

@@ -1,5 +1,5 @@
 /*
- * FICHIER : Transcription.kt | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/java/fr/kobayashi/shield/repondeur/Transcription.kt
+ * FICHIER : Transcription.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/repondeur/Transcription.kt
  * LIGNES : 50 | RÔLE : Transcription en texte d'un message vocal par l'API Whisper de Groq (offre gratuite)
  * DATE : 2026-10-16 | VERSION : 1.9.0 | ORIGINE : Création | AUTEUR : Maitre Kobayashi | STATUT : STABLE
  * DÉPENDANCES : okhttp | LIEN : Synchro.kt | NOTES : facultatif. Sans clé Groq, le message reste écoutable mais

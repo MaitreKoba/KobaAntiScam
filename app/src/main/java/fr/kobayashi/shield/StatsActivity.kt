@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
- * FICHIER : StatsActivity.kt | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/java/fr/kobayashi/shield/StatsActivity.kt
+ * FICHIER : StatsActivity.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/StatsActivity.kt
  * LIGNES : ~100 | RÔLE : Écran de statistiques | DATE : 2026-10-14
  * VERSION : 1.0.0 | ORIGINE : Création | AUTEUR : Maitre Kobayashi (via agent)
  * STATUT : STABLE | DÉPENDANCES : ActivityStatsBinding, RuleDatabase

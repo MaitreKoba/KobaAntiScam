@@ -1,5 +1,5 @@
 <!--
-FICHIER : README.md | CHEMIN : D:/Kobayashi/Developpement/shield/README.md | LIGNES : 105
+FICHIER : README.md | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/README.md | LIGNES : 105
 RÔLE : Page d'accueil du dépôt GitHub | DATE : 2026-10-16 | VERSION : 1.9.0 | ORIGINE : Réécriture
 AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : docs/ | LIEN : CHANGELOG.md
 NOTES : en-tête en commentaire HTML pour rester invisible sur GitHub

@@ -1,7 +1,7 @@
 # STATE — Kobayashi AntiScam
 
 /**
- * FICHIER : STATE.md | CHEMIN : D:/Kobayashi/Developpement/shield/STATE.md
+ * FICHIER : STATE.md | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/STATE.md
  * LIGNES : ~250 | RÔLE : État du développement | DATE : 2026-10-14
  * VERSION : 1.0.0 | ORIGINE : Mise à jour | AUTEUR : Maitre Kobayashi (via agent)
  * STATUT : EN COURS | DÉPENDANCES : MEGA_PROMPT.md, AndroidManifest.xml, build.gradle.kts
@@ -299,7 +299,7 @@ adb shell cmd notification post -t "36105" shield_test "Code 1234"
 - **CHANGELOG.md**: Historique des versions (SemVer)
 
 ## 📦 APK généré
-- **Chemin**: `D:/Kobayashi/Developpement/shield/app/build/outputs/apk/debug/app-debug.apk`
+- **Chemin**: `D:/Kobayashi/Developpement/KobayashiAntiScam/app/build/outputs/apk/debug/app-debug.apk`
 - **Taille**: ~19,76 Mo
 - **Package**: fr.kobayashi.shield.debug
 - **Version**: 1.0.0
@@ -396,7 +396,7 @@ adb shell cmd notification post -t "36105" shield_test "Code 1234"
 
 ```bash
 # Build
-cd D:/Kobayashi/Developpement/shield
+cd D:/Kobayashi/Developpement/KobayashiAntiScam
 set JAVA_HOME=D:/Kobayashi/Developpement/Android/jdk17/jdk-17.0.20+8
 ./gradlew.bat assembleDebug
 

@@ -1,5 +1,5 @@
 /*
- * FICHIER : BoiteMail.kt | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/java/fr/kobayashi/shield/repondeur/BoiteMail.kt
+ * FICHIER : BoiteMail.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/repondeur/BoiteMail.kt
  * LIGNES : 120 | RÔLE : Lecture IMAP (SSL) de la boîte qui reçoit les messages vocaux OVH : sujet, texte, date,
  *          pièce jointe audio enregistrée dans le dossier privé de l'app | DATE : 2026-10-16 | VERSION : 1.9.0
  * ORIGINE : Création | AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : com.sun.mail:android-mail

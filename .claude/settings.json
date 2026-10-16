@@ -42,7 +42,7 @@
   "maxIterationsPerError": 5,
   "autoAcceptDebugPrompt": false,
   "allowedDirectories": [
-    "D:/Kobayashi/Developpement/shield",
+    "D:/Kobayashi/Developpement/KobayashiAntiScam",
     "D:/Kobayashi/Developpement/Android/sdk",
     "D:/Kobayashi/Developpement/Android/jdk17"
   ],
