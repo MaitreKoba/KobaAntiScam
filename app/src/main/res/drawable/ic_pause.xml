@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- FICHIER : ic_pause.xml | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/res/drawable/ic_pause.xml | LIGNES : 7
+     RÔLE : Icône Material Round « pause » | DATE : 2026-10-16 | VERSION : 1.9.0 | ORIGINE : Material Icons (Apache 2.0)
+     AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : aucune | LIEN : activity_messages.xml | NOTES : teinte posée par app:tint -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+    <path android:fillColor="@android:color/white" android:pathData="M8 19c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2s-2 .9-2 2v10c0 1.1.9 2 2 2zm6-12v10c0 1.1.9 2 2 2s2-.9 2-2V7c0-1.1-.9-2-2-2s-2 .9-2 2z" />
+</vector>

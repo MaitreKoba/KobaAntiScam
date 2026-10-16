@@ -10,6 +10,15 @@
 
 Dernière mise à jour : 2026-10-16
 
+## 1.9.0 (2026-10-16) : répondeur OVH dans l'app
+- [x] Paquet `repondeur` : RepondeurConfig (chiffré), BoiteMail (IMAP), Transcription (Groq), Classement, MessagesVocaux (JSON local), Synchro (WorkManager 15 min, notifications)
+- [x] MessagesActivity, RepondeurActivity (codes de renvoi Free), tuile d'accueil
+- [x] 18 tests unitaires OK (RulesTest 9, ClassementTest 9)
+- [x] Émulateur : connexion à repondeur@kobacraft.net, e-mail de test avec MP3 lu, numéro extrait (ligne OVH ignorée), notification, lecture audio, menu. E-mail de test supprimé ensuite.
+- [ ] Ligne OVH Découverte : numéro 09 à recevoir, annonce MP3, envoi des messages par e-mail, renvoi immédiat vers la messagerie
+- [ ] Honor : codes **67/**61/**62 vers le 09, réglages du répondeur dans l'app, premier vrai message (vérifier le format de l'e-mail OVH et le numéro transmis)
+- [ ] Clé Groq (facultative) saisie dans l'app
+
 ## 1.8.0 (2026-10-16) : étiquette Spam / Sûr / Inconnu et numéro toujours visible
 - [x] JournalVue.etiquette (déduite du type d'entrée, pas de migration Room), item_log.xml (tvTag)
 - [x] Émulateur : contact (Sûr + numéro), ARCEP (Spam), inconnu (Inconnu, « Pas dans tes contacts »)

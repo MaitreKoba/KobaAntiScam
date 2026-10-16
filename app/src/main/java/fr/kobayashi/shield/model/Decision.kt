@@ -2,7 +2,7 @@
  * FICHIER : Decision.kt | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/java/fr/kobayashi/shield/model/Decision.kt
  * LIGNES : 250 | RÔLE : Décision pour un appel entrant (action + raison lisible pour le journal), dans l'ordre :
  *          système coupé, règle perso, contact, liste blanche, déjà appelé, démarchage ARCEP, rappel sous 3 min,
- *          pays d'arnaque au rappel, rotation de numéros, inconnu ou masqué | DATE : 2026-10-16 | VERSION : 1.7.0
+ *          pays d'arnaque au rappel, rotation de numéros, inconnu ou masqué | DATE : 2026-10-16 | VERSION : 1.9.0
  * ORIGINE : Refonte du filtrage | AUTEUR : Maitre Kobayashi | STATUT : STABLE
  * DÉPENDANCES : Rules.kt, ContactsHelper.kt, RuleDatabase | LIEN : CallFilterService.kt
  * NOTES : un inconnu n'est jamais rejeté sur simple soupçon : il part en messagerie pour qu'un vrai correspondant
@@ -107,7 +107,7 @@ object Decision {
     private fun neufDerniers(numero: String) = numero.filter { it.isDigit() }.takeLast(9)
 
     /** PhoneLookup dépend du pays du téléphone : on essaie les formats +33 et 06, puis une comparaison sur les 9 derniers chiffres */
-    private fun nomContact(context: Context, numero: String): String? = try {
+    fun nomContact(context: Context, numero: String): String? = try {
         val formats = listOfNotNull(numero, Rules.affichage(numero).replace(" ", "").takeIf { it != numero })
         formats.firstNotNullOfOrNull { f ->
             val uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(f))

@@ -1,6 +1,6 @@
 <!--
-FICHIER : README.md | CHEMIN : D:/Kobayashi/Developpement/shield/README.md | LIGNES : 95
-RÔLE : Page d'accueil du dépôt GitHub | DATE : 2026-10-16 | VERSION : 1.7.0 | ORIGINE : Réécriture
+FICHIER : README.md | CHEMIN : D:/Kobayashi/Developpement/shield/README.md | LIGNES : 105
+RÔLE : Page d'accueil du dépôt GitHub | DATE : 2026-10-16 | VERSION : 1.9.0 | ORIGINE : Réécriture
 AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : docs/ | LIEN : CHANGELOG.md
 NOTES : en-tête en commentaire HTML pour rester invisible sur GitHub
 -->
@@ -57,13 +57,16 @@ Côté SMS, la notification des expéditeurs bloqués par une règle est masqué
 
 Les versions suivantes s'installent depuis l'application : Accueil, puis Mise à jour.
 
-## Annonce personnalisée
+## Répondeur et annonce personnalisée
 
-Une application Android ne peut pas diffuser de son dans un appel téléphonique. Pour que l'appelant entende ton message, il faut le mettre en annonce d'accueil de la messagerie Free : espace abonné, Messagerie vocale, envoi d'un fichier audio (45 secondes et 2 Mo au maximum). Tous les appels envoyés en messagerie par l'application l'entendront.
+Une application Android ne peut pas diffuser de son dans un appel téléphonique. L'annonce passe donc par un répondeur :
+
+- **Gratuit :** l'annonce d'accueil de la messagerie Free (espace abonné, fichier de 45 secondes et 2 Mo au maximum).
+- **Répondeur OVH (1,19 € par mois) :** les inconnus sont renvoyés vers une ligne OVH qui joue ton MP3 et envoie les messages par e-mail. L'écran Répondeur de l'application lit ces e-mails, joue l'audio, transcrit le message en texte et le range par catégorie (Livraison, Travail, Démarches, Démarchage). Mise en place pas à pas : [docs/REPONDEUR_OVH.md](docs/REPONDEUR_OVH.md).
 
 ## Données personnelles
 
-L'historique, la liste blanche et les règles restent sur le téléphone. Aucune donnée n'est envoyée ailleurs, à part la vérification des mises à jour auprès de GitHub.
+L'historique, la liste blanche, les règles et les messages vocaux restent sur le téléphone. Seules sorties : la vérification des mises à jour auprès de GitHub, la lecture de ta boîte mail par le répondeur, et l'envoi de l'audio à Groq si tu actives la transcription.
 
 ## Développement
 

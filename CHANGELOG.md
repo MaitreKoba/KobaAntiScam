@@ -10,6 +10,15 @@
 
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr-FR/1.0.0/).
 
+## [1.9.0] - 2026-10-16
+### Ajouté
+- Écran Répondeur : messages vocaux de la ligne OVH lus dans une boîte mail (IMAP SSL, lecture seule), numéro de l'appelant extrait de l'e-mail, écoute de l'audio, transcription facultative par Groq Whisper, classement automatique (Livraison, Travail, Rendez-vous et démarches, Démarchage, Autre), étiquette Sûr, Inconnu ou Spam, actions rappeler, autoriser, marquer comme spam, voir l'e-mail.
+- Synchronisation toutes les 15 minutes (WorkManager) et notification des nouveaux messages, sauf le démarchage.
+- Réglages du répondeur : boîte mail avec test de connexion, numéro OVH ajouté à la liste blanche, clé Groq, codes de renvoi Free conditionnels prêts à composer (`**67`, `**61`, `**62`, vérification, annulation).
+- Mot de passe et clé stockés chiffrés (EncryptedSharedPreferences).
+- Tuile Répondeur sur l'accueil avec le nombre de messages non lus.
+- Guide `docs/REPONDEUR_OVH.md`. Tests `ClassementTest` (9 tests).
+
 ## [1.8.0] - 2026-10-16
 ### Ajouté
 - Historique et Dernière activité : étiquette de confiance à côté du verdict. Spam (appel rejeté : démarchage ARCEP, arnaque au rappel, rotation, numéro bloqué), Sûr (contact, liste blanche, numéro déjà appelé, rappel), Inconnu (messagerie ou silencieux), Non vérifié (protection coupée).

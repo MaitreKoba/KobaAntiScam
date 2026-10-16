@@ -3,7 +3,7 @@
  * LIGNES : 150 | RÔLE : Présentation d'une entrée du journal (icône, couleur, verdict, étiquette Spam / Sûr / Inconnu,
  *          titre, numéro, raison, heure) et menu
  *          d'actions (autoriser, bloquer, appeler, copier) partagés par l'accueil et l'historique
- * DATE : 2026-10-16 | VERSION : 1.8.0 | ORIGINE : Refonte accueil et journal, étiquette et numéro toujours visible en 1.8.0 | AUTEUR : Maitre Kobayashi | STATUT : STABLE
+ * DATE : 2026-10-16 | VERSION : 1.9.0 | ORIGINE : Refonte accueil et journal, étiquette et numéro toujours visible en 1.8.0, heure(ts) en 1.9.0 | AUTEUR : Maitre Kobayashi | STATUT : STABLE
  * DÉPENDANCES : item_log.xml, LogEntry.kt, ContactsHelper.kt | LIEN : LogAdapter.kt, MainActivity.kt
  * NOTES : les anciennes entrées sans raison affichent un texte générique. L'étiquette est déduite du type d'entrée,
  *         sans colonne en base : rejeté = Spam, a sonné = Sûr, messagerie ou silencieux = Inconnu
@@ -94,12 +94,14 @@ object JournalVue {
         else -> ""
     }
 
-    fun heure(log: LogEntry): String {
-        val d = Date(log.timestamp)
+    fun heure(log: LogEntry): String = heure(log.timestamp)
+
+    fun heure(ts: Long): String {
+        val d = Date(ts)
         val h = SimpleDateFormat("HH:mm", Locale.FRANCE).format(d)
         return when {
-            DateUtils.isToday(log.timestamp) -> h
-            DateUtils.isToday(log.timestamp + DateUtils.DAY_IN_MILLIS) -> "Hier $h"
+            DateUtils.isToday(ts) -> h
+            DateUtils.isToday(ts + DateUtils.DAY_IN_MILLIS) -> "Hier $h"
             else -> SimpleDateFormat("dd/MM HH:mm", Locale.FRANCE).format(d)
         }
     }

@@ -1,8 +1,8 @@
 /*
  * FICHIER : MainActivity.kt | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/java/fr/kobayashi/shield/MainActivity.kt
  * LIGNES : 175 | RÔLE : Accueil : interrupteur du système, compteurs du jour, dernière activité avec raisons, tuiles,
- *          état des services (rôle de filtrage, accès aux notifications, batterie) | DATE : 2026-10-16 | VERSION : 1.7.0
- * ORIGINE : Refonte accueil sans emojis | AUTEUR : Maitre Kobayashi | STATUT : STABLE
+ *          état des services (rôle de filtrage, accès aux notifications, batterie) | DATE : 2026-10-16 | VERSION : 1.9.0
+ * ORIGINE : Refonte accueil sans emojis, tuile Répondeur en 1.9.0 | AUTEUR : Maitre Kobayashi | STATUT : STABLE
  * DÉPENDANCES : activity_main.xml, item_tuile.xml, item_log.xml, JournalVue.kt, Apparence.kt
  * LIEN : LogsActivity.kt | NOTES : clé "system_enabled" des prefs "shield" inchangée
  */
@@ -45,6 +45,7 @@ class MainActivity : BaseActivity() {
         setContentView(binding.root)
 
         tuile(binding.btnLogs, R.drawable.ic_history, 0xFF2F80ED.toInt(), "Historique", "Chaque appel et sa raison", LogsActivity::class.java)
+        tuile(binding.btnRepondeur, R.drawable.ic_voicemail, 0xFF0F9D9A.toInt(), "Répondeur", "Messages vocaux OVH", MessagesActivity::class.java)
         tuile(binding.btnRules, R.drawable.ic_rule, 0xFFFF7E00.toInt(), getString(R.string.nav_rules), getString(R.string.tuile_regles), RulesActivity::class.java)
         tuile(binding.btnStats, R.drawable.ic_insights, 0xFF8E5CF7.toInt(), getString(R.string.nav_stats), getString(R.string.tuile_stats), StatsActivity::class.java)
         tuile(binding.btnSettings, R.drawable.ic_tune, 0xFF85633B.toInt(), getString(R.string.nav_settings), getString(R.string.tuile_reglages), SettingsActivity::class.java)
@@ -74,6 +75,8 @@ class MainActivity : BaseActivity() {
         majEtat()
         majServices()
         majDisposition()
+        val nonLus = fr.kobayashi.shield.repondeur.MessagesVocaux.nonLus(this)
+        binding.btnRepondeur.sousTitre.text = if (nonLus > 0) "$nonLus message(s) non lu(s)" else "Messages vocaux OVH"
         binding.tvSalut.text = when (Calendar.getInstance().get(Calendar.HOUR_OF_DAY)) {
             in 5..11 -> "Bonjour, ton téléphone est surveillé"
             in 12..17 -> "Bon après-midi, ton téléphone est surveillé"

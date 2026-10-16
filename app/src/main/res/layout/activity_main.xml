@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- FICHIER : activity_main.xml | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/res/layout/activity_main.xml
      LIGNES : 300 | RÔLE : Accueil : en-tête, carte d'état (interrupteur, compteurs du jour), dernière activité avec raisons,
-     raccourcis à icônes, état des services | DATE : 2026-10-16 | VERSION : 1.7.0 | ORIGINE : Refonte accueil sans emojis
+     raccourcis à icônes, état des services | DATE : 2026-10-16 | VERSION : 1.9.0 | ORIGINE : Refonte accueil sans emojis
      AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : themes.xml, bg_hero.xml, item_tuile.xml, item_log.xml
      LIEN : MainActivity.kt | NOTES : la grille passe en liste selon Apparence -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -318,6 +318,7 @@
             android:useDefaultMargins="false">
 
             <include android:id="@+id/btnLogs" layout="@layout/item_tuile" />
+            <include android:id="@+id/btnRepondeur" layout="@layout/item_tuile" />
             <include android:id="@+id/btnRules" layout="@layout/item_tuile" />
             <include android:id="@+id/btnStats" layout="@layout/item_tuile" />
             <include android:id="@+id/btnSettings" layout="@layout/item_tuile" />
