@@ -8,7 +8,13 @@
  * LIEN : STATE.md | NOTES : État courant après renommage en Kobayashi AntiScam
  */
 
-Dernière mise à jour : 2026-10-15
+Dernière mise à jour : 2026-10-16
+
+## 1.6.1 (2026-10-16) : correctif de la mise à jour intégrée
+- [x] Cause : plantage `FileProvider` (racines en double dans file_paths.xml) à la fin du téléchargement. La release v1.5.0 contenait en plus un APK compilé en 1.4.3 (versionCode 6).
+- [x] UpdateActivity réécrite : dossier privé, contrôle paquet et versionCode, SemVer, RECEIVER_EXPORTED
+- [x] Honor X7 passé en 1.6.0 puis 1.6.1 par adb
+- Règle de release : vérifier `aapt dump badging` de l'APK (versionName = tag) avant `gh release create`
 
 ## 🎨 1.6.0 (2026-10-15) : refonte UI kobacraft.net
 - [x] Thème Kobacraft clair et sombre, polices Fredoka et Nunito, fond dégradé

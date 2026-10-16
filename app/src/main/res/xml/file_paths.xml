@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  FICHIER : file_paths.xml | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/res/xml/file_paths.xml
+  LIGNES : 14 | RÔLE : Racines exposées par le FileProvider | DATE : 2026-10-16 | VERSION : 1.6.1
+  ORIGINE : Correctif mise à jour | AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : AndroidManifest.xml
+  LIEN : UpdateActivity.kt | NOTES : un nom unique par racine, sinon la dernière écrase les précédentes
+-->
 <paths xmlns:android="http://schemas.android.com/apk/res/android">
-    <external-path name="external_files" path="." />
-    <external-files-path name="external_files" path="." />
+    <external-files-path name="update_apk" path="Download/" />
+    <external-path name="external_root" path="." />
     <cache-path name="cache" path="." />
     <external-cache-path name="external_cache" path="." />
     <files-path name="files" path="." />

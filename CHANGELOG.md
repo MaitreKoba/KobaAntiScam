@@ -10,6 +10,14 @@
 
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr-FR/1.0.0/).
 
+## [1.6.1] - 2026-10-16
+### Corrigé
+- Mise à jour intégrée : l'app plantait à la fin du téléchargement (`FileProvider` : « Failed to find configured root »), car deux racines de `file_paths.xml` portaient le même nom `external_files`. Résultat : rien ne s'installait et l'app restait sur l'ancienne version.
+- L'APK est maintenant téléchargé dans le dossier privé de l'app (`Android/data/.../files/Download/KobaAntiScan-update.apk`), écrasé à chaque fois : fini les doublons `-1`, `-2` dans Téléchargements et l'installation d'un ancien fichier.
+- Avant installation, l'APK est contrôlé : paquet identique, `versionCode` strictement supérieur. Un APK de release mal étiqueté (cas de la v1.5.0, compilée en 1.4.3) est refusé avec un message clair au lieu d'une fausse réussite.
+- Comparaison de versions SemVer (l'ancienne proposait une « mise à jour » dès que les chaînes différaient, y compris vers une version plus ancienne).
+- Receiver `DOWNLOAD_COMPLETE` enregistré avec `RECEIVER_EXPORTED` (obligatoire avec targetSdk 34+), statut du téléchargement vérifié, renvoi vers l'autorisation « sources inconnues » si elle manque.
+
 ## [1.6.0] - 2026-10-15
 ### Ajouté
 - Interface refaite avec la charte de kobacraft.net : palette crème, pêche, orange et rouge, cartes en verre dépoli, polices Fredoka et Nunito embarquées, mode sombre repris du site.
