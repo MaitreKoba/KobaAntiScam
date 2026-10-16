@@ -10,6 +10,12 @@
 
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr-FR/1.0.0/).
 
+## [1.8.0] - 2026-10-16
+### Ajouté
+- Historique et Dernière activité : étiquette de confiance à côté du verdict. Spam (appel rejeté : démarchage ARCEP, arnaque au rappel, rotation, numéro bloqué), Sûr (contact, liste blanche, numéro déjà appelé, rappel), Inconnu (messagerie ou silencieux), Non vérifié (protection coupée).
+- Le numéro de l'appelant est toujours visible, y compris pour un contact (nom en titre, numéro sur la ligne du dessous).
+- Action « Marquer comme spam (rejeté) » au lieu de « Bloquer ce numéro ».
+
 ## [1.7.0] - 2026-10-16
 ### Ajouté
 - Moteur de décision `Decision.kt` : chaque appel reçoit une action et une raison lisible, enregistrées dans l'historique. Ordre : protection coupée, règle perso, contact (avec son nom), liste blanche, numéro déjà appelé, démarchage ARCEP (rejet), rappel en moins de 3 min (sonne), pays connus pour l'arnaque au rappel (rejet), rotation de numéros (plus de 5 numéros différents d'une même tranche en 24 h, rejet), inconnu ou masqué (messagerie).

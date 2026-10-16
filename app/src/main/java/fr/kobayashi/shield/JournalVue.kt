@@ -1,10 +1,12 @@
 /*
  * FICHIER : JournalVue.kt | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/java/fr/kobayashi/shield/JournalVue.kt
- * LIGNES : 120 | RÔLE : Présentation d'une entrée du journal (icône, couleur, verdict, titre, raison, heure) et menu
+ * LIGNES : 150 | RÔLE : Présentation d'une entrée du journal (icône, couleur, verdict, étiquette Spam / Sûr / Inconnu,
+ *          titre, numéro, raison, heure) et menu
  *          d'actions (autoriser, bloquer, appeler, copier) partagés par l'accueil et l'historique
- * DATE : 2026-10-16 | VERSION : 1.7.0 | ORIGINE : Refonte accueil et journal | AUTEUR : Maitre Kobayashi | STATUT : STABLE
+ * DATE : 2026-10-16 | VERSION : 1.8.0 | ORIGINE : Refonte accueil et journal, étiquette et numéro toujours visible en 1.8.0 | AUTEUR : Maitre Kobayashi | STATUT : STABLE
  * DÉPENDANCES : item_log.xml, LogEntry.kt, ContactsHelper.kt | LIEN : LogAdapter.kt, MainActivity.kt
- * NOTES : les anciennes entrées sans raison affichent un texte générique
+ * NOTES : les anciennes entrées sans raison affichent un texte générique. L'étiquette est déduite du type d'entrée,
+ *         sans colonne en base : rejeté = Spam, a sonné = Sûr, messagerie ou silencieux = Inconnu
  */
 package fr.kobayashi.shield
 
@@ -50,6 +52,16 @@ object JournalVue {
         LogType.ERROR -> Style(R.drawable.ic_error, R.color.red, "Erreur")
     }
 
+    data class Etiquette(val texte: String, val couleur: Int)
+
+    fun etiquette(log: LogEntry): Etiquette? = when (log.type) {
+        LogType.CALL_BLOCKED, LogType.SMS_BLOCKED -> Etiquette("Spam", R.color.red)
+        LogType.CALL_INCOMING ->
+            if (log.details == "Protection désactivée") Etiquette("Non vérifié", R.color.ink3) else Etiquette("Sûr", R.color.succes)
+        LogType.CALL_VOICEMAIL, LogType.CALL_SILENCED -> Etiquette("Inconnu", R.color.ink3)
+        else -> null
+    }
+
     fun titre(log: LogEntry): String = when (log.type) {
         LogType.UPDATE_CHECK, LogType.ERROR -> log.message ?: log.displayText()
         LogType.SMS_RECEIVED, LogType.SMS_BLOCKED -> log.phoneNumber?.let { Rules.affichage(it) } ?: "Expéditeur inconnu"
@@ -63,7 +75,17 @@ object JournalVue {
         }
     }
 
-    fun raison(log: LogEntry): String = log.details ?: when (log.type) {
+    fun raison(log: LogEntry): String {
+        val r = when (val m = motif(log)) {
+            "Inconnu" -> "Pas dans tes contacts"
+            "Inconnu, numéro étranger" -> "Numéro étranger, pas dans tes contacts"
+            else -> m
+        }
+        val numero = log.phoneNumber?.takeIf { it.isNotBlank() }?.let { Rules.affichage(it) }
+        return if (numero != null && titre(log) != numero) listOf(numero, r).filter { it.isNotBlank() }.joinToString(" · ") else r
+    }
+
+    private fun motif(log: LogEntry): String = log.details ?: when (log.type) {
         LogType.CALL_INCOMING -> "Appel autorisé"
         LogType.CALL_BLOCKED -> "Appel rejeté"
         LogType.CALL_VOICEMAIL -> "Envoyé en messagerie"
@@ -93,6 +115,16 @@ object JournalVue {
         b.tvVerdict.text = s.verdict
         b.tvVerdict.setTextColor(couleur)
         b.tvVerdict.backgroundTintList = ColorStateList.valueOf(ColorUtils.setAlphaComponent(couleur, 0x24))
+        val e = etiquette(log)
+        if (e != null) {
+            val c = ContextCompat.getColor(ctx, e.couleur)
+            b.tvTag.text = e.texte
+            b.tvTag.setTextColor(c)
+            b.tvTag.backgroundTintList = ColorStateList.valueOf(ColorUtils.setAlphaComponent(c, 0x24))
+            b.tvTag.visibility = View.VISIBLE
+        } else {
+            b.tvTag.visibility = View.GONE
+        }
         val r = raison(log)
         b.tvRaison.text = r
         b.tvRaison.visibility = if (r.isBlank()) View.GONE else View.VISIBLE
@@ -109,7 +141,7 @@ object JournalVue {
 
     private fun actions(ctx: Context, numero: String, scope: LifecycleCoroutineScope) {
         val lisible = Rules.affichage(numero)
-        val choix = arrayOf("Autoriser ce numéro (il sonnera)", "Bloquer ce numéro", "Rappeler", "Copier le numéro")
+        val choix = arrayOf("Autoriser ce numéro (il sonnera)", "Marquer comme spam (rejeté)", "Rappeler", "Copier le numéro")
         MaterialAlertDialogBuilder(ctx)
             .setTitle(lisible)
             .setItems(choix) { _, i ->
@@ -123,7 +155,7 @@ object JournalVue {
                             Rule(pattern = Rules.normalize(numero), description = "Bloqué depuis l'historique ($lisible)",
                                 action = RuleAction.BLOCK, ruleType = RuleType.CALL)
                         )
-                        Toast.makeText(ctx, "$lisible sera rejeté", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(ctx, "$lisible marqué comme spam, il sera rejeté", Toast.LENGTH_SHORT).show()
                     }
                     2 -> ctx.startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:$numero")))
                     3 -> {

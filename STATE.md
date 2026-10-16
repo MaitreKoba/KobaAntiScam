@@ -10,6 +10,12 @@
 
 Dernière mise à jour : 2026-10-16
 
+## 1.8.0 (2026-10-16) : étiquette Spam / Sûr / Inconnu et numéro toujours visible
+- [x] JournalVue.etiquette (déduite du type d'entrée, pas de migration Room), item_log.xml (tvTag)
+- [x] Émulateur : contact (Sûr + numéro), ARCEP (Spam), inconnu (Inconnu, « Pas dans tes contacts »)
+- [ ] Passerelle OVH Découverte : renvois Free conditionnels **67/**61/**62 vers le numéro OVH, annonce MP3, messages par email, vérifier que le numéro d'origine est transmis
+- [ ] Écran Contacts avec rôle par contact (Sonne, Messagerie, Bloqué), diagnostic contacts sur le Honor
+
 ## 1.7.0 (2026-10-16) : filtrage fiable, historique avec raisons, accueil sans emojis
 - [x] Decision.kt (ordre des règles, raison par appel), CallFilterService réécrit, MP3 plus joué
 - [x] Historique et accueil refaits, icônes Material vectorielles (res/drawable/ic_*.xml)

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- FICHIER : item_log.xml | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/res/layout/item_log.xml | LIGNES : 80
-     RÔLE : Ligne du journal : icône dans un rond teinté, numéro ou nom, étiquette de verdict, raison, heure
-     DATE : 2026-10-16 | VERSION : 1.7.0 | ORIGINE : Refonte journal | AUTEUR : Maitre Kobayashi | STATUT : STABLE
+<!-- FICHIER : item_log.xml | CHEMIN : D:/Kobayashi/Developpement/shield/app/src/main/res/layout/item_log.xml | LIGNES : 89
+     RÔLE : Ligne du journal : icône dans un rond teinté, numéro ou nom, étiquette de verdict, étiquette Spam / Sûr / Inconnu, raison, heure
+     DATE : 2026-10-16 | VERSION : 1.8.0 | ORIGINE : Refonte journal, étiquette de confiance en 1.8.0 | AUTEUR : Maitre Kobayashi | STATUT : STABLE
      DÉPENDANCES : bg_rond.xml, bg_pastille_texte.xml | LIEN : JournalVue.kt | NOTES : utilisée par l'historique et l'accueil -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -66,6 +66,15 @@
                 android:id="@+id/tvVerdict"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/bg_pastille_texte"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvTag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
                 android:background="@drawable/bg_pastille_texte"
                 android:textSize="11sp"
                 android:textStyle="bold" />
