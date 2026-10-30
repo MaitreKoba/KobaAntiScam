@@ -10,6 +10,11 @@
 
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr-FR/1.0.0/).
 
+## [1.9.1] - 2026-10-30
+### Modifié
+- Écran Répondeur : les boutons Vérifier et « Tout annuler » (`##002#`) sont toujours affichés, même sans numéro OVH saisi, pour contrôler ou supprimer des renvois composés à la main.
+- Ajout de la vérification du renvoi si pas de réponse (`*#61#`) et si éteint (`*#62#`).
+
 ## [1.9.0] - 2026-10-16
 ### Ajouté
 - Écran Répondeur : messages vocaux de la ligne OVH lus dans une boîte mail (IMAP SSL, lecture seule), numéro de l'appelant extrait de l'e-mail, écoute de l'audio, transcription facultative par Groq Whisper, classement automatique (Livraison, Travail, Rendez-vous et démarches, Démarchage, Autre), étiquette Sûr, Inconnu ou Spam, actions rappeler, autoriser, marquer comme spam, voir l'e-mail.

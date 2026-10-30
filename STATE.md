@@ -8,7 +8,14 @@
  * LIEN : STATE.md | NOTES : État courant après renommage en Kobayashi AntiScam
  */
 
-Dernière mise à jour : 2026-10-16
+Dernière mise à jour : 2026-10-30
+
+## 1.9.1 (2026-10-30) : ligne OVH configurée, renvois Free actifs
+- [x] Ligne OVH 09 72 12 02 56 : renvoi de tous les appels vers le répondeur, notification vers repondeur@kobacraft.net (transcription et audio joint), annonce personnalisée importée (option « Annonce personnalisée »)
+- [x] Renvois Free **67, **61, **62 vers 0972120256 composés à la main sur le Honor
+- [x] Écran Répondeur : Vérifier 67/61/62 et Tout annuler toujours visibles
+- [ ] Honor : installer 1.9.1, réglages du répondeur dans l'app, test d'un vrai appel inconnu, format de l'e-mail OVH et numéro transmis
+- [ ] Révoquer l'ancien token GitHub (présent dans l'historique git)
 
 ## 1.9.0 (2026-10-16) : répondeur OVH dans l'app
 - [x] Paquet `repondeur` : RepondeurConfig (chiffré), BoiteMail (IMAP), Transcription (Groq), Classement, MessagesVocaux (JSON local), Synchro (WorkManager 15 min, notifications)
@@ -130,7 +137,7 @@ adb shell cmd notification post -t "36105" shield_test "Code 1234"
 - **Branche**: main
 - **Commit initial**: 477cac7 - "Initial commit - KobaAntiScam Android app"
 - **Fichiers poussés**: 69 fichiers
-- **Token utilisé**: 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 (à conserver pour les pushes futurs)
+- **Token**: retiré du dépôt le 2026-10-30 (révoquer l'ancien sur github.com/settings/tokens)
 - **URL SSH**: git@github.com:MaitreKoba/KobaAntiScam.git
 - **URL HTTPS**: https://github.com/MaitreKoba/KobaAntiScam.git
 
