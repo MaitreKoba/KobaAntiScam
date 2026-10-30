@@ -1,8 +1,8 @@
 /*
  * FICHIER : Synchro.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/repondeur/Synchro.kt
- * LIGNES : 140 | RÔLE : Récupère les nouveaux messages vocaux (IMAP), les transcrit, les classe, les enregistre et
- *          notifie ; tâche périodique WorkManager toutes les 15 min quand le réseau est disponible
- * DATE : 2026-10-16 | VERSION : 1.9.0 | ORIGINE : Création | AUTEUR : Maitre Kobayashi | STATUT : STABLE
+ * LIGNES : 142 | RÔLE : Récupère les nouveaux messages vocaux (IMAP), les transcrit, les classe, les enregistre et
+ *          notifie (transcription Groq, sinon texte de l'e-mail OVH) ; tâche WorkManager toutes les 15 min
+ * DATE : 2026-10-30 | VERSION : 1.9.2 | ORIGINE : Modification | AUTEUR : Maitre Kobayashi | STATUT : STABLE
  * DÉPENDANCES : BoiteMail.kt, Transcription.kt, Classement.kt, MessagesVocaux.kt, work-runtime-ktx
  * LIEN : MessagesActivity.kt, ShieldApp.kt | NOTES : le démarchage n'est pas notifié sauf réglage contraire
  */
@@ -107,12 +107,14 @@ object Synchro {
             context, m.uid.toInt(), Intent(context, MessagesActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
-        val texte = m.transcription?.take(200) ?: "Nouveau message vocal, touche pour l'écouter"
+        // Sans clé Groq, le corps de l'e-mail OVH porte leur propre transcription
+        val texte = m.transcription?.takeIf { it.isNotBlank() } ?: m.corps.takeIf { it.isNotBlank() }
+            ?: "Nouveau message vocal, touche pour l'écouter"
         val n = NotificationCompat.Builder(context, CANAL)
             .setSmallIcon(R.drawable.ic_voicemail)
             .setContentTitle("${m.categorie.libelle} : ${titre(context, m)}")
-            .setContentText(texte)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(texte))
+            .setContentText(texte.take(200))
+            .setStyle(NotificationCompat.BigTextStyle().bigText(texte.take(1500)))
             .setContentIntent(ouvrir)
             .setAutoCancel(true)
             .build()

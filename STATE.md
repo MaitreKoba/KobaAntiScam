@@ -10,6 +10,10 @@
 
 Dernière mise à jour : 2026-10-30
 
+## 1.9.2 (2026-10-30) : notification avec le texte du message
+- [x] Synchro.notifier : transcription Groq, sinon corps de l'e-mail OVH (leur transcription IA)
+- [ ] Format exact de l'e-mail OVH à relever pour n'afficher que la transcription et classer sans clé Groq
+
 ## 1.9.1 (2026-10-30) : ligne OVH configurée, renvois Free actifs
 - [x] Ligne OVH 09 72 12 02 56 : renvoi de tous les appels vers le répondeur, notification vers repondeur@kobacraft.net (transcription et audio joint), annonce personnalisée importée (option « Annonce personnalisée »)
 - [x] Renvois Free **67, **61, **62 vers 0972120256 composés à la main sur le Honor

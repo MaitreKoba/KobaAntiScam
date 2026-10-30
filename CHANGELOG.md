@@ -10,6 +10,10 @@
 
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr-FR/1.0.0/).
 
+## [1.9.2] - 2026-10-30
+### Modifié
+- Notification d'un nouveau message vocal : sans transcription Groq, elle affiche le texte de l'e-mail OVH (option « Transcription et message joint »), au lieu de « Nouveau message vocal ». Texte déplié jusqu'à 1500 caractères.
+
 ## [1.9.1] - 2026-10-30
 ### Modifié
 - Écran Répondeur : les boutons Vérifier et « Tout annuler » (`##002#`) sont toujours affichés, même sans numéro OVH saisi, pour contrôler ou supprimer des renvois composés à la main.
