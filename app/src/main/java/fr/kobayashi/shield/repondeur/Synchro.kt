@@ -1,8 +1,8 @@
 /*
  * FICHIER : Synchro.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/repondeur/Synchro.kt
- * LIGNES : 142 | RÔLE : Récupère les nouveaux messages vocaux (IMAP), les transcrit, les classe, les enregistre et
+ * LIGNES : 184 | RÔLE : Récupère les nouveaux messages vocaux (IMAP), les transcrit, les classe, les enregistre et
  *          notifie (transcription Groq, sinon texte de l'e-mail OVH) ; tâche WorkManager toutes les 15 min
- * DATE : 2026-10-30 | VERSION : 1.9.2 | ORIGINE : Modification | AUTEUR : Maitre Kobayashi | STATUT : STABLE
+ * DATE : 2026-10-30 | VERSION : 1.10.0 | ORIGINE : Modification (alerte immédiate, relèves rapides) | AUTEUR : Maitre Kobayashi | STATUT : STABLE
  * DÉPENDANCES : BoiteMail.kt, Transcription.kt, Classement.kt, MessagesVocaux.kt, work-runtime-ktx
  * LIEN : MessagesActivity.kt, ShieldApp.kt | NOTES : le démarchage n'est pas notifié sauf réglage contraire
  */
@@ -15,6 +15,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -22,7 +23,9 @@ import androidx.core.content.ContextCompat
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
@@ -36,6 +39,8 @@ object Synchro {
     private const val TAG = "Shield"
     private const val CANAL = "repondeur"
     private const val TRAVAIL = "synchro_repondeur"
+    private const val CANAL_APPELS = "appels_repondeur"
+    private val RELANCES_S = listOf(45L, 90L, 180L, 360L)
 
     data class Resultat(val nouveaux: Int, val erreur: String? = null)
 
@@ -119,6 +124,43 @@ object Synchro {
             .setAutoCancel(true)
             .build()
         NotificationManagerCompat.from(context).notify(CANAL, m.uid.toInt(), n)
+    }
+
+    /** Appel renvoyé au répondeur : prévient tout de suite, puis relève la boîte sans attendre la tâche des 15 min */
+    fun appelAuRepondeur(context: Context, brut: String) {
+        relancer(context)
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) return
+        val nm = context.getSystemService(NotificationManager::class.java)
+        nm.createNotificationChannel(NotificationChannel(CANAL_APPELS, "Appels envoyés au répondeur", NotificationManager.IMPORTANCE_HIGH))
+        val id = (System.currentTimeMillis() / 1000).toInt()
+        val drapeaux = PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        val ouvrir = PendingIntent.getActivity(
+            context, id, Intent(context, MessagesActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK), drapeaux
+        )
+        val b = NotificationCompat.Builder(context, CANAL_APPELS)
+            .setSmallIcon(R.drawable.ic_voicemail)
+            .setContentTitle("Au répondeur : ${if (brut.isBlank()) "numéro masqué" else Rules.affichage(brut)}")
+            .setContentText("Inconnu renvoyé vers ton répondeur. Son message s'affichera dès réception.")
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setContentIntent(ouvrir)
+            .setAutoCancel(true)
+        if (brut.isNotBlank()) {
+            val rappeler = Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + Uri.encode(brut))).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            b.addAction(0, "Rappeler", PendingIntent.getActivity(context, id + 1, rappeler, drapeaux))
+        }
+        NotificationManagerCompat.from(context).notify(CANAL_APPELS, id, b.build())
+    }
+
+    private fun relancer(context: Context) {
+        if (!RepondeurConfig.lire(context).complet) return
+        val wm = WorkManager.getInstance(context)
+        val reseau = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+        RELANCES_S.forEachIndexed { i, s ->
+            wm.enqueueUniqueWork(
+                "${TRAVAIL}_relance_$i", ExistingWorkPolicy.REPLACE,
+                OneTimeWorkRequestBuilder<Travail>().setInitialDelay(s, TimeUnit.SECONDS).setConstraints(reseau).build()
+            )
+        }
     }
 
     fun planifier(context: Context) {

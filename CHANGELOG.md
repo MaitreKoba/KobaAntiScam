@@ -10,6 +10,11 @@
 
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr-FR/1.0.0/).
 
+## [1.10.0] - 2026-10-30
+### Ajouté
+- Alerte immédiate quand un inconnu est envoyé au répondeur : notification « Au répondeur : numéro » avec bouton Rappeler, sans attendre l'e-mail.
+- Relève rapide de la boîte mail 45 s, 90 s, 3 min et 6 min après l'appel : le message (texte et catégorie) arrive en une à deux minutes au lieu de 15.
+
 ## [1.9.2] - 2026-10-30
 ### Modifié
 - Notification d'un nouveau message vocal : sans transcription Groq, elle affiche le texte de l'e-mail OVH (option « Transcription et message joint »), au lieu de « Nouveau message vocal ». Texte déplié jusqu'à 1500 caractères.

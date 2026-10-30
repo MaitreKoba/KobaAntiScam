@@ -1,7 +1,8 @@
 /*
  * FICHIER : CallFilterService.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/service/CallFilterService.kt
- * LIGNES : 110 | RÔLE : Filtrage des appels entrants : applique le verdict de Decision et l'inscrit au journal avec sa raison
- * DATE : 2026-10-16 | VERSION : 1.7.0 | ORIGINE : Réécriture (le rappel sous 3 min était toujours vrai, contacts mal reconnus)
+ * LIGNES : 97 | RÔLE : Filtrage des appels entrants : applique le verdict de Decision et l'inscrit au journal avec sa raison ;
+ *          appel envoyé au répondeur : alerte immédiate et relève rapide de la boîte (Synchro.appelAuRepondeur)
+ * DATE : 2026-10-30 | VERSION : 1.10.0 | ORIGINE : Modification (alerte immédiate au répondeur)
  * AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : CallScreeningService, Decision.kt, RuleDatabase
  * LIEN : LogsActivity.kt | NOTES : plus de lecture du MP3 au rejet : il sortait du haut-parleur du téléphone, pas dans l'appel
  */
@@ -17,6 +18,7 @@ import fr.kobayashi.shield.model.LogType
 import fr.kobayashi.shield.model.RuleAction
 import fr.kobayashi.shield.model.RuleDatabase
 import fr.kobayashi.shield.model.Rules
+import fr.kobayashi.shield.repondeur.Synchro
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -43,6 +45,10 @@ class CallFilterService : CallScreeningService() {
             Log.d(tag, "Appel ${brut.ifBlank { "masqué" }} -> ${verdict.action} (${verdict.raison})")
             respondToCall(details, reponse(verdict.action))
             journaliser(brut, verdict)
+            if (verdict.action == Decision.Action.MESSAGERIE) {
+                runCatching { Synchro.appelAuRepondeur(applicationContext, brut) }
+                    .onFailure { Log.e(tag, "Alerte répondeur impossible", it) }
+            }
         }
     }
 

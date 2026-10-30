@@ -10,6 +10,11 @@
 
 Dernière mise à jour : 2026-10-30
 
+## 1.10.0 (2026-10-30) : alerte immédiate au répondeur
+- [x] CallFilterService : verdict MESSAGERIE -> Synchro.appelAuRepondeur (notification immédiate + Rappeler, relèves à 45 s, 90 s, 3 min, 6 min)
+- [ ] Honor : vérifier que la notification immédiate s'affiche et le délai réel du message
+- [ ] Écran Contacts (liste + rôle Sonne, Messagerie, Bloqué) : demandé, à préciser
+
 ## 1.9.2 (2026-10-30) : notification avec le texte du message
 - [x] Synchro.notifier : transcription Groq, sinon corps de l'e-mail OVH (leur transcription IA)
 - [ ] Format exact de l'e-mail OVH à relever pour n'afficher que la transcription et classer sans clé Groq
