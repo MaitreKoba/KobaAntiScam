@@ -10,6 +10,19 @@
 
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr-FR/1.0.0/).
 
+## [1.11.0] - 2026-10-30
+### Corrigé
+- Répondeur : le numéro affiché était celui de la ligne OVH (09 72 12 02 56) au lieu de l'appelant. Le format réel des e-mails OVH (« provenant du numéro 33… ») est maintenant reconnu ; un appel masqué n'est plus confondu avec la ligne.
+- Répondeur : la transcription fournie par OVH est utilisée quand il n'y a pas de clé Groq (liste, notification, classement par catégorie). Les messages déjà reçus sont réparés au chargement.
+- Réglages : l'écran ne défilait pas, le mode strict, la liste neutre, le choix messagerie ou sonnerie coupée, la liste blanche et l'export étaient inaccessibles.
+- Accueil et Apparence : le contenu passait sous la barre d'état en défilant.
+- Accueil : le message « ton téléphone est surveillé » restait affiché protection en pause.
+
+### Ajouté
+- Bouton « Réglages : boîte mail, clé Groq, renvois » avec libellé dans l'écran Répondeur (l'icône seule passait inaperçue), et le même accès depuis Réglages.
+- Crédits et à propos (Réglages) : auteur, services, bibliothèques, vie privée.
+- 3 tests sur le format OVH réel (21 tests au total).
+
 ## [1.10.0] - 2026-10-30
 ### Ajouté
 - Alerte immédiate quand un inconnu est envoyé au répondeur : notification « Au répondeur : numéro » avec bouton Rappeler, sans attendre l'e-mail.

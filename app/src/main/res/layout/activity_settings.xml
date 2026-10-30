@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- FICHIER : activity_settings.xml | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/res/layout/activity_settings.xml
+     LIGNES : 278 | RÔLE : Écran Réglages : accès au répondeur, rôle, notifications, batterie, mises à jour, modes, listes, crédits
+     DATE : 2026-10-30 | VERSION : 1.11.0 | ORIGINE : Écran rendu défilable (le bas était inaccessible), accès Répondeur et Crédits
+     AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : themes.xml | LIEN : SettingsActivity.kt | NOTES : - -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
     tools:context=".SettingsActivity">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/settingsTitle"
@@ -16,6 +24,24 @@
         android:textSize="20sp"
         android:textStyle="bold"
         android:layout_marginBottom="24dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnRepondeurReglages"
+        style="@style/Widget.Material3.Button.TonalButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Répondeur : boîte mail, clé Groq, renvois"
+        android:textAllCaps="false"
+        app:icon="@drawable/ic_voicemail" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCredits"
+        style="@style/Widget.Material3.Button.TonalButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="Crédits et à propos"
+        android:textAllCaps="false" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -187,7 +213,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Activé : ils partent en messagerie Free sans sonner. Désactivé : ça ne sonne pas mais l'appel reste affiché."
+            android:text="Activé : ils partent au répondeur sans sonner. Désactivé : ça ne sonne pas mais l'appel reste affiché."
             android:layout_marginTop="4dp" />
         <Button
             android:id="@+id/btnToggleCallback"
@@ -249,3 +275,4 @@
     </LinearLayout>
 
 </LinearLayout>
+</ScrollView>

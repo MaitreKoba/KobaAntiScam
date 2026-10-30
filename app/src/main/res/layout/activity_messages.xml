@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- FICHIER : activity_messages.xml | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/res/layout/activity_messages.xml | LIGNES : 175
+<!-- FICHIER : activity_messages.xml | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/res/layout/activity_messages.xml | LIGNES : 202
      RÔLE : Écran Répondeur : en-tête, actualisation, réglages, filtres par catégorie, liste des messages vocaux
-     DATE : 2026-10-16 | VERSION : 1.9.0 | ORIGINE : Création | AUTEUR : Maitre Kobayashi | STATUT : STABLE
+     DATE : 2026-10-30 | VERSION : 1.11.0 | ORIGINE : Bouton Réglages avec libellé (l'icône seule passait inaperçue) | AUTEUR : Maitre Kobayashi | STATUT : STABLE
      DÉPENDANCES : item_message.xml, themes.xml | LIEN : MessagesActivity.kt | NOTES : carte de configuration tant que la boîte n'est pas réglée -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -58,16 +58,17 @@
             android:contentDescription="Actualiser"
             android:src="@drawable/ic_refresh"
             app:tint="?attr/colorPrimary" />
-
-        <ImageButton
-            android:id="@+id/btnReglages"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Réglages du répondeur"
-            android:src="@drawable/ic_tune"
-            app:tint="?android:attr/textColorSecondary" />
     </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnReglages"
+        style="@style/Widget.Material3.Button.TonalButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Réglages : boîte mail, clé Groq, renvois"
+        android:textAllCaps="false"
+        app:icon="@drawable/ic_tune" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/chargement"

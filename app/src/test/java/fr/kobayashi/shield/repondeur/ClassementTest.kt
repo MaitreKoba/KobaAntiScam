@@ -1,7 +1,7 @@
 /*
  * FICHIER : ClassementTest.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/test/java/fr/kobayashi/shield/repondeur/ClassementTest.kt
- * LIGNES : 75 | RÔLE : Tests JVM du classement des messages vocaux et de l'extraction du numéro de l'appelant
- * DATE : 2026-10-16 | VERSION : 1.9.0 | ORIGINE : Création | AUTEUR : Maitre Kobayashi | STATUT : STABLE
+ * LIGNES : 104 | RÔLE : Tests JVM du classement des messages vocaux et de l'extraction du numéro de l'appelant
+ * DATE : 2026-10-30 | VERSION : 1.11.0 | ORIGINE : Ajout des tests du format OVH réel | AUTEUR : Maitre Kobayashi | STATUT : STABLE
  * DÉPENDANCES : junit 4, Classement.kt | LIEN : Classement.kt | NOTES : scénarios nominal, erreur et limite
  */
 package fr.kobayashi.shield.repondeur
@@ -62,6 +62,39 @@ class ClassementTest {
         val textes = listOf("Nouveau message vocal", "Appelant : anonyme. Durée 12 s, reçu le 16/10/2026 à 13:05")
         assertNull(Classement.numeroAppelant(textes, listOf("0912345678")))
         assertTrue(Classement.estMasque(textes))
+    }
+
+    private val corpsOvh = """
+        Bonjour,
+        Vous avez reçu un message vocal provenant du numéro 33682657801 vers votre numéro 0033972120256.
+        Vous trouverez, ci-joint, le message de 5 secondes que votre correspondant vous a laissé.
+        Voici la transcription de ce dernier :
+        00:01.910 -> 00:03.330
+        Bonjour, c'est le livreur Uber Eats, je suis en bas de chez vous.
+        Attention : Cette transcription a été générée automatiquement par une intelligence artificielle.
+        Service messagerie
+    """.trimIndent()
+
+    @Test
+    fun emailOvhReelNumeroEtTranscription() {
+        assertEquals("+33682657801", Classement.numeroAppelant(listOf("Message vocal du 33682657801", corpsOvh)))
+        val t = Classement.transcriptionOvh(corpsOvh)
+        assertEquals("Bonjour, c'est le livreur Uber Eats, je suis en bas de chez vous.", t)
+        assertEquals(Categorie.LIVRAISON, Classement.categorie(t))
+    }
+
+    @Test
+    fun emailOvhSansAppelantNeRetientPasLaLigne() {
+        val corps = "Vous avez reçu un message vocal provenant du numéro anonyme vers votre numéro 0033972120256."
+        assertNull(Classement.numeroAppelant(listOf("Message vocal", corps)))
+    }
+
+    @Test
+    fun emailOvhSansTranscription() {
+        val corps = "Vous avez reçu un message vocal provenant du numéro 33695626373 vers votre numéro 0033972120256.\n" +
+            "Vous trouverez, sur votre boite vocale, le message de 4 secondes.\nService messagerie"
+        assertNull(Classement.transcriptionOvh(corps))
+        assertEquals("+33695626373", Classement.numeroAppelant(listOf(corps)))
     }
 
     @Test

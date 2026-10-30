@@ -1,8 +1,8 @@
 /*
  * FICHIER : MainActivity.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/MainActivity.kt
- * LIGNES : 175 | RÔLE : Accueil : interrupteur du système, compteurs du jour, dernière activité avec raisons, tuiles,
- *          état des services (rôle de filtrage, accès aux notifications, batterie) | DATE : 2026-10-16 | VERSION : 1.9.0
- * ORIGINE : Refonte accueil sans emojis, tuile Répondeur en 1.9.0 | AUTEUR : Maitre Kobayashi | STATUT : STABLE
+ * LIGNES : 174 | RÔLE : Accueil : interrupteur du système, compteurs du jour, dernière activité avec raisons, tuiles,
+ *          état des services (rôle de filtrage, accès aux notifications, batterie) | DATE : 2026-10-30 | VERSION : 1.11.0
+ * ORIGINE : Message d'accueil qui suit l'interrupteur | AUTEUR : Maitre Kobayashi | STATUT : STABLE
  * DÉPENDANCES : activity_main.xml, item_tuile.xml, item_log.xml, JournalVue.kt, Apparence.kt
  * LIEN : LogsActivity.kt | NOTES : clé "system_enabled" des prefs "shield" inchangée
  */
@@ -77,11 +77,6 @@ class MainActivity : BaseActivity() {
         majDisposition()
         val nonLus = fr.kobayashi.shield.repondeur.MessagesVocaux.nonLus(this)
         binding.btnRepondeur.sousTitre.text = if (nonLus > 0) "$nonLus message(s) non lu(s)" else "Messages vocaux OVH"
-        binding.tvSalut.text = when (Calendar.getInstance().get(Calendar.HOUR_OF_DAY)) {
-            in 5..11 -> "Bonjour, ton téléphone est surveillé"
-            in 12..17 -> "Bon après-midi, ton téléphone est surveillé"
-            else -> "Bonsoir, ton téléphone est surveillé"
-        }
     }
 
     private fun tuile(t: ItemTuileBinding, icone: Int, couleur: Int, titre: String, sous: String, cible: Class<*>) {
@@ -96,6 +91,12 @@ class MainActivity : BaseActivity() {
     private fun majEtat() {
         val actif = getSharedPreferences("shield", MODE_PRIVATE).getBoolean("system_enabled", true)
         binding.switchSystem.isChecked = actif
+        val salut = when (Calendar.getInstance().get(Calendar.HOUR_OF_DAY)) {
+            in 5..11 -> "Bonjour"
+            in 12..17 -> "Bon après-midi"
+            else -> "Bonsoir"
+        }
+        binding.tvSalut.text = if (actif) "$salut, ton téléphone est surveillé" else "$salut, la protection est en pause"
         binding.titreEtat.text = if (actif) "Protection active" else "Protection en pause"
         binding.statusText.text = getString(if (actif) R.string.etat_actif_desc else R.string.etat_inactif_desc)
         binding.iconeEtat.setImageResource(if (actif) R.drawable.ic_verified_user else R.drawable.ic_remove_moderator)

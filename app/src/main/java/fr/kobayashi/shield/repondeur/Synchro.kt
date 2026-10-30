@@ -1,8 +1,8 @@
 /*
  * FICHIER : Synchro.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/repondeur/Synchro.kt
- * LIGNES : 184 | RÔLE : Récupère les nouveaux messages vocaux (IMAP), les transcrit, les classe, les enregistre et
+ * LIGNES : 186 | RÔLE : Récupère les nouveaux messages vocaux (IMAP), les transcrit, les classe, les enregistre et
  *          notifie (transcription Groq, sinon texte de l'e-mail OVH) ; tâche WorkManager toutes les 15 min
- * DATE : 2026-10-30 | VERSION : 1.10.0 | ORIGINE : Modification (alerte immédiate, relèves rapides) | AUTEUR : Maitre Kobayashi | STATUT : STABLE
+ * DATE : 2026-10-30 | VERSION : 1.11.0 | ORIGINE : Modification (transcription OVH utilisée sans clé Groq) | AUTEUR : Maitre Kobayashi | STATUT : STABLE
  * DÉPENDANCES : BoiteMail.kt, Transcription.kt, Classement.kt, MessagesVocaux.kt, work-runtime-ktx
  * LIEN : MessagesActivity.kt, ShieldApp.kt | NOTES : le démarchage n'est pas notifié sauf réglage contraire
  */
@@ -74,6 +74,8 @@ object Synchro {
                 Log.w(TAG, "Transcription impossible: $erreur")
             }
         }
+        if (transcription == null) transcription = Classement.transcriptionOvh(e.corps)
+        if (transcription != null) erreur = null
         val categorie = if (numero != null && Rules.isArcpPrefix(numero)) Categorie.DEMARCHAGE else Classement.categorie(transcription)
         return MessageVocal(
             uid = e.uid, date = e.date, numero = numero, masque = numero == null && Classement.estMasque(textes),

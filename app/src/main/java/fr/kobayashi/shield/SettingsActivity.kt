@@ -1,3 +1,9 @@
+/*
+ * FICHIER : SettingsActivity.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/SettingsActivity.kt
+ * LIGNES : 389 | RÔLE : Réglages : accès au répondeur, rôle de filtrage, notifications, batterie, modes, listes, crédits
+ * DATE : 2026-10-30 | VERSION : 1.11.0 | ORIGINE : Ajout des accès Répondeur et Crédits | AUTEUR : Maitre Kobayashi
+ * STATUT : STABLE | DÉPENDANCES : activity_settings.xml, RepondeurActivity.kt | LIEN : MainActivity.kt | NOTES : -
+ */
 package fr.kobayashi.shield
 
 import android.content.Context
@@ -28,6 +34,9 @@ class SettingsActivity : BaseActivity() {
     }
     
     private fun setupButtons() {
+        binding.btnRepondeurReglages.setOnClickListener { startActivity(Intent(this, RepondeurActivity::class.java)) }
+        binding.btnCredits.setOnClickListener { afficherCredits() }
+
         binding.btnRequestCallFilterRole.setOnClickListener {
             requestCallFilterRole()
         }
@@ -75,6 +84,26 @@ class SettingsActivity : BaseActivity() {
     }
     
     @Suppress("DEPRECATION")
+    private fun afficherCredits() {
+        val version = runCatching { packageManager.getPackageInfo(packageName, 0).versionName }.getOrNull().orEmpty()
+        AlertDialog.Builder(this)
+            .setTitle("Kobayashi AntiScam $version")
+            .setMessage(
+                "Conception et développement : Maitre Kobayashi\n" +
+                "Code source : github.com/MaitreKoba/KobaAntiScam\n\n" +
+                "Services utilisés\n" +
+                "• OVHcloud : ligne VoIP, répondeur et transcription des messages\n" +
+                "• Free Mobile : renvois d'appel conditionnels\n" +
+                "• Groq (Whisper) : transcription facultative\n\n" +
+                "Bibliothèques\n" +
+                "• AndroidX, Material Components, Room, WorkManager\n" +
+                "• Retrofit, OkHttp, Gson, JavaMail Android (IMAP), Security Crypto\n\n" +
+                "Vie privée : historique, messages et clés restent sur ce téléphone. Aucune télémétrie."
+            )
+            .setPositiveButton("Fermer", null)
+            .show()
+    }
+
     private fun requestCallFilterRole() {
         // TODO: Implémenter lorsque l'API est disponible
         // Nécessite Android 10+ (API 29) et le rôle CALL_SCREENING

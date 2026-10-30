@@ -10,6 +10,12 @@
 
 Dernière mise à jour : 2026-10-30
 
+## 1.11.0 (2026-10-30) : contrôle complet et corrections
+- [x] Émulateur : interrupteur Protection OK (shield.xml system_enabled bascule), accueil, Répondeur, Réglages contrôlés à l'écran
+- [x] Format réel e-mail OVH relevé : numéro « 33XXXXXXXXX » après « provenant du numéro », transcription entre « Voici la transcription » et « Attention : »
+- [x] Réglages défilables, accès Répondeur et Crédits, bouton Réglages libellé dans Répondeur, barre d'état
+- [ ] Honor : vérifier la version installée (bas de l'accueil) et installer 1.11.0
+
 ## 1.10.0 (2026-10-30) : alerte immédiate au répondeur
 - [x] CallFilterService : verdict MESSAGERIE -> Synchro.appelAuRepondeur (notification immédiate + Rappeler, relèves à 45 s, 90 s, 3 min, 6 min)
 - [ ] Honor : vérifier que la notification immédiate s'affiche et le délai réel du message
