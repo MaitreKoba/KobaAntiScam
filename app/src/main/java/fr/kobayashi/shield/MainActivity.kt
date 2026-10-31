@@ -1,8 +1,8 @@
 /*
  * FICHIER : MainActivity.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/MainActivity.kt
- * LIGNES : 185 | RÔLE : Accueil : interrupteur du système, compteurs du jour, dernière activité avec raisons, tuiles,
- *          état des services (rôle, notifications, accès aux notifications SMS, batterie) | DATE : 2026-10-31 | VERSION : 1.12.0
- * ORIGINE : Demande de la permission de notification (Android 13+) | AUTEUR : Maitre Kobayashi | STATUT : STABLE
+ * LIGNES : 186 | RÔLE : Accueil : interrupteur du système, compteurs du jour, dernière activité avec raisons, tuiles,
+ *          état des services (rôle, notifications, accès aux notifications SMS, batterie) | DATE : 2026-10-31 | VERSION : 1.15.0
+ * ORIGINE : Tuile Tri des photos | AUTEUR : Maitre Kobayashi | STATUT : STABLE
  * DÉPENDANCES : activity_main.xml, item_tuile.xml, item_log.xml, JournalVue.kt, Apparence.kt
  * LIEN : LogsActivity.kt | NOTES : clé "system_enabled" des prefs "shield" inchangée
  */
@@ -53,6 +53,7 @@ class MainActivity : BaseActivity() {
         tuile(binding.btnStats, R.drawable.ic_insights, 0xFF8E5CF7.toInt(), getString(R.string.nav_stats), getString(R.string.tuile_stats), StatsActivity::class.java)
         tuile(binding.btnSettings, R.drawable.ic_tune, 0xFF85633B.toInt(), getString(R.string.nav_settings), getString(R.string.tuile_reglages), SettingsActivity::class.java)
         tuile(binding.btnApparence, R.drawable.ic_palette, 0xFFEC5D9C.toInt(), getString(R.string.nav_apparence), getString(R.string.tuile_apparence), AppearanceActivity::class.java)
+        tuile(binding.btnPhotos, R.drawable.ic_photo_library, 0xFF3D8BD9.toInt(), "Tri des photos", "Dossiers, glisser pour trier", TriPhotosActivity::class.java)
         tuile(binding.btnUpdate, R.drawable.ic_download, 0xFF2E9E5B.toInt(), getString(R.string.nav_update), getString(R.string.tuile_maj), UpdateActivity::class.java)
 
         binding.btnApparenceRapide.setOnClickListener { startActivity(Intent(this, AppearanceActivity::class.java)) }

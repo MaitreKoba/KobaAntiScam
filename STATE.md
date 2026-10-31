@@ -10,6 +10,10 @@
 
 Dernière mise à jour : 2026-10-30
 
+## 1.15.0 (2026-10-31) : tri des photos
+- [x] TriPhotosActivity : dossiers (MediaStore BUCKET), consulter, mode suppression par glissement, vérification, createDeleteRequest (Android 11+)
+- [ ] Non testé sur appareil ; Android 10 : suppression en lot non proposée
+
 ## 1.14.0 (2026-10-31) : écoute en continu du répondeur
 - [x] Service Ecoute (IMAP IDLE, specialUse), DemarrageReceiver (BOOT_COMPLETED, MY_PACKAGE_REPLACED), Module.ECOUTE
 - [ ] Non testé sur appareil (émulateur arrêté faute de mémoire) : notification « Répondeur à l'écoute », délai réel d'un message, tenue sur Honor écran éteint

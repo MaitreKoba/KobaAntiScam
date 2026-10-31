@@ -10,6 +10,11 @@
 
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr-FR/1.0.0/).
 
+## [1.15.0] - 2026-10-31
+### Ajouté
+- Tri des photos (tuile d'accueil) : liste des dossiers du téléphone avec nombre de photos, « Consulter » (grille, ouverture dans la galerie) ou « Mode suppression » : une photo à la fois, glisser à gauche pour supprimer, à droite pour garder, boutons Supprimer / Annuler / Garder.
+- « Terminer » (en haut à droite) ouvre la vérification : les photos marquées en rouge, un appui pour en garder une ou plusieurs, puis « Supprimer N photo(s) » avec la confirmation système d'Android. Rien n'est effacé avant.
+
 ## [1.14.0] - 2026-10-31
 ### Ajouté
 - Écoute en continu du répondeur (IMAP IDLE) : un nouveau message vocal est notifié en quelques secondes, y compris pour un appel direct au 09, au lieu de la relève toutes les 15 min. Notification permanente discrète « Répondeur à l'écoute » (imposée par Android). Ping toutes les 9 min, reconnexion automatique, relance au démarrage du téléphone et par la tâche des 15 min.
