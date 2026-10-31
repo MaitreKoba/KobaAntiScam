@@ -10,6 +10,14 @@
 
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr-FR/1.0.0/).
 
+## [1.13.0] - 2026-10-31
+### Ajouté
+- Réglages, section « Modules » : un interrupteur par règle d'appel (contacts, numéros déjà appelés, rappel sous 3 min, rejet du démarchage, arnaque au rappel, anti-rotation), pour le SMS anti-arnaque et pour chaque type d'alerte (tentatives d'appel, appels bloqués, messages du répondeur). Tout est actif par défaut.
+- Alerte « Appel silencieux » quand un inconnu est mis en sonnerie coupée : chaque appel qui ne sonne pas est signalé.
+
+### Notes
+- Couper « Contacts » et « Numéros déjà appelés » permet de tester le répondeur avec son autre téléphone sans masquer le numéro (le « #31# » est refusé par l'option anti-appels masqués de l'opérateur ou du téléphone).
+
 ## [1.12.1] - 2026-10-31
 ### Corrigé
 - Historique : les SMS ordinaires (proches compris) n'y sont plus enregistrés, avec leur raison technique « Package: … ». Seuls les SMS suspects et ceux bloqués par une règle y figurent.

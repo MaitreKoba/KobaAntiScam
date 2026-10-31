@@ -1,7 +1,7 @@
 /*
  * FICHIER : SmsNotificationListener.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/service/SmsNotificationListener.kt
- * LIGNES : 206 | RÔLE : Notifications des SMS : règles perso, puis anti-arnaque (lien désarmé, score, signalement 33700)
- * DATE : 2026-10-31 | VERSION : 1.12.1 | ORIGINE : SMS ordinaires plus enregistrés dans l'historique | AUTEUR : Maitre Kobayashi
+ * LIGNES : 207 | RÔLE : Notifications des SMS : règles perso, puis anti-arnaque (lien désarmé, score, signalement 33700)
+ * DATE : 2026-10-31 | VERSION : 1.13.0 | ORIGINE : Module SMS activable | AUTEUR : Maitre Kobayashi
  * STATUT : STABLE | DÉPENDANCES : SmsAnalyse.kt, Notifs.kt, Decision.kt, RuleDatabase | LIEN : LogsActivity.kt
  * NOTES : une app non définie par défaut ne bloque pas le SMS : elle masque sa notification et en poste une autre.
  *         Le SMS reste lisible dans Messages. Build debug : com.android.shell accepté pour les tests adb.
@@ -23,6 +23,7 @@ import fr.kobayashi.shield.Notifs
 import fr.kobayashi.shield.model.Decision
 import fr.kobayashi.shield.model.LogEntry
 import fr.kobayashi.shield.model.LogType
+import fr.kobayashi.shield.model.Module
 import fr.kobayashi.shield.model.RuleAction
 import fr.kobayashi.shield.model.RuleDatabase
 import fr.kobayashi.shield.model.RuleType
@@ -90,7 +91,7 @@ class SmsNotificationListener : NotificationListenerService() {
         if (text.isBlank()) return
 
         val number = extractPhoneNumber(title)
-        if (antiArnaque(sbn, title, text, number)) return
+        if (Module.SMS.actif(this) && antiArnaque(sbn, title, text, number)) return
         if (number == null) {
             Log.d(tag, "No phone number extracted from notification")
             return

@@ -10,6 +10,11 @@
 
 Dernière mise à jour : 2026-10-30
 
+## 1.13.0 (2026-10-31) : modules activables dans Réglages
+- [x] Module (enum) : 6 règles d'appel, SMS, 3 types d'alerte ; Decision, CallFilterService, Synchro, SmsNotificationListener branchés
+- [x] #31# refusé : « le correspondant ne veut pas d'appels masqués » vient de Free ou du Honor, pas de l'app
+- [ ] Honor : couper Contacts + Déjà appelés, appel depuis l'autre téléphone, vérifier répondeur et alertes, puis tout réactiver
+
 ## 1.12.1 (2026-10-31) : historique des SMS lisible
 - [x] SMS ordinaires plus journalisés, expéditeur lisible, texte désarmé et actions sur les SMS suspects
 - [ ] Vérification visuelle (émulateur arrêté faute de mémoire) et sur le Honor

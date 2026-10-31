@@ -1,8 +1,8 @@
 /*
  * FICHIER : Synchro.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/repondeur/Synchro.kt
- * LIGNES : 198 | RÔLE : Récupère les nouveaux messages vocaux (IMAP), les transcrit, les classe, les enregistre et
+ * LIGNES : 201 | RÔLE : Récupère les nouveaux messages vocaux (IMAP), les transcrit, les classe, les enregistre et
  *          notifie (transcription Groq, sinon texte de l'e-mail OVH) ; tâche WorkManager toutes les 15 min
- * DATE : 2026-10-30 | VERSION : 1.12.0 | ORIGINE : Modification (autorisation réelle des notifications, dernière relève) | AUTEUR : Maitre Kobayashi | STATUT : STABLE
+ * DATE : 2026-10-30 | VERSION : 1.13.0 | ORIGINE : Modification (notifications activables) | AUTEUR : Maitre Kobayashi | STATUT : STABLE
  * DÉPENDANCES : BoiteMail.kt, Transcription.kt, Classement.kt, MessagesVocaux.kt, work-runtime-ktx
  * LIEN : MessagesActivity.kt, ShieldApp.kt | NOTES : le démarchage n'est pas notifié sauf réglage contraire
  */
@@ -30,6 +30,7 @@ import fr.kobayashi.shield.MessagesActivity
 import fr.kobayashi.shield.Notifs
 import fr.kobayashi.shield.R
 import fr.kobayashi.shield.model.Decision
+import fr.kobayashi.shield.model.Module
 import fr.kobayashi.shield.model.Rules
 import java.util.concurrent.TimeUnit
 
@@ -68,7 +69,9 @@ object Synchro {
         }
         val messages = emails.map { e -> traiter(context, r, e) }
         MessagesVocaux.ajouter(context, messages)
-        messages.filter { it.categorie != Categorie.DEMARCHAGE || r.notifierDemarchage }.forEach { notifier(context, it) }
+        if (Module.NOTIF_MESSAGES.actif(context)) {
+            messages.filter { it.categorie != Categorie.DEMARCHAGE || r.notifierDemarchage }.forEach { notifier(context, it) }
+        }
         Log.d(TAG, "Répondeur : ${messages.size} nouveau(x) message(s)")
         return Resultat(messages.size)
     }
@@ -141,9 +144,9 @@ object Synchro {
     }
 
     /** Appel renvoyé au répondeur : prévient tout de suite, puis relève la boîte sans attendre la tâche des 15 min */
-    fun appelAuRepondeur(context: Context, brut: String) {
+    fun appelAuRepondeur(context: Context, brut: String, alerter: Boolean = true) {
         relancer(context)
-        if (!Notifs.autorisees(context)) return
+        if (!alerter || !Notifs.autorisees(context)) return
         val nm = context.getSystemService(NotificationManager::class.java)
         nm.createNotificationChannel(NotificationChannel(CANAL_APPELS, "Appels envoyés au répondeur", NotificationManager.IMPORTANCE_HIGH))
         val id = (System.currentTimeMillis() / 1000).toInt()

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- FICHIER : activity_settings.xml | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/res/layout/activity_settings.xml
-     LIGNES : 286 | RÔLE : Écran Réglages : accès au répondeur, rôle, notifications, batterie, mises à jour, modes, listes, crédits
-     DATE : 2026-10-31 | VERSION : 1.12.0 | ORIGINE : Bouton Diagnostic et tests
+     LIGNES : 306 | RÔLE : Écran Réglages : accès au répondeur, rôle, notifications, batterie, mises à jour, modes, listes, crédits
+     DATE : 2026-10-31 | VERSION : 1.13.0 | ORIGINE : Section Modules (interrupteurs)
      AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : themes.xml | LIEN : SettingsActivity.kt | NOTES : - -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -50,6 +50,26 @@
         android:text="Diagnostic et tests (notifications, relève, appel simulé)"
         android:textAllCaps="false"
         android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Modules"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Active ou coupe chaque règle et chaque alerte. Tout est actif par défaut." />
+
+    <LinearLayout
+        android:id="@+id/listeModules"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical" />
 
     <LinearLayout
         android:layout_width="match_parent"

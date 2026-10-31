@@ -2,8 +2,8 @@
  * FICHIER : Decision.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/model/Decision.kt
  * LIGNES : 173 | RÔLE : Décision pour un appel entrant (action + raison lisible pour le journal), dans l'ordre :
  *          système coupé, règle perso, contact, liste blanche, déjà appelé, démarchage ARCEP, rappel sous 3 min,
- *          pays d'arnaque au rappel, rotation de numéros, inconnu ou masqué | DATE : 2026-10-31 | VERSION : 1.12.0
- * ORIGINE : Mode simulation sans enregistrement | AUTEUR : Maitre Kobayashi | STATUT : STABLE
+ *          pays d'arnaque au rappel, rotation de numéros, inconnu ou masqué | DATE : 2026-10-31 | VERSION : 1.13.0
+ * ORIGINE : Chaque règle activable (Modules) | AUTEUR : Maitre Kobayashi | STATUT : STABLE
  * DÉPENDANCES : Rules.kt, ContactsHelper.kt, RuleDatabase | LIEN : CallFilterService.kt
  * NOTES : un inconnu n'est jamais rejeté sur simple soupçon : il part en messagerie pour qu'un vrai correspondant
  *         puisse laisser un message. Seuls ARCEP, pays d'arnaque au rappel, rotation et règles perso rejettent.
@@ -64,24 +64,24 @@ object Decision {
 
         val neutres = ContactsHelper.getNeutralList(context)
         val nomContact = nomContact(context, numero)
-        if (nomContact != null && numero !in neutres) return Verdict(Action.SONNE, "Contact", nomContact)
+        if (Module.CONTACTS.actif(context) && nomContact != null && numero !in neutres) return Verdict(Action.SONNE, "Contact", nomContact)
 
         val blanche = ContactsHelper.getAllowlist(context) + (prefs.getStringSet("allowlist", emptySet()) ?: emptySet())
         if (blanche.any { correspond(numero, it) }) return Verdict(Action.SONNE, "Liste blanche")
 
-        if (dejaAppele(context, numero)) return Verdict(Action.SONNE, "Numéro que tu as déjà appelé")
+        if (Module.DEJA_APPELE.actif(context) && dejaAppele(context, numero)) return Verdict(Action.SONNE, "Numéro que tu as déjà appelé")
 
-        if (Rules.isArcpPrefix(numero)) {
+        if (Module.ARCEP.actif(context) && Rules.isArcpPrefix(numero)) {
             noterAppelInconnu(context, numero, !simulation)
             return Verdict(Action.REJET, "Démarchage : préfixe ARCEP ${Rules.affichage(numero).take(5)}")
         }
 
-        if (rappelRecent(context, numero)) {
+        if (Module.RAPPEL.actif(context) && rappelRecent(context, numero)) {
             noterAppelInconnu(context, numero, !simulation)
             return Verdict(Action.SONNE, "A rappelé en moins de 3 min : sûrement une vraie personne")
         }
 
-        val indicatif = PAYS_ARNAQUE_RAPPEL.keys.firstOrNull { numero.startsWith("+$it") }
+        val indicatif = if (!Module.PAYS.actif(context)) null else PAYS_ARNAQUE_RAPPEL.keys.firstOrNull { numero.startsWith("+$it") }
         if (indicatif != null) {
             noterAppelInconnu(context, numero, !simulation)
             return Verdict(Action.REJET, "Arnaque au rappel probable : +$indicatif ${PAYS_ARNAQUE_RAPPEL[indicatif]}")
@@ -90,7 +90,7 @@ object Decision {
         val appelsTranche = noterAppelInconnu(context, numero, !simulation)
         val seuil = context.getSharedPreferences("slice_prefs", Context.MODE_PRIVATE)
             .getInt("slice_threshold", SEUIL_TRANCHE_DEFAUT)
-        if (appelsTranche > seuil) {
+        if (Module.ROTATION.actif(context) && appelsTranche > seuil) {
             return Verdict(Action.REJET, "Rotation de numéros : $appelsTranche numéros différents en ${tranche(numero)}xx en 24 h")
         }
 

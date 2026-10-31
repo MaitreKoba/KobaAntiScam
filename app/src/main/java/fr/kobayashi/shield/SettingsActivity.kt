@@ -1,7 +1,7 @@
 /*
  * FICHIER : SettingsActivity.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/SettingsActivity.kt
- * LIGNES : 453 | RÔLE : Réglages : accès au répondeur, rôle de filtrage, notifications, batterie, modes, listes, crédits
- * DATE : 2026-10-31 | VERSION : 1.12.0 | ORIGINE : Diagnostic et tests (notifications, relève, appel simulé) | AUTEUR : Maitre Kobayashi
+ * LIGNES : 488 | RÔLE : Réglages : accès au répondeur, rôle de filtrage, notifications, batterie, modes, listes, crédits
+ * DATE : 2026-10-31 | VERSION : 1.13.0 | ORIGINE : Section Modules (interrupteurs des règles et alertes) | AUTEUR : Maitre Kobayashi
  * STATUT : STABLE | DÉPENDANCES : activity_settings.xml, RepondeurActivity.kt | LIEN : MainActivity.kt | NOTES : -
  */
 package fr.kobayashi.shield
@@ -17,13 +17,18 @@ import android.provider.Settings
 import android.text.InputType
 import android.text.format.DateUtils
 import android.util.Log
+import android.graphics.Typeface
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
+import com.google.android.material.materialswitch.MaterialSwitch
 import androidx.lifecycle.lifecycleScope
 import fr.kobayashi.shield.databinding.ActivitySettingsBinding
 import fr.kobayashi.shield.model.Decision
+import fr.kobayashi.shield.model.Module
 import fr.kobayashi.shield.model.Rules
 import fr.kobayashi.shield.repondeur.RepondeurConfig
 import fr.kobayashi.shield.repondeur.Synchro
@@ -50,6 +55,7 @@ class SettingsActivity : BaseActivity() {
         binding.btnRepondeurReglages.setOnClickListener { startActivity(Intent(this, RepondeurActivity::class.java)) }
         binding.btnCredits.setOnClickListener { afficherCredits() }
         binding.btnDiagnostic.setOnClickListener { afficherDiagnostic() }
+        afficherModules()
 
         binding.btnRequestCallFilterRole.setOnClickListener {
             requestCallFilterRole()
@@ -98,6 +104,35 @@ class SettingsActivity : BaseActivity() {
     }
     
     @Suppress("DEPRECATION")
+    private fun afficherModules() {
+        val liste = binding.listeModules
+        liste.removeAllViews()
+        val dp = resources.displayMetrics.density
+        val gris = ContextCompat.getColor(this, R.color.ink3)
+        Module.values().groupBy { it.section }.forEach { (section, modules) ->
+            liste.addView(TextView(this).apply {
+                text = section
+                textSize = 13f
+                setTypeface(typeface, Typeface.BOLD)
+                setTextColor(gris)
+                setPadding(0, (14 * dp).toInt(), 0, 0)
+            })
+            modules.forEach { m ->
+                liste.addView(MaterialSwitch(this).apply {
+                    text = m.titre
+                    textSize = 15f
+                    isChecked = m.actif(context)
+                    setOnCheckedChangeListener { _, actif -> m.regler(context, actif) }
+                })
+                liste.addView(TextView(this).apply {
+                    text = m.description
+                    textSize = 12f
+                    setTextColor(gris)
+                })
+            }
+        }
+    }
+
     private fun afficherDiagnostic() {
         val ok = { b: Boolean -> if (b) "OK" else "À CORRIGER" }
         val r = RepondeurConfig.lire(this)
