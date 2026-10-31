@@ -1,16 +1,18 @@
 /*
  * FICHIER : MainActivity.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/MainActivity.kt
- * LIGNES : 175 | RÔLE : Accueil : interrupteur du système, compteurs du jour, dernière activité avec raisons, tuiles,
- *          état des services (rôle de filtrage, accès aux notifications, batterie) | DATE : 2026-10-16 | VERSION : 1.9.0
- * ORIGINE : Refonte accueil sans emojis, tuile Répondeur en 1.9.0 | AUTEUR : Maitre Kobayashi | STATUT : STABLE
+ * LIGNES : 186 | RÔLE : Accueil : interrupteur du système, compteurs du jour, dernière activité avec raisons, tuiles,
+ *          état des services (rôle, notifications, accès aux notifications SMS, batterie) | DATE : 2026-10-31 | VERSION : 1.15.0
+ * ORIGINE : Tuile Tri des photos | AUTEUR : Maitre Kobayashi | STATUT : STABLE
  * DÉPENDANCES : activity_main.xml, item_tuile.xml, item_log.xml, JournalVue.kt, Apparence.kt
  * LIEN : LogsActivity.kt | NOTES : clé "system_enabled" des prefs "shield" inchangée
  */
 package fr.kobayashi.shield
 
+import android.Manifest
 import android.app.role.RoleManager
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
 import android.text.format.DateUtils
@@ -21,6 +23,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
@@ -50,6 +53,7 @@ class MainActivity : BaseActivity() {
         tuile(binding.btnStats, R.drawable.ic_insights, 0xFF8E5CF7.toInt(), getString(R.string.nav_stats), getString(R.string.tuile_stats), StatsActivity::class.java)
         tuile(binding.btnSettings, R.drawable.ic_tune, 0xFF85633B.toInt(), getString(R.string.nav_settings), getString(R.string.tuile_reglages), SettingsActivity::class.java)
         tuile(binding.btnApparence, R.drawable.ic_palette, 0xFFEC5D9C.toInt(), getString(R.string.nav_apparence), getString(R.string.tuile_apparence), AppearanceActivity::class.java)
+        tuile(binding.btnPhotos, R.drawable.ic_photo_library, 0xFF3D8BD9.toInt(), "Tri des photos", "Dossiers, glisser pour trier", TriPhotosActivity::class.java)
         tuile(binding.btnUpdate, R.drawable.ic_download, 0xFF2E9E5B.toInt(), getString(R.string.nav_update), getString(R.string.tuile_maj), UpdateActivity::class.java)
 
         binding.btnApparenceRapide.setOnClickListener { startActivity(Intent(this, AppearanceActivity::class.java)) }
@@ -68,7 +72,13 @@ class MainActivity : BaseActivity() {
         lifecycleScope.launch {
             RuleDatabase.getDatabase().logDao().getAllLogs().collect { majActivite(it) }
         }
+        // Sans cet accord (Android 13+), aucune alerte d'appel, de SMS ou de message vocal ne s'affiche
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !Notifs.autorisees(this)) {
+            demandeNotifs.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
     }
+
+    private val demandeNotifs = registerForActivityResult(ActivityResultContracts.RequestPermission()) { majServices() }
 
     override fun onResume() {
         super.onResume()
@@ -77,11 +87,6 @@ class MainActivity : BaseActivity() {
         majDisposition()
         val nonLus = fr.kobayashi.shield.repondeur.MessagesVocaux.nonLus(this)
         binding.btnRepondeur.sousTitre.text = if (nonLus > 0) "$nonLus message(s) non lu(s)" else "Messages vocaux OVH"
-        binding.tvSalut.text = when (Calendar.getInstance().get(Calendar.HOUR_OF_DAY)) {
-            in 5..11 -> "Bonjour, ton téléphone est surveillé"
-            in 12..17 -> "Bon après-midi, ton téléphone est surveillé"
-            else -> "Bonsoir, ton téléphone est surveillé"
-        }
     }
 
     private fun tuile(t: ItemTuileBinding, icone: Int, couleur: Int, titre: String, sous: String, cible: Class<*>) {
@@ -96,6 +101,12 @@ class MainActivity : BaseActivity() {
     private fun majEtat() {
         val actif = getSharedPreferences("shield", MODE_PRIVATE).getBoolean("system_enabled", true)
         binding.switchSystem.isChecked = actif
+        val salut = when (Calendar.getInstance().get(Calendar.HOUR_OF_DAY)) {
+            in 5..11 -> "Bonjour"
+            in 12..17 -> "Bon après-midi"
+            else -> "Bonsoir"
+        }
+        binding.tvSalut.text = if (actif) "$salut, ton téléphone est surveillé" else "$salut, la protection est en pause"
         binding.titreEtat.text = if (actif) "Protection active" else "Protection en pause"
         binding.statusText.text = getString(if (actif) R.string.etat_actif_desc else R.string.etat_inactif_desc)
         binding.iconeEtat.setImageResource(if (actif) R.drawable.ic_verified_user else R.drawable.ic_remove_moderator)
@@ -140,9 +151,11 @@ class MainActivity : BaseActivity() {
         val roleOk = getSystemService(RoleManager::class.java)?.isRoleHeld(RoleManager.ROLE_CALL_SCREENING) == true
         val notifOk = NotificationManagerCompat.getEnabledListenerPackages(this).contains(packageName)
         val batterieOk = getSystemService(PowerManager::class.java)?.isIgnoringBatteryOptimizations(packageName) == true
+        val alertesOk = Notifs.autorisees(this)
         binding.listeServices.removeAllViews()
         listOf(
             Triple("Filtrage des appels", roleOk, if (roleOk) "Rôle attribué" else "Rôle à attribuer dans les réglages"),
+            Triple("Notifications", alertesOk, if (alertesOk) "Alertes autorisées" else "Bloquées : aucune alerte ne s'affichera"),
             Triple("Lecture des notifications SMS", notifOk, if (notifOk) "Accès activé" else "Accès à activer"),
             Triple("Batterie", batterieOk, if (batterieOk) "Pas de mise en veille" else "Exclure de l'optimisation (Honor)"),
         ).forEach { (nom, ok, detail) -> binding.listeServices.addView(ligneService(nom, ok, detail)) }

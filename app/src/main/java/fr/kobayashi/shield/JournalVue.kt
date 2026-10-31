@@ -1,9 +1,9 @@
 /*
  * FICHIER : JournalVue.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/JournalVue.kt
- * LIGNES : 150 | RÔLE : Présentation d'une entrée du journal (icône, couleur, verdict, étiquette Spam / Sûr / Inconnu,
+ * LIGNES : 200 | RÔLE : Présentation d'une entrée du journal (icône, couleur, verdict, étiquette Spam / Sûr / Inconnu,
  *          titre, numéro, raison, heure) et menu
  *          d'actions (autoriser, bloquer, appeler, copier) partagés par l'accueil et l'historique
- * DATE : 2026-10-16 | VERSION : 1.9.0 | ORIGINE : Refonte accueil et journal, étiquette et numéro toujours visible en 1.8.0, heure(ts) en 1.9.0 | AUTEUR : Maitre Kobayashi | STATUT : STABLE
+ * DATE : 2026-10-31 | VERSION : 1.12.1 | ORIGINE : SMS dans l'historique : expéditeur lisible, texte désarmé, actions 33700 et copie | AUTEUR : Maitre Kobayashi | STATUT : STABLE
  * DÉPENDANCES : item_log.xml, LogEntry.kt, ContactsHelper.kt | LIEN : LogAdapter.kt, MainActivity.kt
  * NOTES : les anciennes entrées sans raison affichent un texte générique. L'étiquette est déduite du type d'entrée,
  *         sans colonne en base : rejeté = Spam, a sonné = Sûr, messagerie ou silencieux = Inconnu
@@ -64,7 +64,7 @@ object JournalVue {
 
     fun titre(log: LogEntry): String = when (log.type) {
         LogType.UPDATE_CHECK, LogType.ERROR -> log.message ?: log.displayText()
-        LogType.SMS_RECEIVED, LogType.SMS_BLOCKED -> log.phoneNumber?.let { Rules.affichage(it) } ?: "Expéditeur inconnu"
+        LogType.SMS_RECEIVED, LogType.SMS_BLOCKED -> expediteur(log.phoneNumber)
         else -> {
             val numero = log.phoneNumber?.let { Rules.affichage(it) }
             when {
@@ -76,6 +76,9 @@ object JournalVue {
     }
 
     fun raison(log: LogEntry): String {
+        if (log.type == LogType.SMS_BLOCKED || log.type == LogType.SMS_RECEIVED) {
+            return listOfNotNull(log.details?.takeUnless { it.startsWith("Package:") }, log.message).joinToString(" · ")
+        }
         val r = when (val m = motif(log)) {
             "Inconnu" -> "Pas dans tes contacts"
             "Inconnu, numéro étranger" -> "Numéro étranger, pas dans tes contacts"
@@ -92,6 +95,13 @@ object JournalVue {
         LogType.CALL_SILENCED -> "Sonnerie coupée"
         LogType.SMS_RECEIVED, LogType.SMS_BLOCKED -> log.message ?: ""
         else -> ""
+    }
+
+    /** Numéro complet mis en forme ; nom ou numéro court d'expéditeur (36105, AMELI) laissé tel quel */
+    private fun expediteur(brut: String?): String = when {
+        brut.isNullOrBlank() -> "Expéditeur inconnu"
+        brut.count { it.isDigit() } >= 9 -> Rules.affichage(brut)
+        else -> brut
     }
 
     fun heure(log: LogEntry): String = heure(log.timestamp)
@@ -135,10 +145,28 @@ object JournalVue {
         if (numero != null && log.type in listOf(LogType.CALL_INCOMING, LogType.CALL_BLOCKED, LogType.CALL_VOICEMAIL, LogType.CALL_SILENCED)) {
             b.root.isClickable = true
             b.root.setOnClickListener { actions(ctx, numero, scope) }
+        } else if (log.type == LogType.SMS_BLOCKED && !log.message.isNullOrBlank()) {
+            b.root.isClickable = true
+            b.root.setOnClickListener { actionsSms(ctx, titre(log), log.message) }
         } else {
             b.root.isClickable = false
             b.root.setOnClickListener(null)
         }
+    }
+
+    private fun actionsSms(ctx: Context, expediteur: String, texte: String) {
+        MaterialAlertDialogBuilder(ctx)
+            .setTitle(expediteur)
+            .setMessage(texte)
+            .setPositiveButton("Signaler au 33700") { _, _ ->
+                ctx.startActivity(Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:33700")).putExtra("sms_body", "$expediteur : $texte"))
+            }
+            .setNeutralButton("Copier le texte") { _, _ ->
+                ctx.getSystemService(ClipboardManager::class.java)?.setPrimaryClip(ClipData.newPlainText("sms", texte))
+                Toast.makeText(ctx, "Texte copié", Toast.LENGTH_SHORT).show()
+            }
+            .setNegativeButton("Fermer", null)
+            .show()
     }
 
     private fun actions(ctx: Context, numero: String, scope: LifecycleCoroutineScope) {

@@ -1,8 +1,8 @@
 /*
  * FICHIER : RepondeurActivity.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/RepondeurActivity.kt
- * LIGNES : 170 | RÔLE : Réglages du répondeur OVH : boîte mail (test de connexion), numéro OVH (liste blanche),
- *          transcription Groq, codes de renvoi conditionnel Free prêts à composer | DATE : 2026-10-16 | VERSION : 1.9.0
- * ORIGINE : Création | AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : activity_repondeur.xml, paquet repondeur
+ * LIGNES : 153 | RÔLE : Réglages du répondeur OVH : boîte mail (test de connexion), numéro OVH (liste blanche),
+ *          transcription Groq, codes de renvoi conditionnel Free prêts à composer | DATE : 2026-10-30 | VERSION : 1.9.1
+ * ORIGINE : Modification (vérifier 61/62, annuler toujours visible) | AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : activity_repondeur.xml, paquet repondeur
  * LIEN : MessagesActivity.kt | NOTES : les codes s'ouvrent dans le composeur, l'utilisateur appuie lui-même sur Appeler.
  *        Jamais de renvoi permanent (**21) : contacts et patrons doivent continuer à sonner.
  */
@@ -107,18 +107,23 @@ class RepondeurActivity : BaseActivity() {
         val national = if (chiffres.isBlank()) "" else Rules.affichage(chiffres).replace(" ", "")
         val liste = binding.listeRenvois
         while (liste.childCount > 1) liste.removeViewAt(1)
-        if (national.length != 10) {
-            binding.tvRenvois.text = "Saisis le numéro de ta ligne OVH : les codes de renvoi apparaîtront ici, prêts à composer depuis ton 06."
-            return
+        val activer = if (national.length == 10) {
+            binding.tvRenvois.text = "Seuls les appels que tu ne prends pas partent vers $national : inconnus raccrochés par l'app, absence de réponse, téléphone éteint. Tes contacts sonnent toujours. Touche Composer, puis Appeler. Gratuit chez Free."
+            listOf(
+                Triple("Si occupé (inconnus filtrés par l'app)", "**67*$national#", "Composer"),
+                Triple("Si pas de réponse", "**61*$national#", "Composer"),
+                Triple("Si éteint ou sans réseau", "**62*$national#", "Composer"),
+            )
+        } else {
+            binding.tvRenvois.text = "Saisis le numéro de ta ligne OVH pour obtenir les codes d'activation. Vérifier et annuler restent disponibles, y compris pour des renvois composés à la main."
+            emptyList()
         }
-        binding.tvRenvois.text = "Seuls les appels que tu ne prends pas partent vers $national : inconnus raccrochés par l'app, absence de réponse, téléphone éteint. Tes contacts sonnent toujours. Touche Composer, puis Appeler. Gratuit chez Free."
-        listOf(
-            Triple("Si occupé (inconnus filtrés par l'app)", "**67*$national#", "Composer"),
-            Triple("Si pas de réponse", "**61*$national#", "Composer"),
-            Triple("Si éteint ou sans réseau", "**62*$national#", "Composer"),
+        (activer + listOf(
             Triple("Vérifier le renvoi si occupé", "*#67#", "Vérifier"),
+            Triple("Vérifier le renvoi si pas de réponse", "*#61#", "Vérifier"),
+            Triple("Vérifier le renvoi si éteint", "*#62#", "Vérifier"),
             Triple("Tout annuler (retour à la messagerie Free)", "##002#", "Annuler"),
-        ).forEach { (titre, code, bouton) -> liste.addView(ligneCode(titre, code, bouton)) }
+        )).forEach { (titre, code, bouton) -> liste.addView(ligneCode(titre, code, bouton)) }
     }
 
     private fun ligneCode(titre: String, code: String, bouton: String): View {

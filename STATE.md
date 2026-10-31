@@ -8,7 +8,60 @@
  * LIEN : STATE.md | NOTES : État courant après renommage en Kobayashi AntiScam
  */
 
-Dernière mise à jour : 2026-10-16
+Dernière mise à jour : 2026-10-30
+
+## 1.15.0 (2026-10-31) : tri des photos
+- [x] TriPhotosActivity : dossiers (MediaStore BUCKET), consulter, mode suppression par glissement, vérification, createDeleteRequest (Android 11+)
+- [ ] Non testé sur appareil ; Android 10 : suppression en lot non proposée
+
+## 1.14.0 (2026-10-31) : écoute en continu du répondeur
+- [x] Service Ecoute (IMAP IDLE, specialUse), DemarrageReceiver (BOOT_COMPLETED, MY_PACKAGE_REPLACED), Module.ECOUTE
+- [ ] Non testé sur appareil (émulateur arrêté faute de mémoire) : notification « Répondeur à l'écoute », délai réel d'un message, tenue sur Honor écran éteint
+
+## 1.13.2 (2026-10-31) : appels des contacts invisibles pour l'app
+- [x] Constat : appel depuis un contact absent de l'historique, normal (Android ne lie pas le CallScreeningService pour les contacts)
+- [ ] Test Honor : retirer l'autre téléphone des contacts, couper « Numéros déjà appelés », appeler
+
+## 1.13.1 (2026-10-31) : rôle de filtrage demandable, voir et configurer
+- [x] Bouton « Activer le rôle » réel (RoleManager), alertes de prérequis en tête de Modules, mode « suspects uniquement »
+- [ ] Honor : Réglages, vérifier les alertes rouges, activer le rôle si demandé, puis tester un appel inconnu
+
+## 1.13.0 (2026-10-31) : modules activables dans Réglages
+- [x] Module (enum) : 6 règles d'appel, SMS, 3 types d'alerte ; Decision, CallFilterService, Synchro, SmsNotificationListener branchés
+- [x] #31# refusé : « le correspondant ne veut pas d'appels masqués » vient de Free ou du Honor, pas de l'app
+- [ ] Honor : couper Contacts + Déjà appelés, appel depuis l'autre téléphone, vérifier répondeur et alertes, puis tout réactiver
+
+## 1.12.1 (2026-10-31) : historique des SMS lisible
+- [x] SMS ordinaires plus journalisés, expéditeur lisible, texte désarmé et actions sur les SMS suspects
+- [ ] Vérification visuelle (émulateur arrêté faute de mémoire) et sur le Honor
+
+## 1.12.0 (2026-10-31) : notifications, SMS anti-arnaque, diagnostic
+- [x] Cause probable des notifications absentes sur le Honor : permission Android 13 vérifiée même sur Android 12-, et plantage de l'app à chaque SMS (regex)
+- [x] Émulateur : faux SMS « Colis… https://bit.ly/x1 » intercepté, alerte 95/100, original masqué ; simulation 09 48 : REJET + notification, rien d'enregistré
+- [ ] Honor : installer 1.12.0, Réglages, Diagnostic, Tester une notification ; vrai SMS et vrai appel inconnu
+- [ ] Annonces différentes selon le cas : demande d'une ligne OVH par annonce (option payante, décision de l'utilisateur)
+
+## 1.11.0 (2026-10-30) : contrôle complet et corrections
+- [x] Émulateur : interrupteur Protection OK (shield.xml system_enabled bascule), accueil, Répondeur, Réglages contrôlés à l'écran
+- [x] Format réel e-mail OVH relevé : numéro « 33XXXXXXXXX » après « provenant du numéro », transcription entre « Voici la transcription » et « Attention : »
+- [x] Réglages défilables, accès Répondeur et Crédits, bouton Réglages libellé dans Répondeur, barre d'état
+- [ ] Honor : vérifier la version installée (bas de l'accueil) et installer 1.11.0
+
+## 1.10.0 (2026-10-30) : alerte immédiate au répondeur
+- [x] CallFilterService : verdict MESSAGERIE -> Synchro.appelAuRepondeur (notification immédiate + Rappeler, relèves à 45 s, 90 s, 3 min, 6 min)
+- [ ] Honor : vérifier que la notification immédiate s'affiche et le délai réel du message
+- [ ] Écran Contacts (liste + rôle Sonne, Messagerie, Bloqué) : demandé, à préciser
+
+## 1.9.2 (2026-10-30) : notification avec le texte du message
+- [x] Synchro.notifier : transcription Groq, sinon corps de l'e-mail OVH (leur transcription IA)
+- [ ] Format exact de l'e-mail OVH à relever pour n'afficher que la transcription et classer sans clé Groq
+
+## 1.9.1 (2026-10-30) : ligne OVH configurée, renvois Free actifs
+- [x] Ligne OVH 09 72 12 02 56 : renvoi de tous les appels vers le répondeur, notification vers repondeur@kobacraft.net (transcription et audio joint), annonce personnalisée importée (option « Annonce personnalisée »)
+- [x] Renvois Free **67, **61, **62 vers 0972120256 composés à la main sur le Honor
+- [x] Écran Répondeur : Vérifier 67/61/62 et Tout annuler toujours visibles
+- [ ] Honor : installer 1.9.1, réglages du répondeur dans l'app, test d'un vrai appel inconnu, format de l'e-mail OVH et numéro transmis
+- [ ] Révoquer l'ancien token GitHub (présent dans l'historique git)
 
 ## 1.9.0 (2026-10-16) : répondeur OVH dans l'app
 - [x] Paquet `repondeur` : RepondeurConfig (chiffré), BoiteMail (IMAP), Transcription (Groq), Classement, MessagesVocaux (JSON local), Synchro (WorkManager 15 min, notifications)
@@ -130,7 +183,7 @@ adb shell cmd notification post -t "36105" shield_test "Code 1234"
 - **Branche**: main
 - **Commit initial**: 477cac7 - "Initial commit - KobaAntiScam Android app"
 - **Fichiers poussés**: 69 fichiers
-- **Token utilisé**: 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 (à conserver pour les pushes futurs)
+- **Token**: retiré du dépôt le 2026-10-30 (révoquer l'ancien sur github.com/settings/tokens)
 - **URL SSH**: git@github.com:MaitreKoba/KobaAntiScam.git
 - **URL HTTPS**: https://github.com/MaitreKoba/KobaAntiScam.git
 

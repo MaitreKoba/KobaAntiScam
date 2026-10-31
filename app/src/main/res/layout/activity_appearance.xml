@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- FICHIER : activity_appearance.xml | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/res/layout/activity_appearance.xml
      LIGNES : 90 | RÔLE : Écran Apparence : aperçu, puis sections de réglages ajoutées par AppearanceActivity
-     DATE : 2026-10-15 | VERSION : 1.6.0 | ORIGINE : Création | AUTEUR : Maitre Kobayashi | STATUT : STABLE
+     DATE : 2026-10-30 | VERSION : 1.11.0 | ORIGINE : Contenu coupé sous la barre d'état | AUTEUR : Maitre Kobayashi | STATUT : STABLE
      DÉPENDANCES : themes.xml, bg_hero.xml | LIEN : AppearanceActivity.kt | NOTES : -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clipToPadding="false">
+    android:clipToPadding="true">
 
     <LinearLayout
         android:id="@+id/conteneur"

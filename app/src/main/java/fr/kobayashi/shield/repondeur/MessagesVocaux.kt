@@ -1,7 +1,7 @@
 /*
  * FICHIER : MessagesVocaux.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/repondeur/MessagesVocaux.kt
- * LIGNES : 115 | RÔLE : Modèle d'un message vocal reçu par e-mail et stockage local (messages_vocaux.json + fichiers audio)
- * DATE : 2026-10-16 | VERSION : 1.9.0 | ORIGINE : Création | AUTEUR : Maitre Kobayashi | STATUT : STABLE
+ * LIGNES : 120 | RÔLE : Modèle d'un message vocal reçu par e-mail et stockage local (messages_vocaux.json + fichiers audio)
+ * DATE : 2026-10-30 | VERSION : 1.11.0 | ORIGINE : Modification (réparation des messages OVH au chargement) | AUTEUR : Maitre Kobayashi | STATUT : STABLE
  * DÉPENDANCES : org.json (Android) | LIEN : Synchro.kt, MessagesActivity.kt
  * NOTES : tout reste dans le dossier privé de l'app. Un fichier JSON suffit pour quelques centaines de messages
  *         et évite une migration de la base Room existante. Le flux `etat` prévient l'écran à chaque changement.
@@ -9,6 +9,7 @@
 package fr.kobayashi.shield.repondeur
 
 import android.content.Context
+import fr.kobayashi.shield.model.Rules
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.json.JSONArray
@@ -47,7 +48,20 @@ data class MessageVocal(
             categorie = runCatching { Categorie.valueOf(o.optString("categorie")) }.getOrDefault(Categorie.AUTRE),
             lu = o.optBoolean("lu"),
             erreurTranscription = o.optString("erreur").takeIf { !o.isNull("erreur") && it.isNotBlank() },
-        )
+        ).reparer()
+    }
+
+    /** Messages OVH enregistrés avant 1.11.0 : la ligne OVH était prise pour l'appelant et leur transcription ignorée */
+    private fun reparer(): MessageVocal {
+        if (!corps.contains("provenant du num", ignoreCase = true)) return this
+        val n = Classement.numeroAppelant(listOf(sujet, corps))
+        val t = transcription ?: Classement.transcriptionOvh(corps)
+        val cat = when {
+            n != null && Rules.isArcpPrefix(n) -> Categorie.DEMARCHAGE
+            categorie == Categorie.SANS_TEXTE -> Classement.categorie(t)
+            else -> categorie
+        }
+        return copy(numero = n, masque = n == null, transcription = t, categorie = cat, erreurTranscription = erreurTranscription.takeIf { t == null })
     }
 }
 

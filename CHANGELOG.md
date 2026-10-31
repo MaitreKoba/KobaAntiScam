@@ -10,6 +10,84 @@
 
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr-FR/1.0.0/).
 
+## [1.15.0] - 2026-10-31
+### Ajouté
+- Tri des photos (tuile d'accueil) : liste des dossiers du téléphone avec nombre de photos, « Consulter » (grille, ouverture dans la galerie) ou « Mode suppression » : une photo à la fois, glisser à gauche pour supprimer, à droite pour garder, boutons Supprimer / Annuler / Garder.
+- « Terminer » (en haut à droite) ouvre la vérification : les photos marquées en rouge, un appui pour en garder une ou plusieurs, puis « Supprimer N photo(s) » avec la confirmation système d'Android. Rien n'est effacé avant.
+
+## [1.14.0] - 2026-10-31
+### Ajouté
+- Écoute en continu du répondeur (IMAP IDLE) : un nouveau message vocal est notifié en quelques secondes, y compris pour un appel direct au 09, au lieu de la relève toutes les 15 min. Notification permanente discrète « Répondeur à l'écoute » (imposée par Android). Ping toutes les 9 min, reconnexion automatique, relance au démarrage du téléphone et par la tâche des 15 min.
+- Modules : interrupteur « Écoute en continu » (actif par défaut).
+
+## [1.13.2] - 2026-10-31
+### Corrigé
+- Interrupteur « Contacts » retiré : Android ne présente jamais les appels d'un numéro enregistré dans les contacts à une app de filtrage (sauf app Téléphone par défaut). Il ne pouvait rien changer et faussait les tests.
+- Texte de la liste neutre corrigé pour la même raison.
+
+## [1.13.1] - 2026-10-31
+### Corrigé
+- Réglages : le bouton « Activer le rôle » ne faisait rien (code jamais écrit). Il ouvre maintenant la demande Android du rôle de filtrage d'appels ; sans ce rôle, l'app ne voit aucun appel (ni filtre ni alerte). Le bouton affiche « Filtrage actif » quand c'est le cas.
+- Réglages : l'état est rafraîchi au retour sur l'écran.
+
+### Ajouté
+- Modules : alertes rouges cliquables en tête si le filtrage d'appels, les notifications ou la lecture des SMS sont inactifs.
+- Modules : « Filtrer uniquement les suspects » (coupé par défaut). Activé, les inconnus sonnent et seuls les suspects sont filtrés ; coupé, seul le répertoire sonne.
+
+## [1.13.0] - 2026-10-31
+### Ajouté
+- Réglages, section « Modules » : un interrupteur par règle d'appel (contacts, numéros déjà appelés, rappel sous 3 min, rejet du démarchage, arnaque au rappel, anti-rotation), pour le SMS anti-arnaque et pour chaque type d'alerte (tentatives d'appel, appels bloqués, messages du répondeur). Tout est actif par défaut.
+- Alerte « Appel silencieux » quand un inconnu est mis en sonnerie coupée : chaque appel qui ne sonne pas est signalé.
+
+### Notes
+- Couper « Contacts » et « Numéros déjà appelés » permet de tester le répondeur avec son autre téléphone sans masquer le numéro (le « #31# » est refusé par l'option anti-appels masqués de l'opérateur ou du téléphone).
+
+## [1.12.1] - 2026-10-31
+### Corrigé
+- Historique : les SMS ordinaires (proches compris) n'y sont plus enregistrés, avec leur raison technique « Package: … ». Seuls les SMS suspects et ceux bloqués par une règle y figurent.
+- Historique : expéditeur court ou nommé (36105, AMELI) affiché tel quel au lieu de « +36105 ».
+- Historique : un SMS suspect montre son score et son texte désarmé ; le toucher propose « Signaler au 33700 » et « Copier le texte ».
+
+## [1.12.0] - 2026-10-31
+### Corrigé
+- Plantage de l'app à chaque notification de SMS : l'expression régulière d'extraction du numéro (`[\s+()-"]`) est invalide sur Android. Le plantage arrêtait tout le processus, filtrage d'appels et répondeur compris. Le traitement des SMS ne peut plus faire tomber l'app.
+- Aucune notification sur Android 12 et moins : la permission POST_NOTIFICATIONS (Android 13+) était vérifiée partout et répondait toujours « refusée ». Vérification réelle : réglage système, plus la permission sur Android 13+, demandée au démarrage.
+- Réglages : « Accès aux notifications » toujours vu comme inactif (méthode cachée d'Android).
+
+### Ajouté
+- SMS anti-arnaque : SMS avec lien d'un expéditeur inconnu, notification remplacée par une alerte « SMS suspect (score/100) » avec lien désarmé (hxxps, [.]) et bouton « Signaler au 33700 », inscrit à l'historique.
+- Notification discrète « Appel bloqué » à chaque appel rejeté, avec la raison.
+- Réglages, « Diagnostic et tests » : état de chaque service, dernière relève de la boîte, tester une notification, relever maintenant, simuler un appel (verdict sans enregistrement).
+- Accueil : ligne « Notifications » dans l'état des services.
+- 4 tests de l'analyse des SMS (25 au total).
+
+## [1.11.0] - 2026-10-30
+### Corrigé
+- Répondeur : le numéro affiché était celui de la ligne OVH (09 72 12 02 56) au lieu de l'appelant. Le format réel des e-mails OVH (« provenant du numéro 33… ») est maintenant reconnu ; un appel masqué n'est plus confondu avec la ligne.
+- Répondeur : la transcription fournie par OVH est utilisée quand il n'y a pas de clé Groq (liste, notification, classement par catégorie). Les messages déjà reçus sont réparés au chargement.
+- Réglages : l'écran ne défilait pas, le mode strict, la liste neutre, le choix messagerie ou sonnerie coupée, la liste blanche et l'export étaient inaccessibles.
+- Accueil et Apparence : le contenu passait sous la barre d'état en défilant.
+- Accueil : le message « ton téléphone est surveillé » restait affiché protection en pause.
+
+### Ajouté
+- Bouton « Réglages : boîte mail, clé Groq, renvois » avec libellé dans l'écran Répondeur (l'icône seule passait inaperçue), et le même accès depuis Réglages.
+- Crédits et à propos (Réglages) : auteur, services, bibliothèques, vie privée.
+- 3 tests sur le format OVH réel (21 tests au total).
+
+## [1.10.0] - 2026-10-30
+### Ajouté
+- Alerte immédiate quand un inconnu est envoyé au répondeur : notification « Au répondeur : numéro » avec bouton Rappeler, sans attendre l'e-mail.
+- Relève rapide de la boîte mail 45 s, 90 s, 3 min et 6 min après l'appel : le message (texte et catégorie) arrive en une à deux minutes au lieu de 15.
+
+## [1.9.2] - 2026-10-30
+### Modifié
+- Notification d'un nouveau message vocal : sans transcription Groq, elle affiche le texte de l'e-mail OVH (option « Transcription et message joint »), au lieu de « Nouveau message vocal ». Texte déplié jusqu'à 1500 caractères.
+
+## [1.9.1] - 2026-10-30
+### Modifié
+- Écran Répondeur : les boutons Vérifier et « Tout annuler » (`##002#`) sont toujours affichés, même sans numéro OVH saisi, pour contrôler ou supprimer des renvois composés à la main.
+- Ajout de la vérification du renvoi si pas de réponse (`*#61#`) et si éteint (`*#62#`).
+
 ## [1.9.0] - 2026-10-16
 ### Ajouté
 - Écran Répondeur : messages vocaux de la ligne OVH lus dans une boîte mail (IMAP SSL, lecture seule), numéro de l'appelant extrait de l'e-mail, écoute de l'audio, transcription facultative par Groq Whisper, classement automatique (Livraison, Travail, Rendez-vous et démarches, Démarchage, Autre), étiquette Sûr, Inconnu ou Spam, actions rappeler, autoriser, marquer comme spam, voir l'e-mail.
