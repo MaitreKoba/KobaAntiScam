@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- FICHIER : activity_settings.xml | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/res/layout/activity_settings.xml
      LIGNES : 306 | RÔLE : Écran Réglages : accès au répondeur, rôle, notifications, batterie, mises à jour, modes, listes, crédits
-     DATE : 2026-10-31 | VERSION : 1.13.0 | ORIGINE : Section Modules (interrupteurs)
+     DATE : 2026-10-31 | VERSION : 1.13.2 | ORIGINE : Texte de la liste neutre corrigé
      AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : themes.xml | LIEN : SettingsActivity.kt | NOTES : - -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -217,7 +217,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Numéros bloqués même s'ils sont dans vos contacts (pour tester)"
+            android:text="Sans effet sur un numéro enregistré dans tes contacts : Android fait sonner les contacts sans consulter l'app."
             android:layout_marginTop="4dp" />
         <Button
             android:id="@+id/btnManageNeutralList"

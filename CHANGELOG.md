@@ -10,6 +10,11 @@
 
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr-FR/1.0.0/).
 
+## [1.13.2] - 2026-10-31
+### Corrigé
+- Interrupteur « Contacts » retiré : Android ne présente jamais les appels d'un numéro enregistré dans les contacts à une app de filtrage (sauf app Téléphone par défaut). Il ne pouvait rien changer et faussait les tests.
+- Texte de la liste neutre corrigé pour la même raison.
+
 ## [1.13.1] - 2026-10-31
 ### Corrigé
 - Réglages : le bouton « Activer le rôle » ne faisait rien (code jamais écrit). Il ouvre maintenant la demande Android du rôle de filtrage d'appels ; sans ce rôle, l'app ne voit aucun appel (ni filtre ni alerte). Le bouton affiche « Filtrage actif » quand c'est le cas.

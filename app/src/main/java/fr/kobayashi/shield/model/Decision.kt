@@ -2,7 +2,7 @@
  * FICHIER : Decision.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/model/Decision.kt
  * LIGNES : 174 | RÔLE : Décision pour un appel entrant (action + raison lisible pour le journal), dans l'ordre :
  *          système coupé, règle perso, contact, liste blanche, déjà appelé, démarchage ARCEP, rappel sous 3 min,
- *          pays d'arnaque au rappel, rotation de numéros, inconnu ou masqué | DATE : 2026-10-31 | VERSION : 1.13.1
+ *          pays d'arnaque au rappel, rotation de numéros, inconnu ou masqué | DATE : 2026-10-31 | VERSION : 1.13.2
  * ORIGINE : Chaque règle activable (Modules) | AUTEUR : Maitre Kobayashi | STATUT : STABLE
  * DÉPENDANCES : Rules.kt, ContactsHelper.kt, RuleDatabase | LIEN : CallFilterService.kt
  * NOTES : un inconnu n'est jamais rejeté sur simple soupçon : il part en messagerie pour qu'un vrai correspondant
@@ -64,7 +64,7 @@ object Decision {
 
         val neutres = ContactsHelper.getNeutralList(context)
         val nomContact = nomContact(context, numero)
-        if (Module.CONTACTS.actif(context) && nomContact != null && numero !in neutres) return Verdict(Action.SONNE, "Contact", nomContact)
+        if (nomContact != null && numero !in neutres) return Verdict(Action.SONNE, "Contact", nomContact)
 
         val blanche = ContactsHelper.getAllowlist(context) + (prefs.getStringSet("allowlist", emptySet()) ?: emptySet())
         if (blanche.any { correspond(numero, it) }) return Verdict(Action.SONNE, "Liste blanche")

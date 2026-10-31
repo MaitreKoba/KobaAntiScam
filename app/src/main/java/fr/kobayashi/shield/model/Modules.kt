@@ -1,9 +1,10 @@
 /*
  * FICHIER : Modules.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/model/Modules.kt
  * LIGNES : 38 | RÔLE : Interrupteurs des modules (règles d'appel, SMS, notifications) affichés dans Réglages
- * DATE : 2026-10-31 | VERSION : 1.13.1 | ORIGINE : Création | AUTEUR : Maitre Kobayashi | STATUT : STABLE
+ * DATE : 2026-10-31 | VERSION : 1.13.2 | ORIGINE : Création | AUTEUR : Maitre Kobayashi | STATUT : STABLE
  * DÉPENDANCES : prefs "shield" | LIEN : Decision.kt, CallFilterService.kt, SmsNotificationListener.kt, SettingsActivity.kt
- * NOTES : valeurs par défaut identiques au comportement des versions précédentes tant qu'on n'y touche pas.
+ * NOTES : pas d'interrupteur Contacts : Android ne présente jamais les appels des contacts à une app de filtrage.
+ *         Valeurs par défaut identiques au comportement des versions précédentes tant qu'on n'y touche pas.
  */
 package fr.kobayashi.shield.model
 
@@ -16,8 +17,7 @@ enum class Module(val cle: String, val section: String, val titre: String, val d
             "Activé : les inconnus sonnent, seuls les suspects (démarchage, arnaque, rotation, masqués) sont filtrés.",
         defaut = false,
     ),
-    CONTACTS("mod_contacts", "Appels", "Contacts", "Tes contacts sonnent toujours. À couper pour tester avec ton autre téléphone."),
-    DEJA_APPELE("mod_deja_appele", "Appels", "Numéros déjà appelés", "Un numéro que tu as déjà appelé sonne. À couper aussi pour tester."),
+    DEJA_APPELE("mod_deja_appele", "Appels", "Numéros déjà appelés", "Un numéro que tu as déjà appelé sonne. À couper pour tester avec ton autre téléphone (retiré de tes contacts)."),
     RAPPEL("mod_rappel", "Appels", "Rappel sous 3 minutes", "Un inconnu qui rappelle aussitôt sonne (livreur, urgence)."),
     ARCEP("mod_arcep", "Appels", "Rejet du démarchage", "Préfixes ARCEP réservés au démarchage (0162, 0163, 0270, 0271, 0377, 0378, 0424, 0425, 0568, 0569, 0948, 0949)."),
     PAYS("mod_pays", "Appels", "Rejet de l'arnaque au rappel", "Indicatifs étrangers connus pour les appels en absence surtaxés."),
