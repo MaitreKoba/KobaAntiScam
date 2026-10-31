@@ -1,15 +1,21 @@
 /*
  * FICHIER : Modules.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/model/Modules.kt
- * LIGNES : 32 | RÔLE : Interrupteurs des modules (règles d'appel, SMS, notifications) affichés dans Réglages
- * DATE : 2026-10-31 | VERSION : 1.13.0 | ORIGINE : Création | AUTEUR : Maitre Kobayashi | STATUT : STABLE
+ * LIGNES : 38 | RÔLE : Interrupteurs des modules (règles d'appel, SMS, notifications) affichés dans Réglages
+ * DATE : 2026-10-31 | VERSION : 1.13.1 | ORIGINE : Création | AUTEUR : Maitre Kobayashi | STATUT : STABLE
  * DÉPENDANCES : prefs "shield" | LIEN : Decision.kt, CallFilterService.kt, SmsNotificationListener.kt, SettingsActivity.kt
- * NOTES : tous actifs par défaut, comportement identique aux versions précédentes tant qu'on n'y touche pas.
+ * NOTES : valeurs par défaut identiques au comportement des versions précédentes tant qu'on n'y touche pas.
  */
 package fr.kobayashi.shield.model
 
 import android.content.Context
 
-enum class Module(val cle: String, val section: String, val titre: String, val description: String) {
+enum class Module(val cle: String, val section: String, val titre: String, val description: String, val defaut: Boolean = true) {
+    SUSPECTS_SEULS(
+        "mod_suspects_seuls", "Appels", "Filtrer uniquement les suspects",
+        "Coupé : seuls tes contacts et numéros sûrs sonnent, les autres inconnus vont au répondeur. " +
+            "Activé : les inconnus sonnent, seuls les suspects (démarchage, arnaque, rotation, masqués) sont filtrés.",
+        defaut = false,
+    ),
     CONTACTS("mod_contacts", "Appels", "Contacts", "Tes contacts sonnent toujours. À couper pour tester avec ton autre téléphone."),
     DEJA_APPELE("mod_deja_appele", "Appels", "Numéros déjà appelés", "Un numéro que tu as déjà appelé sonne. À couper aussi pour tester."),
     RAPPEL("mod_rappel", "Appels", "Rappel sous 3 minutes", "Un inconnu qui rappelle aussitôt sonne (livreur, urgence)."),
@@ -21,7 +27,7 @@ enum class Module(val cle: String, val section: String, val titre: String, val d
     NOTIF_BLOQUES("notif_bloques", "Notifications", "Appels bloqués", "Alerte discrète à chaque appel rejeté, avec la raison."),
     NOTIF_MESSAGES("notif_messages", "Notifications", "Messages du répondeur", "Alerte avec le texte de chaque message vocal reçu.");
 
-    fun actif(context: Context): Boolean = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getBoolean(cle, true)
+    fun actif(context: Context): Boolean = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getBoolean(cle, defaut)
 
     fun regler(context: Context, actif: Boolean) =
         context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putBoolean(cle, actif).apply()

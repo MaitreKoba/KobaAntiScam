@@ -1,8 +1,8 @@
 /*
  * FICHIER : Decision.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/model/Decision.kt
- * LIGNES : 173 | RÔLE : Décision pour un appel entrant (action + raison lisible pour le journal), dans l'ordre :
+ * LIGNES : 174 | RÔLE : Décision pour un appel entrant (action + raison lisible pour le journal), dans l'ordre :
  *          système coupé, règle perso, contact, liste blanche, déjà appelé, démarchage ARCEP, rappel sous 3 min,
- *          pays d'arnaque au rappel, rotation de numéros, inconnu ou masqué | DATE : 2026-10-31 | VERSION : 1.13.0
+ *          pays d'arnaque au rappel, rotation de numéros, inconnu ou masqué | DATE : 2026-10-31 | VERSION : 1.13.1
  * ORIGINE : Chaque règle activable (Modules) | AUTEUR : Maitre Kobayashi | STATUT : STABLE
  * DÉPENDANCES : Rules.kt, ContactsHelper.kt, RuleDatabase | LIEN : CallFilterService.kt
  * NOTES : un inconnu n'est jamais rejeté sur simple soupçon : il part en messagerie pour qu'un vrai correspondant
@@ -95,6 +95,7 @@ object Decision {
         }
 
         if (strict) return Verdict(Action.REJET, "Inconnu, mode strict")
+        if (Module.SUSPECTS_SEULS.actif(context)) return Verdict(Action.SONNE, "Inconnu non suspect : filtrage des suspects uniquement")
         return if (numero.startsWith("+33")) Verdict(inconnu, "Inconnu")
         else Verdict(inconnu, "Inconnu, numéro étranger")
     }

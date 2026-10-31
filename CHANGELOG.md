@@ -10,6 +10,15 @@
 
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr-FR/1.0.0/).
 
+## [1.13.1] - 2026-10-31
+### Corrigé
+- Réglages : le bouton « Activer le rôle » ne faisait rien (code jamais écrit). Il ouvre maintenant la demande Android du rôle de filtrage d'appels ; sans ce rôle, l'app ne voit aucun appel (ni filtre ni alerte). Le bouton affiche « Filtrage actif » quand c'est le cas.
+- Réglages : l'état est rafraîchi au retour sur l'écran.
+
+### Ajouté
+- Modules : alertes rouges cliquables en tête si le filtrage d'appels, les notifications ou la lecture des SMS sont inactifs.
+- Modules : « Filtrer uniquement les suspects » (coupé par défaut). Activé, les inconnus sonnent et seuls les suspects sont filtrés ; coupé, seul le répertoire sonne.
+
 ## [1.13.0] - 2026-10-31
 ### Ajouté
 - Réglages, section « Modules » : un interrupteur par règle d'appel (contacts, numéros déjà appelés, rappel sous 3 min, rejet du démarchage, arnaque au rappel, anti-rotation), pour le SMS anti-arnaque et pour chaque type d'alerte (tentatives d'appel, appels bloqués, messages du répondeur). Tout est actif par défaut.

@@ -10,6 +10,10 @@
 
 Dernière mise à jour : 2026-10-30
 
+## 1.13.1 (2026-10-31) : rôle de filtrage demandable, voir et configurer
+- [x] Bouton « Activer le rôle » réel (RoleManager), alertes de prérequis en tête de Modules, mode « suspects uniquement »
+- [ ] Honor : Réglages, vérifier les alertes rouges, activer le rôle si demandé, puis tester un appel inconnu
+
 ## 1.13.0 (2026-10-31) : modules activables dans Réglages
 - [x] Module (enum) : 6 règles d'appel, SMS, 3 types d'alerte ; Decision, CallFilterService, Synchro, SmsNotificationListener branchés
 - [x] #31# refusé : « le correspondant ne veut pas d'appels masqués » vient de Free ou du Honor, pas de l'app

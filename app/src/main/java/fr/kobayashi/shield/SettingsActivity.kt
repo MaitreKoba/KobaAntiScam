@@ -1,7 +1,7 @@
 /*
  * FICHIER : SettingsActivity.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/SettingsActivity.kt
- * LIGNES : 488 | RÔLE : Réglages : accès au répondeur, rôle de filtrage, notifications, batterie, modes, listes, crédits
- * DATE : 2026-10-31 | VERSION : 1.13.0 | ORIGINE : Section Modules (interrupteurs des règles et alertes) | AUTEUR : Maitre Kobayashi
+ * LIGNES : 510 | RÔLE : Réglages : accès au répondeur, rôle de filtrage, notifications, batterie, modes, listes, crédits
+ * DATE : 2026-10-31 | VERSION : 1.13.1 | ORIGINE : Section Modules (interrupteurs des règles et alertes) | AUTEUR : Maitre Kobayashi
  * STATUT : STABLE | DÉPENDANCES : activity_settings.xml, RepondeurActivity.kt | LIEN : MainActivity.kt | NOTES : -
  */
 package fr.kobayashi.shield
@@ -22,6 +22,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import com.google.android.material.materialswitch.MaterialSwitch
@@ -50,7 +51,19 @@ class SettingsActivity : BaseActivity() {
         setupButtons()
         updateStatus()
     }
-    
+
+    override fun onResume() {
+        super.onResume()
+        updateStatus()
+        afficherModules()
+    }
+
+    private val demandeRole = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        Toast.makeText(this, if (roleFiltrage()) "Filtrage des appels activé" else "Rôle refusé : l'app ne verra pas les appels", Toast.LENGTH_LONG).show()
+    }
+
+    private fun roleFiltrage(): Boolean = getSystemService(RoleManager::class.java)?.isRoleHeld(RoleManager.ROLE_CALL_SCREENING) == true
+
     private fun setupButtons() {
         binding.btnRepondeurReglages.setOnClickListener { startActivity(Intent(this, RepondeurActivity::class.java)) }
         binding.btnCredits.setOnClickListener { afficherCredits() }
@@ -109,6 +122,20 @@ class SettingsActivity : BaseActivity() {
         liste.removeAllViews()
         val dp = resources.displayMetrics.density
         val gris = ContextCompat.getColor(this, R.color.ink3)
+        val rouge = ContextCompat.getColor(this, R.color.red)
+        fun alerte(texte: String, action: () -> Unit) = liste.addView(TextView(this).apply {
+            text = texte
+            textSize = 14f
+            setTypeface(typeface, Typeface.BOLD)
+            setTextColor(rouge)
+            setPadding(0, (10 * dp).toInt(), 0, 0)
+            setOnClickListener { action() }
+        })
+        if (!roleFiltrage()) alerte("Filtrage des appels inactif : l'app ne voit aucun appel, donc ni filtre ni alerte. Touche ici pour l'activer.") { requestCallFilterRole() }
+        if (!Notifs.autorisees(this)) alerte("Notifications bloquées : aucune alerte ne s'affichera. Touche ici pour les autoriser.") {
+            startActivity(Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).putExtra(Settings.EXTRA_APP_PACKAGE, packageName))
+        }
+        if (!isNotificationServiceEnabled()) alerte("Lecture des SMS inactive : pas d'anti-arnaque SMS. Touche ici pour l'activer.") { requestNotificationAccess() }
         Module.values().groupBy { it.section }.forEach { (section, modules) ->
             liste.addView(TextView(this).apply {
                 text = section
@@ -213,13 +240,13 @@ class SettingsActivity : BaseActivity() {
     }
 
     private fun requestCallFilterRole() {
-        // TODO: Implémenter lorsque l'API est disponible
-        // Nécessite Android 10+ (API 29) et le rôle CALL_SCREENING
-        // Pour l'instant, afficher un message
-        if (Build.VERSION.SDK_INT >= 29) {
-            Toast.makeText(this, "Activer le rôle via les paramètres du téléphone", Toast.LENGTH_LONG).show()
-        } else {
-            Toast.makeText(this, "Le filtrage d'appels nécessite Android 10+", Toast.LENGTH_SHORT).show()
+        val rm = getSystemService(RoleManager::class.java)
+        when {
+            rm == null || !rm.isRoleAvailable(RoleManager.ROLE_CALL_SCREENING) ->
+                Toast.makeText(this, "Ce téléphone ne propose pas le filtrage d'appels aux apps", Toast.LENGTH_LONG).show()
+            rm.isRoleHeld(RoleManager.ROLE_CALL_SCREENING) ->
+                Toast.makeText(this, "Le filtrage des appels est déjà actif", Toast.LENGTH_SHORT).show()
+            else -> demandeRole.launch(rm.createRequestRoleIntent(RoleManager.ROLE_CALL_SCREENING))
         }
     }
     
@@ -413,12 +440,7 @@ class SettingsActivity : BaseActivity() {
     }
     
     private fun updateStatus() {
-        // Call Filter Role - TODO: Vérifier le rôle
-        if (Build.VERSION.SDK_INT >= 29) {
-            binding.btnRequestCallFilterRole.text = "Activer le rôle"
-        } else {
-            binding.btnRequestCallFilterRole.text = "Non disponible"
-        }
+        binding.btnRequestCallFilterRole.text = if (roleFiltrage()) "Filtrage actif" else "Activer le rôle"
         
         // Notification Access
         val hasNotificationAccess = isNotificationServiceEnabled()
