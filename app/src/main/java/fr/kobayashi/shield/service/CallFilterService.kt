@@ -1,8 +1,8 @@
 /*
  * FICHIER : CallFilterService.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/service/CallFilterService.kt
- * LIGNES : 97 | RÔLE : Filtrage des appels entrants : applique le verdict de Decision et l'inscrit au journal avec sa raison ;
- *          appel envoyé au répondeur : alerte immédiate et relève rapide de la boîte (Synchro.appelAuRepondeur)
- * DATE : 2026-10-30 | VERSION : 1.10.0 | ORIGINE : Modification (alerte immédiate au répondeur)
+ * LIGNES : 101 | RÔLE : Filtrage des appels entrants : applique le verdict de Decision et l'inscrit au journal avec sa raison ;
+ *          répondeur : alerte immédiate et relève rapide de la boîte ; rejet : notification « Appel bloqué »
+ * DATE : 2026-10-31 | VERSION : 1.12.0 | ORIGINE : Modification (notification des appels bloqués)
  * AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : CallScreeningService, Decision.kt, RuleDatabase
  * LIEN : LogsActivity.kt | NOTES : plus de lecture du MP3 au rejet : il sortait du haut-parleur du téléphone, pas dans l'appel
  */
@@ -12,6 +12,7 @@ import android.net.Uri
 import android.telecom.Call
 import android.telecom.CallScreeningService
 import android.util.Log
+import fr.kobayashi.shield.Notifs
 import fr.kobayashi.shield.model.Decision
 import fr.kobayashi.shield.model.LogEntry
 import fr.kobayashi.shield.model.LogType
@@ -45,10 +46,13 @@ class CallFilterService : CallScreeningService() {
             Log.d(tag, "Appel ${brut.ifBlank { "masqué" }} -> ${verdict.action} (${verdict.raison})")
             respondToCall(details, reponse(verdict.action))
             journaliser(brut, verdict)
-            if (verdict.action == Decision.Action.MESSAGERIE) {
-                runCatching { Synchro.appelAuRepondeur(applicationContext, brut) }
-                    .onFailure { Log.e(tag, "Alerte répondeur impossible", it) }
-            }
+            runCatching {
+                when (verdict.action) {
+                    Decision.Action.MESSAGERIE -> Synchro.appelAuRepondeur(applicationContext, brut)
+                    Decision.Action.REJET -> Notifs.appelBloque(applicationContext, brut, verdict.raison)
+                    else -> Unit
+                }
+            }.onFailure { Log.e(tag, "Notification d'appel impossible", it) }
         }
     }
 

@@ -1,16 +1,18 @@
 /*
  * FICHIER : MainActivity.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/MainActivity.kt
- * LIGNES : 174 | RÔLE : Accueil : interrupteur du système, compteurs du jour, dernière activité avec raisons, tuiles,
- *          état des services (rôle de filtrage, accès aux notifications, batterie) | DATE : 2026-10-30 | VERSION : 1.11.0
- * ORIGINE : Message d'accueil qui suit l'interrupteur | AUTEUR : Maitre Kobayashi | STATUT : STABLE
+ * LIGNES : 185 | RÔLE : Accueil : interrupteur du système, compteurs du jour, dernière activité avec raisons, tuiles,
+ *          état des services (rôle, notifications, accès aux notifications SMS, batterie) | DATE : 2026-10-31 | VERSION : 1.12.0
+ * ORIGINE : Demande de la permission de notification (Android 13+) | AUTEUR : Maitre Kobayashi | STATUT : STABLE
  * DÉPENDANCES : activity_main.xml, item_tuile.xml, item_log.xml, JournalVue.kt, Apparence.kt
  * LIEN : LogsActivity.kt | NOTES : clé "system_enabled" des prefs "shield" inchangée
  */
 package fr.kobayashi.shield
 
+import android.Manifest
 import android.app.role.RoleManager
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
 import android.text.format.DateUtils
@@ -21,6 +23,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
@@ -68,7 +71,13 @@ class MainActivity : BaseActivity() {
         lifecycleScope.launch {
             RuleDatabase.getDatabase().logDao().getAllLogs().collect { majActivite(it) }
         }
+        // Sans cet accord (Android 13+), aucune alerte d'appel, de SMS ou de message vocal ne s'affiche
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !Notifs.autorisees(this)) {
+            demandeNotifs.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
     }
+
+    private val demandeNotifs = registerForActivityResult(ActivityResultContracts.RequestPermission()) { majServices() }
 
     override fun onResume() {
         super.onResume()
@@ -141,9 +150,11 @@ class MainActivity : BaseActivity() {
         val roleOk = getSystemService(RoleManager::class.java)?.isRoleHeld(RoleManager.ROLE_CALL_SCREENING) == true
         val notifOk = NotificationManagerCompat.getEnabledListenerPackages(this).contains(packageName)
         val batterieOk = getSystemService(PowerManager::class.java)?.isIgnoringBatteryOptimizations(packageName) == true
+        val alertesOk = Notifs.autorisees(this)
         binding.listeServices.removeAllViews()
         listOf(
             Triple("Filtrage des appels", roleOk, if (roleOk) "Rôle attribué" else "Rôle à attribuer dans les réglages"),
+            Triple("Notifications", alertesOk, if (alertesOk) "Alertes autorisées" else "Bloquées : aucune alerte ne s'affichera"),
             Triple("Lecture des notifications SMS", notifOk, if (notifOk) "Accès activé" else "Accès à activer"),
             Triple("Batterie", batterieOk, if (batterieOk) "Pas de mise en veille" else "Exclure de l'optimisation (Honor)"),
         ).forEach { (nom, ok, detail) -> binding.listeServices.addView(ligneService(nom, ok, detail)) }

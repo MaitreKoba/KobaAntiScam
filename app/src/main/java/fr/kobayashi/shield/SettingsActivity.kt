@@ -1,23 +1,36 @@
 /*
  * FICHIER : SettingsActivity.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/SettingsActivity.kt
- * LIGNES : 389 | RÔLE : Réglages : accès au répondeur, rôle de filtrage, notifications, batterie, modes, listes, crédits
- * DATE : 2026-10-30 | VERSION : 1.11.0 | ORIGINE : Ajout des accès Répondeur et Crédits | AUTEUR : Maitre Kobayashi
+ * LIGNES : 453 | RÔLE : Réglages : accès au répondeur, rôle de filtrage, notifications, batterie, modes, listes, crédits
+ * DATE : 2026-10-31 | VERSION : 1.12.0 | ORIGINE : Diagnostic et tests (notifications, relève, appel simulé) | AUTEUR : Maitre Kobayashi
  * STATUT : STABLE | DÉPENDANCES : activity_settings.xml, RepondeurActivity.kt | LIEN : MainActivity.kt | NOTES : -
  */
 package fr.kobayashi.shield
 
+import android.app.role.RoleManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.PowerManager
 import android.provider.Settings
+import android.text.InputType
+import android.text.format.DateUtils
 import android.util.Log
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.lifecycleScope
 import fr.kobayashi.shield.databinding.ActivitySettingsBinding
+import fr.kobayashi.shield.model.Decision
+import fr.kobayashi.shield.model.Rules
+import fr.kobayashi.shield.repondeur.RepondeurConfig
+import fr.kobayashi.shield.repondeur.Synchro
 import fr.kobayashi.shield.service.ContactsHelper
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 class SettingsActivity : BaseActivity() {
@@ -36,6 +49,7 @@ class SettingsActivity : BaseActivity() {
     private fun setupButtons() {
         binding.btnRepondeurReglages.setOnClickListener { startActivity(Intent(this, RepondeurActivity::class.java)) }
         binding.btnCredits.setOnClickListener { afficherCredits() }
+        binding.btnDiagnostic.setOnClickListener { afficherDiagnostic() }
 
         binding.btnRequestCallFilterRole.setOnClickListener {
             requestCallFilterRole()
@@ -84,6 +98,65 @@ class SettingsActivity : BaseActivity() {
     }
     
     @Suppress("DEPRECATION")
+    private fun afficherDiagnostic() {
+        val ok = { b: Boolean -> if (b) "OK" else "À CORRIGER" }
+        val r = RepondeurConfig.lire(this)
+        val (date, resultat) = Synchro.derniereReleve(this)
+        val lignes = listOf(
+            "Version" to runCatching { packageManager.getPackageInfo(packageName, 0).versionName }.getOrNull().orEmpty(),
+            "Android" to "${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})",
+            "Protection" to if (getSharedPreferences("shield", MODE_PRIVATE).getBoolean("system_enabled", true)) "active" else "EN PAUSE",
+            "Notifications" to ok(Notifs.autorisees(this)),
+            "Filtrage des appels" to ok(getSystemService(RoleManager::class.java)?.isRoleHeld(RoleManager.ROLE_CALL_SCREENING) == true),
+            "Lecture des SMS (notifications)" to ok(isNotificationServiceEnabled()),
+            "Batterie (Honor)" to ok(getSystemService(PowerManager::class.java)?.isIgnoringBatteryOptimizations(packageName) == true),
+            "Répondeur" to if (r.complet) "configuré" else "NON CONFIGURÉ",
+            "Numéro OVH" to r.numeroOvh.ifBlank { "absent" },
+            "Clé Groq" to if (r.cleGroq.isBlank()) "absente (texte OVH utilisé)" else "présente",
+            "Dernière relève" to if (date == 0L) resultat else "${DateUtils.getRelativeTimeSpanString(date)} : $resultat",
+        )
+        AlertDialog.Builder(this)
+            .setTitle("Diagnostic")
+            .setMessage(lignes.joinToString("\n") { "${it.first} : ${it.second}" })
+            .setPositiveButton("Tester une notification") { _, _ ->
+                if (Notifs.test(this)) Toast.makeText(this, "Notification envoyée : regarde le volet", Toast.LENGTH_SHORT).show()
+                else startActivity(Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).putExtra(Settings.EXTRA_APP_PACKAGE, packageName))
+            }
+            .setNeutralButton("Relever maintenant") { _, _ ->
+                lifecycleScope.launch {
+                    val res = withContext(Dispatchers.IO) { Synchro.executer(applicationContext) }
+                    Toast.makeText(this@SettingsActivity, res.erreur ?: "${res.nouveaux} nouveau(x) message(s)", Toast.LENGTH_LONG).show()
+                }
+            }
+            .setNegativeButton("Simuler un appel") { _, _ -> simulerAppel() }
+            .show()
+    }
+
+    /** Verdict qu'aurait un appel entrant, sans appel réel ni enregistrement ; affiche l'alerte correspondante */
+    private fun simulerAppel() {
+        val champ = EditText(this).apply { hint = "ex. 0948112233 ou 0612345678"; inputType = InputType.TYPE_CLASS_PHONE }
+        AlertDialog.Builder(this)
+            .setTitle("Simuler un appel entrant")
+            .setView(champ)
+            .setPositiveButton("Simuler") { _, _ ->
+                val brut = Rules.normalize(champ.text.toString())
+                lifecycleScope.launch {
+                    val v = withContext(Dispatchers.IO) { Decision.decider(applicationContext, brut, simulation = true) }
+                    when (v.action) {
+                        Decision.Action.REJET -> Notifs.appelBloque(applicationContext, brut, "Simulation : ${v.raison}")
+                        else -> Notifs.test(applicationContext)
+                    }
+                    AlertDialog.Builder(this@SettingsActivity)
+                        .setTitle(if (brut.isBlank()) "Numéro masqué" else Rules.affichage(brut))
+                        .setMessage("Verdict : ${v.action}\nRaison : ${v.raison}" + (v.nom?.let { "\nContact : $it" } ?: ""))
+                        .setPositiveButton("OK", null)
+                        .show()
+                }
+            }
+            .setNegativeButton("Annuler", null)
+            .show()
+    }
+
     private fun afficherCredits() {
         val version = runCatching { packageManager.getPackageInfo(packageName, 0).versionName }.getOrNull().orEmpty()
         AlertDialog.Builder(this)
@@ -360,18 +433,9 @@ class SettingsActivity : BaseActivity() {
         Toast.makeText(this, "Fonctionnalité d'import à venir", Toast.LENGTH_SHORT).show()
     }
     
-    private fun isNotificationServiceEnabled(): Boolean {
-        return try {
-            val listenerName = "fr.kobayashi.shield.service.SmsNotificationListener"
-            val cl = Class.forName("android.app.NotificationManager")
-            val method = cl.getMethod("getEnabledNotificationListeners")
-            val nm = getSystemService(NOTIFICATION_SERVICE) as android.app.NotificationManager
-            val listeners = method.invoke(nm) as? Set<String>
-            listeners?.contains(listenerName) ?: false
-        } catch (e: Exception) {
-            false
-        }
-    }
+    // L'ancienne version passait par une méthode cachée d'Android et répondait toujours non
+    private fun isNotificationServiceEnabled(): Boolean =
+        androidx.core.app.NotificationManagerCompat.getEnabledListenerPackages(this).contains(packageName)
     
     private fun isBatteryOptimized(): Boolean {
         return if (Build.VERSION.SDK_INT >= 23) {

@@ -10,6 +10,12 @@
 
 Dernière mise à jour : 2026-10-30
 
+## 1.12.0 (2026-10-31) : notifications, SMS anti-arnaque, diagnostic
+- [x] Cause probable des notifications absentes sur le Honor : permission Android 13 vérifiée même sur Android 12-, et plantage de l'app à chaque SMS (regex)
+- [x] Émulateur : faux SMS « Colis… https://bit.ly/x1 » intercepté, alerte 95/100, original masqué ; simulation 09 48 : REJET + notification, rien d'enregistré
+- [ ] Honor : installer 1.12.0, Réglages, Diagnostic, Tester une notification ; vrai SMS et vrai appel inconnu
+- [ ] Annonces différentes selon le cas : demande d'une ligne OVH par annonce (option payante, décision de l'utilisateur)
+
 ## 1.11.0 (2026-10-30) : contrôle complet et corrections
 - [x] Émulateur : interrupteur Protection OK (shield.xml system_enabled bascule), accueil, Répondeur, Réglages contrôlés à l'écran
 - [x] Format réel e-mail OVH relevé : numéro « 33XXXXXXXXX » après « provenant du numéro », transcription entre « Voici la transcription » et « Attention : »

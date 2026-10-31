@@ -1,9 +1,9 @@
 /*
  * FICHIER : Decision.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/model/Decision.kt
- * LIGNES : 250 | RÔLE : Décision pour un appel entrant (action + raison lisible pour le journal), dans l'ordre :
+ * LIGNES : 173 | RÔLE : Décision pour un appel entrant (action + raison lisible pour le journal), dans l'ordre :
  *          système coupé, règle perso, contact, liste blanche, déjà appelé, démarchage ARCEP, rappel sous 3 min,
- *          pays d'arnaque au rappel, rotation de numéros, inconnu ou masqué | DATE : 2026-10-16 | VERSION : 1.9.0
- * ORIGINE : Refonte du filtrage | AUTEUR : Maitre Kobayashi | STATUT : STABLE
+ *          pays d'arnaque au rappel, rotation de numéros, inconnu ou masqué | DATE : 2026-10-31 | VERSION : 1.12.0
+ * ORIGINE : Mode simulation sans enregistrement | AUTEUR : Maitre Kobayashi | STATUT : STABLE
  * DÉPENDANCES : Rules.kt, ContactsHelper.kt, RuleDatabase | LIEN : CallFilterService.kt
  * NOTES : un inconnu n'est jamais rejeté sur simple soupçon : il part en messagerie pour qu'un vrai correspondant
  *         puisse laisser un message. Seuls ARCEP, pays d'arnaque au rappel, rotation et règles perso rejettent.
@@ -34,7 +34,8 @@ object Decision {
         "881" to "réseau satellite", "882" to "réseau international", "883" to "réseau international",
     )
 
-    fun decider(context: Context, brut: String): Verdict {
+    /** `simulation` : même verdict, sans rien enregistrer (fenêtre de rappel, tranches), pour l'écran de diagnostic */
+    fun decider(context: Context, brut: String, simulation: Boolean = false): Verdict {
         val prefs = context.getSharedPreferences("shield", Context.MODE_PRIVATE)
         if (!prefs.getBoolean("system_enabled", true)) return Verdict(Action.SONNE, "Protection désactivée")
 
@@ -71,22 +72,22 @@ object Decision {
         if (dejaAppele(context, numero)) return Verdict(Action.SONNE, "Numéro que tu as déjà appelé")
 
         if (Rules.isArcpPrefix(numero)) {
-            noterAppelInconnu(context, numero)
+            noterAppelInconnu(context, numero, !simulation)
             return Verdict(Action.REJET, "Démarchage : préfixe ARCEP ${Rules.affichage(numero).take(5)}")
         }
 
         if (rappelRecent(context, numero)) {
-            noterAppelInconnu(context, numero)
+            noterAppelInconnu(context, numero, !simulation)
             return Verdict(Action.SONNE, "A rappelé en moins de 3 min : sûrement une vraie personne")
         }
 
         val indicatif = PAYS_ARNAQUE_RAPPEL.keys.firstOrNull { numero.startsWith("+$it") }
         if (indicatif != null) {
-            noterAppelInconnu(context, numero)
+            noterAppelInconnu(context, numero, !simulation)
             return Verdict(Action.REJET, "Arnaque au rappel probable : +$indicatif ${PAYS_ARNAQUE_RAPPEL[indicatif]}")
         }
 
-        val appelsTranche = noterAppelInconnu(context, numero)
+        val appelsTranche = noterAppelInconnu(context, numero, !simulation)
         val seuil = context.getSharedPreferences("slice_prefs", Context.MODE_PRIVATE)
             .getInt("slice_threshold", SEUIL_TRANCHE_DEFAUT)
         if (appelsTranche > seuil) {
@@ -153,10 +154,10 @@ object Decision {
     fun tranche(numero: String): String = Rules.affichage(numero).replace(" ", "").dropLast(2)
 
     /** Enregistre l'appel (fenêtre de rappel + tranche) et renvoie le nombre de numéros distincts de la tranche en 24 h */
-    private fun noterAppelInconnu(context: Context, numero: String): Int {
+    private fun noterAppelInconnu(context: Context, numero: String, ecrire: Boolean): Int {
         val maintenant = System.currentTimeMillis()
         val rappels = context.getSharedPreferences("shield_rappels", Context.MODE_PRIVATE)
-        rappels.edit().apply {
+        if (ecrire) rappels.edit().apply {
             rappels.all.forEach { (k, v) -> if (v is Long && maintenant - v > JOUR_MS) remove(k) }
             putLong(numero, maintenant)
         }.apply()
@@ -166,7 +167,7 @@ object Decision {
         val entrees = (tranches.getString(cle, "") ?: "").split(',')
             .mapNotNull { e -> e.split('@').takeIf { it.size == 2 }?.let { it[0] to (it[1].toLongOrNull() ?: 0L) } }
             .filter { maintenant - it.second <= JOUR_MS && it.first != numero } + (numero to maintenant)
-        tranches.edit().putString(cle, entrees.joinToString(",") { "${it.first}@${it.second}" }).apply()
+        if (ecrire) tranches.edit().putString(cle, entrees.joinToString(",") { "${it.first}@${it.second}" }).apply()
         return entrees.size
     }
 }

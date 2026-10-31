@@ -10,6 +10,19 @@
 
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr-FR/1.0.0/).
 
+## [1.12.0] - 2026-10-31
+### Corrigé
+- Plantage de l'app à chaque notification de SMS : l'expression régulière d'extraction du numéro (`[\s+()-"]`) est invalide sur Android. Le plantage arrêtait tout le processus, filtrage d'appels et répondeur compris. Le traitement des SMS ne peut plus faire tomber l'app.
+- Aucune notification sur Android 12 et moins : la permission POST_NOTIFICATIONS (Android 13+) était vérifiée partout et répondait toujours « refusée ». Vérification réelle : réglage système, plus la permission sur Android 13+, demandée au démarrage.
+- Réglages : « Accès aux notifications » toujours vu comme inactif (méthode cachée d'Android).
+
+### Ajouté
+- SMS anti-arnaque : SMS avec lien d'un expéditeur inconnu, notification remplacée par une alerte « SMS suspect (score/100) » avec lien désarmé (hxxps, [.]) et bouton « Signaler au 33700 », inscrit à l'historique.
+- Notification discrète « Appel bloqué » à chaque appel rejeté, avec la raison.
+- Réglages, « Diagnostic et tests » : état de chaque service, dernière relève de la boîte, tester une notification, relever maintenant, simuler un appel (verdict sans enregistrement).
+- Accueil : ligne « Notifications » dans l'état des services.
+- 4 tests de l'analyse des SMS (25 au total).
+
 ## [1.11.0] - 2026-10-30
 ### Corrigé
 - Répondeur : le numéro affiché était celui de la ligne OVH (09 72 12 02 56) au lieu de l'appelant. Le format réel des e-mails OVH (« provenant du numéro 33… ») est maintenant reconnu ; un appel masqué n'est plus confondu avec la ligne.

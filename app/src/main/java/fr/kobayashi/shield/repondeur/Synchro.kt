@@ -1,25 +1,22 @@
 /*
  * FICHIER : Synchro.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/repondeur/Synchro.kt
- * LIGNES : 186 | RÔLE : Récupère les nouveaux messages vocaux (IMAP), les transcrit, les classe, les enregistre et
+ * LIGNES : 198 | RÔLE : Récupère les nouveaux messages vocaux (IMAP), les transcrit, les classe, les enregistre et
  *          notifie (transcription Groq, sinon texte de l'e-mail OVH) ; tâche WorkManager toutes les 15 min
- * DATE : 2026-10-30 | VERSION : 1.11.0 | ORIGINE : Modification (transcription OVH utilisée sans clé Groq) | AUTEUR : Maitre Kobayashi | STATUT : STABLE
+ * DATE : 2026-10-30 | VERSION : 1.12.0 | ORIGINE : Modification (autorisation réelle des notifications, dernière relève) | AUTEUR : Maitre Kobayashi | STATUT : STABLE
  * DÉPENDANCES : BoiteMail.kt, Transcription.kt, Classement.kt, MessagesVocaux.kt, work-runtime-ktx
  * LIEN : MessagesActivity.kt, ShieldApp.kt | NOTES : le démarchage n'est pas notifié sauf réglage contraire
  */
 package fr.kobayashi.shield.repondeur
 
-import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingPeriodicWorkPolicy
@@ -30,6 +27,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import fr.kobayashi.shield.MessagesActivity
+import fr.kobayashi.shield.Notifs
 import fr.kobayashi.shield.R
 import fr.kobayashi.shield.model.Decision
 import fr.kobayashi.shield.model.Rules
@@ -40,12 +38,26 @@ object Synchro {
     private const val CANAL = "repondeur"
     private const val TRAVAIL = "synchro_repondeur"
     private const val CANAL_APPELS = "appels_repondeur"
+    private const val PREFS = "repondeur_releve"
     private val RELANCES_S = listOf(45L, 90L, 180L, 360L)
 
     data class Resultat(val nouveaux: Int, val erreur: String? = null)
 
+    /** Heure et résultat de la dernière relève, pour le diagnostic */
+    fun derniereReleve(context: Context): Pair<Long, String> {
+        val p = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        return p.getLong("date", 0L) to p.getString("resultat", "Jamais relevée").orEmpty()
+    }
+
     @Synchronized
-    fun executer(context: Context): Resultat {
+    fun executer(context: Context): Resultat = relever(context).also { res ->
+        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
+            .putLong("date", System.currentTimeMillis())
+            .putString("resultat", res.erreur ?: "${res.nouveaux} nouveau(x) message(s)")
+            .apply()
+    }
+
+    private fun relever(context: Context): Resultat {
         val r = RepondeurConfig.lire(context)
         if (!r.complet) return Resultat(0, "Répondeur non configuré")
         val emails = try {
@@ -107,7 +119,7 @@ object Synchro {
     }
 
     private fun notifier(context: Context, m: MessageVocal) {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) return
+        if (!Notifs.autorisees(context)) return
         val nm = context.getSystemService(NotificationManager::class.java)
         nm.createNotificationChannel(NotificationChannel(CANAL, "Messages du répondeur", NotificationManager.IMPORTANCE_DEFAULT))
         val ouvrir = PendingIntent.getActivity(
@@ -131,7 +143,7 @@ object Synchro {
     /** Appel renvoyé au répondeur : prévient tout de suite, puis relève la boîte sans attendre la tâche des 15 min */
     fun appelAuRepondeur(context: Context, brut: String) {
         relancer(context)
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) return
+        if (!Notifs.autorisees(context)) return
         val nm = context.getSystemService(NotificationManager::class.java)
         nm.createNotificationChannel(NotificationChannel(CANAL_APPELS, "Appels envoyés au répondeur", NotificationManager.IMPORTANCE_HIGH))
         val id = (System.currentTimeMillis() / 1000).toInt()

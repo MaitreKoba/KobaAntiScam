@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- FICHIER : activity_settings.xml | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/res/layout/activity_settings.xml
-     LIGNES : 278 | RÔLE : Écran Réglages : accès au répondeur, rôle, notifications, batterie, mises à jour, modes, listes, crédits
-     DATE : 2026-10-30 | VERSION : 1.11.0 | ORIGINE : Écran rendu défilable (le bas était inaccessible), accès Répondeur et Crédits
+     LIGNES : 286 | RÔLE : Écran Réglages : accès au répondeur, rôle, notifications, batterie, mises à jour, modes, listes, crédits
+     DATE : 2026-10-31 | VERSION : 1.12.0 | ORIGINE : Bouton Diagnostic et tests
      AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : themes.xml | LIEN : SettingsActivity.kt | NOTES : - -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -39,9 +39,17 @@
         style="@style/Widget.Material3.Button.TonalButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
         android:text="Crédits et à propos"
         android:textAllCaps="false" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnDiagnostic"
+        style="@style/Widget.Material3.Button.TonalButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Diagnostic et tests (notifications, relève, appel simulé)"
+        android:textAllCaps="false"
+        android:layout_marginBottom="16dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
