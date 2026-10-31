@@ -10,6 +10,10 @@
 
 Dernière mise à jour : 2026-10-30
 
+## 1.14.0 (2026-10-31) : écoute en continu du répondeur
+- [x] Service Ecoute (IMAP IDLE, specialUse), DemarrageReceiver (BOOT_COMPLETED, MY_PACKAGE_REPLACED), Module.ECOUTE
+- [ ] Non testé sur appareil (émulateur arrêté faute de mémoire) : notification « Répondeur à l'écoute », délai réel d'un message, tenue sur Honor écran éteint
+
 ## 1.13.2 (2026-10-31) : appels des contacts invisibles pour l'app
 - [x] Constat : appel depuis un contact absent de l'historique, normal (Android ne lie pas le CallScreeningService pour les contacts)
 - [ ] Test Honor : retirer l'autre téléphone des contacts, couper « Numéros déjà appelés », appeler

@@ -1,7 +1,7 @@
 /*
  * FICHIER : SettingsActivity.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/SettingsActivity.kt
- * LIGNES : 510 | RÔLE : Réglages : accès au répondeur, rôle de filtrage, notifications, batterie, modes, listes, crédits
- * DATE : 2026-10-31 | VERSION : 1.13.1 | ORIGINE : Section Modules (interrupteurs des règles et alertes) | AUTEUR : Maitre Kobayashi
+ * LIGNES : 514 | RÔLE : Réglages : accès au répondeur, rôle de filtrage, notifications, batterie, modes, listes, crédits
+ * DATE : 2026-10-31 | VERSION : 1.14.0 | ORIGINE : Interrupteur Écoute en continu | AUTEUR : Maitre Kobayashi
  * STATUT : STABLE | DÉPENDANCES : activity_settings.xml, RepondeurActivity.kt | LIEN : MainActivity.kt | NOTES : -
  */
 package fr.kobayashi.shield
@@ -31,6 +31,7 @@ import fr.kobayashi.shield.databinding.ActivitySettingsBinding
 import fr.kobayashi.shield.model.Decision
 import fr.kobayashi.shield.model.Module
 import fr.kobayashi.shield.model.Rules
+import fr.kobayashi.shield.repondeur.Ecoute
 import fr.kobayashi.shield.repondeur.RepondeurConfig
 import fr.kobayashi.shield.repondeur.Synchro
 import fr.kobayashi.shield.service.ContactsHelper
@@ -149,7 +150,10 @@ class SettingsActivity : BaseActivity() {
                     text = m.titre
                     textSize = 15f
                     isChecked = m.actif(context)
-                    setOnCheckedChangeListener { _, actif -> m.regler(context, actif) }
+                    setOnCheckedChangeListener { _, actif ->
+                        m.regler(context, actif)
+                        if (m == Module.ECOUTE) Ecoute.appliquer(context)
+                    }
                 })
                 liste.addView(TextView(this).apply {
                     text = m.description

@@ -1,7 +1,7 @@
 /*
  * FICHIER : Modules.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/model/Modules.kt
- * LIGNES : 38 | RÔLE : Interrupteurs des modules (règles d'appel, SMS, notifications) affichés dans Réglages
- * DATE : 2026-10-31 | VERSION : 1.13.2 | ORIGINE : Création | AUTEUR : Maitre Kobayashi | STATUT : STABLE
+ * LIGNES : 39 | RÔLE : Interrupteurs des modules (règles d'appel, SMS, notifications) affichés dans Réglages
+ * DATE : 2026-10-31 | VERSION : 1.14.0 | ORIGINE : Module Écoute en continu | AUTEUR : Maitre Kobayashi | STATUT : STABLE
  * DÉPENDANCES : prefs "shield" | LIEN : Decision.kt, CallFilterService.kt, SmsNotificationListener.kt, SettingsActivity.kt
  * NOTES : pas d'interrupteur Contacts : Android ne présente jamais les appels des contacts à une app de filtrage.
  *         Valeurs par défaut identiques au comportement des versions précédentes tant qu'on n'y touche pas.
@@ -23,6 +23,7 @@ enum class Module(val cle: String, val section: String, val titre: String, val d
     PAYS("mod_pays", "Appels", "Rejet de l'arnaque au rappel", "Indicatifs étrangers connus pour les appels en absence surtaxés."),
     ROTATION("mod_rotation", "Appels", "Anti-rotation de numéros", "Trop de numéros différents d'une même tranche en 24 h : rejet."),
     SMS("mod_sms", "SMS", "SMS anti-arnaque", "SMS avec lien d'un inconnu : alerte, lien désarmé, signalement 33700."),
+    ECOUTE("mod_ecoute", "Répondeur", "Écoute en continu", "Message vocal notifié en quelques secondes au lieu de 15 min. Affiche une notification permanente discrète « Répondeur à l'écoute »."),
     NOTIF_TENTATIVES("notif_tentatives", "Notifications", "Tentatives d'appel", "Alerte immédiate quand un appel ne sonne pas (répondeur ou sonnerie coupée)."),
     NOTIF_BLOQUES("notif_bloques", "Notifications", "Appels bloqués", "Alerte discrète à chaque appel rejeté, avec la raison."),
     NOTIF_MESSAGES("notif_messages", "Notifications", "Messages du répondeur", "Alerte avec le texte de chaque message vocal reçu.");

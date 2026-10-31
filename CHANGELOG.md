@@ -10,6 +10,11 @@
 
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr-FR/1.0.0/).
 
+## [1.14.0] - 2026-10-31
+### Ajouté
+- Écoute en continu du répondeur (IMAP IDLE) : un nouveau message vocal est notifié en quelques secondes, y compris pour un appel direct au 09, au lieu de la relève toutes les 15 min. Notification permanente discrète « Répondeur à l'écoute » (imposée par Android). Ping toutes les 9 min, reconnexion automatique, relance au démarrage du téléphone et par la tâche des 15 min.
+- Modules : interrupteur « Écoute en continu » (actif par défaut).
+
 ## [1.13.2] - 2026-10-31
 ### Corrigé
 - Interrupteur « Contacts » retiré : Android ne présente jamais les appels d'un numéro enregistré dans les contacts à une app de filtrage (sauf app Téléphone par défaut). Il ne pouvait rien changer et faussait les tests.

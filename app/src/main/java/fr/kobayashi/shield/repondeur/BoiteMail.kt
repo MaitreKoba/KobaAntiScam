@@ -1,8 +1,8 @@
 /*
  * FICHIER : BoiteMail.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/repondeur/BoiteMail.kt
- * LIGNES : 120 | RÔLE : Lecture IMAP (SSL) de la boîte qui reçoit les messages vocaux OVH : sujet, texte, date,
- *          pièce jointe audio enregistrée dans le dossier privé de l'app | DATE : 2026-10-16 | VERSION : 1.9.0
- * ORIGINE : Création | AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : com.sun.mail:android-mail
+ * LIGNES : 104 | RÔLE : Lecture IMAP (SSL) de la boîte qui reçoit les messages vocaux OVH : sujet, texte, date,
+ *          pièce jointe audio enregistrée dans le dossier privé de l'app | DATE : 2026-10-31 | VERSION : 1.14.0
+ * ORIGINE : Session à délai de lecture réglable (écoute) | AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : com.sun.mail:android-mail
  * LIEN : Synchro.kt | NOTES : boîte ouverte en lecture seule, aucun e-mail n'est modifié ni supprimé sur le serveur.
  *        Seuls les e-mails d'UID supérieur au dernier traité sont lus.
  */
@@ -26,14 +26,15 @@ object BoiteMail {
 
     private val EXTENSIONS_AUDIO = listOf("wav", "mp3", "ogg", "oga", "opus", "m4a", "amr", "gsm")
 
-    private fun session(r: RepondeurConfig.Reglages): Session = Session.getInstance(Properties().apply {
+    /** `lectureMs` : délai de lecture ; l'écoute en continu (IDLE) a besoin d'une connexion silencieuse longue */
+    internal fun session(r: RepondeurConfig.Reglages, lectureMs: Int = 30_000): Session = Session.getInstance(Properties().apply {
         put("mail.store.protocol", "imaps")
         put("mail.imaps.host", r.serveur)
         put("mail.imaps.port", r.port.toString())
         put("mail.imaps.ssl.enable", "true")
         put("mail.imaps.ssl.checkserveridentity", "true")
         put("mail.imaps.connectiontimeout", "15000")
-        put("mail.imaps.timeout", "30000")
+        put("mail.imaps.timeout", lectureMs.toString())
     })
 
     /** Vérifie la connexion et renvoie le nombre d'e-mails dans la boîte de réception */

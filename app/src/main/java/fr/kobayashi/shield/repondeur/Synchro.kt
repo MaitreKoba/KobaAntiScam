@@ -1,8 +1,8 @@
 /*
  * FICHIER : Synchro.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/repondeur/Synchro.kt
- * LIGNES : 201 | RÔLE : Récupère les nouveaux messages vocaux (IMAP), les transcrit, les classe, les enregistre et
+ * LIGNES : 204 | RÔLE : Récupère les nouveaux messages vocaux (IMAP), les transcrit, les classe, les enregistre et
  *          notifie (transcription Groq, sinon texte de l'e-mail OVH) ; tâche WorkManager toutes les 15 min
- * DATE : 2026-10-30 | VERSION : 1.13.0 | ORIGINE : Modification (notifications activables) | AUTEUR : Maitre Kobayashi | STATUT : STABLE
+ * DATE : 2026-10-31 | VERSION : 1.14.0 | ORIGINE : Lance l'écoute en continu | AUTEUR : Maitre Kobayashi | STATUT : STABLE
  * DÉPENDANCES : BoiteMail.kt, Transcription.kt, Classement.kt, MessagesVocaux.kt, work-runtime-ktx
  * LIEN : MessagesActivity.kt, ShieldApp.kt | NOTES : le démarchage n'est pas notifié sauf réglage contraire
  */
@@ -182,6 +182,7 @@ object Synchro {
 
     fun planifier(context: Context) {
         val wm = WorkManager.getInstance(context)
+        Ecoute.appliquer(context)
         if (!RepondeurConfig.lire(context).complet) {
             wm.cancelUniqueWork(TRAVAIL)
             return
@@ -194,6 +195,8 @@ object Synchro {
 
     class Travail(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
         override suspend fun doWork(): Result {
+            // Relance l'écoute en continu si le système l'a arrêtée
+            Ecoute.appliquer(applicationContext)
             val res = executer(applicationContext)
             return if (res.erreur == null || res.erreur == "Répondeur non configuré") Result.success() else Result.retry()
         }
