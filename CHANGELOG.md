@@ -10,6 +10,16 @@
 
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr-FR/1.0.0/).
 
+## [1.16.0] - 2026-10-31
+### Ajouté
+- Accueil : section « Modes » sous la carte d'état, avec interrupteurs rapides (filtrer uniquement les suspects, inconnus au répondeur, écoute en continu, SMS anti-arnaque, alertes de tentatives d'appel) et lien vers tous les réglages. Tuile « Tri des photos » remontée en haut des raccourcis.
+- Réglages refaits en sections : À corriger, Accès (avec lancement automatique Honor), Répondeur, Modules, Inconnus, Listes, Sauvegarde, Application.
+- Sauvegarde : export dans le dossier de son choix (Téléchargements, Drive) et import réel (fusion sans doublon) des listes, modes, modules et règles.
+
+### Corrigé
+- L'import n'existait pas (« à venir ») et l'export écrivait dans un dossier caché inaccessible.
+- Réglages : champ « GitHub Repository » inutilisé et liste neutre sans effet retirés.
+
 ## [1.15.0] - 2026-10-31
 ### Ajouté
 - Tri des photos (tuile d'accueil) : liste des dossiers du téléphone avec nombre de photos, « Consulter » (grille, ouverture dans la galerie) ou « Mode suppression » : une photo à la fois, glisser à gauche pour supprimer, à droite pour garder, boutons Supprimer / Annuler / Garder.

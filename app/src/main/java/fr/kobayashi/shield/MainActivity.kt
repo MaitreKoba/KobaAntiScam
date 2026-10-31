@@ -1,8 +1,8 @@
 /*
  * FICHIER : MainActivity.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/MainActivity.kt
- * LIGNES : 186 | RÔLE : Accueil : interrupteur du système, compteurs du jour, dernière activité avec raisons, tuiles,
- *          état des services (rôle, notifications, accès aux notifications SMS, batterie) | DATE : 2026-10-31 | VERSION : 1.15.0
- * ORIGINE : Tuile Tri des photos | AUTEUR : Maitre Kobayashi | STATUT : STABLE
+ * LIGNES : 230 | RÔLE : Accueil : interrupteur du système, compteurs du jour, dernière activité avec raisons, tuiles,
+ *          état des services (rôle, notifications, accès aux notifications SMS, batterie) | DATE : 2026-10-31 | VERSION : 1.16.0
+ * ORIGINE : Section Modes (interrupteurs rapides), tuile Photos en haut | AUTEUR : Maitre Kobayashi | STATUT : STABLE
  * DÉPENDANCES : activity_main.xml, item_tuile.xml, item_log.xml, JournalVue.kt, Apparence.kt
  * LIEN : LogsActivity.kt | NOTES : clé "system_enabled" des prefs "shield" inchangée
  */
@@ -29,12 +29,16 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.divider.MaterialDivider
+import com.google.android.material.materialswitch.MaterialSwitch
 import fr.kobayashi.shield.databinding.ActivityMainBinding
 import fr.kobayashi.shield.databinding.ItemLogBinding
 import fr.kobayashi.shield.databinding.ItemTuileBinding
 import fr.kobayashi.shield.model.LogEntry
 import fr.kobayashi.shield.model.LogType
+import fr.kobayashi.shield.model.Module
 import fr.kobayashi.shield.model.RuleDatabase
+import fr.kobayashi.shield.repondeur.Ecoute
+import fr.kobayashi.shield.service.ContactsHelper
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
@@ -85,8 +89,48 @@ class MainActivity : BaseActivity() {
         majEtat()
         majServices()
         majDisposition()
+        majModes()
         val nonLus = fr.kobayashi.shield.repondeur.MessagesVocaux.nonLus(this)
         binding.btnRepondeur.sousTitre.text = if (nonLus > 0) "$nonLus message(s) non lu(s)" else "Messages vocaux OVH"
+    }
+
+    /** Interrupteurs rapides des modes les plus utilisés ; le détail reste dans Réglages */
+    private fun majModes() {
+        val liste = binding.listeModes
+        liste.removeAllViews()
+        val dp = resources.displayMetrics.density
+        fun mode(titre: String, sous: String, valeur: Boolean, changer: (Boolean) -> Unit) {
+            val rangee = LinearLayout(this).apply {
+                gravity = Gravity.CENTER_VERTICAL
+                setPadding((16 * dp).toInt(), (8 * dp).toInt(), (12 * dp).toInt(), (8 * dp).toInt())
+            }
+            val textes = LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                addView(TextView(context).apply { text = titre; textSize = 15f; setTypeface(typeface, android.graphics.Typeface.BOLD) })
+                addView(TextView(context).apply { text = sous; textSize = 12f; setTextColor(ContextCompat.getColor(context, R.color.ink3)) })
+            }
+            rangee.addView(textes, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+            val bascule = MaterialSwitch(this).apply { isChecked = valeur; setOnCheckedChangeListener { _, v -> changer(v) } }
+            rangee.addView(bascule)
+            rangee.setOnClickListener { bascule.toggle() }
+            liste.addView(rangee)
+        }
+        fun module(m: Module, sous: String, apres: () -> Unit = {}) = mode(m.titre, sous, m.actif(this)) { m.regler(this, it); apres() }
+        module(Module.SUSPECTS_SEULS, "Activé : les inconnus sonnent, seuls les suspects sont filtrés")
+        mode("Inconnus au répondeur", "Coupé : sonnerie coupée au lieu du répondeur", ContactsHelper.isVoicemailEnabled(this)) {
+            ContactsHelper.setVoicemailEnabled(this, it)
+        }
+        module(Module.ECOUTE, "Message vocal notifié en quelques secondes") { Ecoute.appliquer(this) }
+        module(Module.SMS, "Lien désarmé, signalement 33700")
+        module(Module.NOTIF_TENTATIVES, "Alerte quand un appel ne sonne pas")
+        liste.addView(TextView(this).apply {
+            text = "Tous les réglages  ›"
+            textSize = 14f
+            setTypeface(typeface, android.graphics.Typeface.BOLD)
+            setTextColor(ContextCompat.getColor(context, R.color.orange))
+            setPadding((16 * dp).toInt(), (10 * dp).toInt(), (16 * dp).toInt(), (12 * dp).toInt())
+            setOnClickListener { startActivity(Intent(this@MainActivity, SettingsActivity::class.java)) }
+        })
     }
 
     private fun tuile(t: ItemTuileBinding, icone: Int, couleur: Int, titre: String, sous: String, cible: Class<*>) {

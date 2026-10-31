@@ -1,14 +1,18 @@
 /*
  * FICHIER : SettingsActivity.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/SettingsActivity.kt
- * LIGNES : 514 | RÔLE : Réglages : accès au répondeur, rôle de filtrage, notifications, batterie, modes, listes, crédits
- * DATE : 2026-10-31 | VERSION : 1.14.0 | ORIGINE : Interrupteur Écoute en continu | AUTEUR : Maitre Kobayashi
- * STATUT : STABLE | DÉPENDANCES : activity_settings.xml, RepondeurActivity.kt | LIEN : MainActivity.kt | NOTES : -
+ * LIGNES : 456 | RÔLE : Réglages en sections : à corriger, accès, répondeur, modules, inconnus, listes, sauvegarde, application
+ * DATE : 2026-10-31 | VERSION : 1.16.0 | ORIGINE : Refonte de l'écran, import et export réels (sélecteur de fichiers)
+ * AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : activity_settings.xml, Module, Sauvegarde, Ecoute
+ * LIEN : MainActivity.kt | NOTES : interface construite par le code pour rester homogène ; la liste neutre est retirée
+ *        (sans effet : Android ne présente pas les appels des contacts à l'app).
  */
 package fr.kobayashi.shield
 
 import android.app.role.RoleManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.graphics.Typeface
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -16,21 +20,23 @@ import android.os.PowerManager
 import android.provider.Settings
 import android.text.InputType
 import android.text.format.DateUtils
-import android.util.Log
-import android.graphics.Typeface
+import android.view.Gravity
 import android.widget.EditText
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import com.google.android.material.materialswitch.MaterialSwitch
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.card.MaterialCardView
+import com.google.android.material.materialswitch.MaterialSwitch
 import fr.kobayashi.shield.databinding.ActivitySettingsBinding
 import fr.kobayashi.shield.model.Decision
 import fr.kobayashi.shield.model.Module
 import fr.kobayashi.shield.model.Rules
+import fr.kobayashi.shield.model.Sauvegarde
 import fr.kobayashi.shield.repondeur.Ecoute
 import fr.kobayashi.shield.repondeur.RepondeurConfig
 import fr.kobayashi.shield.repondeur.Synchro
@@ -38,129 +44,212 @@ import fr.kobayashi.shield.service.ContactsHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class SettingsActivity : BaseActivity() {
-    
+
     private lateinit var binding: ActivitySettingsBinding
-    
+    private val dp by lazy { resources.displayMetrics.density }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        
-        setupButtons()
-        updateStatus()
+        binding.btnRetour.setOnClickListener { finish() }
     }
 
     override fun onResume() {
         super.onResume()
-        updateStatus()
-        afficherModules()
+        construire()
     }
 
     private val demandeRole = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         Toast.makeText(this, if (roleFiltrage()) "Filtrage des appels activé" else "Rôle refusé : l'app ne verra pas les appels", Toast.LENGTH_LONG).show()
+        construire()
+    }
+
+    private val choixExport = registerForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri ->
+        if (uri == null) return@registerForActivityResult
+        lifecycleScope.launch {
+            val ok = runCatching {
+                val json = Sauvegarde.versJson(applicationContext)
+                withContext(Dispatchers.IO) { contentResolver.openOutputStream(uri)?.use { it.write(json.toByteArray()) } }
+            }
+            Toast.makeText(this@SettingsActivity, ok.fold({ "Sauvegarde enregistrée" }, { "Export impossible : ${it.message}" }), Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private val choixImport = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri == null) return@registerForActivityResult
+        lifecycleScope.launch {
+            val res = runCatching {
+                val texte = withContext(Dispatchers.IO) { contentResolver.openInputStream(uri)?.use { it.readBytes().decodeToString() } }
+                    ?: error("Fichier illisible")
+                Sauvegarde.depuisJson(applicationContext, texte)
+            }
+            AlertDialog.Builder(this@SettingsActivity)
+                .setTitle(if (res.isSuccess) "Import terminé" else "Import impossible")
+                .setMessage(res.fold({ it }, { it.message ?: it.javaClass.simpleName }))
+                .setPositiveButton("OK", null)
+                .show()
+            Ecoute.appliquer(applicationContext)
+            construire()
+        }
     }
 
     private fun roleFiltrage(): Boolean = getSystemService(RoleManager::class.java)?.isRoleHeld(RoleManager.ROLE_CALL_SCREENING) == true
 
-    private fun setupButtons() {
-        binding.btnRepondeurReglages.setOnClickListener { startActivity(Intent(this, RepondeurActivity::class.java)) }
-        binding.btnCredits.setOnClickListener { afficherCredits() }
-        binding.btnDiagnostic.setOnClickListener { afficherDiagnostic() }
-        afficherModules()
+    // ---- Construction de l'écran ----
 
-        binding.btnRequestCallFilterRole.setOnClickListener {
-            requestCallFilterRole()
+    private fun construire() {
+        val zone = binding.contenuReglages
+        zone.removeAllViews()
+        val role = roleFiltrage()
+        val alertes = Notifs.autorisees(this)
+        val sms = isNotificationServiceEnabled()
+        val batterie = !isBatteryOptimized()
+
+        val manques = listOfNotNull(
+            if (!role) Pair("Filtrage des appels inactif : l'app ne voit aucun appel") { requestCallFilterRole() } else null,
+            if (!alertes) Pair("Notifications bloquées : aucune alerte ne s'affichera") { ouvrirNotifs() } else null,
+            if (!sms) Pair("Lecture des SMS inactive : pas d'anti-arnaque SMS") { requestNotificationAccess() } else null,
+        )
+        if (manques.isNotEmpty()) {
+            section(zone, "À corriger")
+            val c = carte(zone)
+            manques.forEach { (texte, action) -> ligne(c, texte, "Touche pour corriger", R.color.red, action) }
         }
-        
-        binding.btnRequestNotificationAccess.setOnClickListener {
-            requestNotificationAccess()
+
+        section(zone, "Accès")
+        carte(zone).let { c ->
+            ligne(c, "Filtrage des appels", if (role) "Actif" else "Inactif, touche pour l'activer", etat(role)) { requestCallFilterRole() }
+            ligne(c, "Notifications", if (alertes) "Autorisées" else "Bloquées, touche pour les autoriser", etat(alertes)) { ouvrirNotifs() }
+            ligne(c, "Lecture des SMS", if (sms) "Active" else "Inactive, touche pour l'activer", etat(sms)) { requestNotificationAccess() }
+            ligne(c, "Batterie", if (batterie) "Pas de mise en veille" else "Optimisée : Honor peut couper l'app", etat(batterie)) { disableBatteryOptimization() }
+            ligne(c, "Lancement automatique (Honor)", "Autorise l'app à tourner en arrière-plan", null) { ouvrirLancementHonor() }
         }
-        
-        binding.btnDisableBatteryOptimization.setOnClickListener {
-            disableBatteryOptimization()
+
+        section(zone, "Répondeur")
+        carte(zone).let { c ->
+            val r = RepondeurConfig.lire(this)
+            ligne(c, "Boîte mail, clé Groq, renvois", if (r.complet) "Configuré : ${r.email}" else "Non configuré", etat(r.complet)) {
+                startActivity(Intent(this, RepondeurActivity::class.java))
+            }
         }
-        
-        binding.btnCheckUpdate.setOnClickListener {
-            startActivity(Intent(this, UpdateActivity::class.java))
+
+        Module.values().groupBy { it.section }.forEach { (nom, modules) ->
+            section(zone, nom)
+            val c = carte(zone)
+            modules.forEach { m ->
+                interrupteur(c, m.titre, m.description, m.actif(this)) { actif ->
+                    m.regler(this, actif)
+                    if (m == Module.ECOUTE) Ecoute.appliquer(this)
+                }
+            }
         }
-        
-        // Strict mode button
-        binding.btnStrictMode.setOnClickListener {
-            toggleStrictMode()
+
+        section(zone, "Inconnus")
+        carte(zone).let { c ->
+            interrupteur(c, "Envoyer au répondeur", "Coupé : ils ne sonnent pas mais restent affichés (sonnerie coupée).",
+                ContactsHelper.isVoicemailEnabled(this)) { ContactsHelper.setVoicemailEnabled(this, it) }
+            interrupteur(c, "Mode strict", "Rejette tous les numéros hors contacts et liste blanche, sans répondeur.",
+                ContactsHelper.isStrictModeEnabled(this)) { ContactsHelper.setStrictModeEnabled(this, it) }
         }
-        
-        // Neutral list button
-        binding.btnManageNeutralList.setOnClickListener {
-            showNeutralListDialog()
+
+        section(zone, "Listes")
+        carte(zone).let { c ->
+            ligne(c, "Liste blanche", "${ContactsHelper.getAllowlist(this).size} numéro(s) qui sonnent toujours", null) { showAllowlistDialog() }
+            ligne(c, "Règles perso", "Autoriser, bloquer ou envoyer au répondeur un numéro ou un préfixe", null) {
+                startActivity(Intent(this, RulesActivity::class.java))
+            }
         }
-        
-        // Voicemail message button
-        binding.btnToggleCallback.setOnClickListener {
-            toggleVoicemailSetting()
+
+        section(zone, "Sauvegarde")
+        carte(zone).let { c ->
+            ligne(c, "Exporter", "Listes, modes, modules et règles dans un fichier JSON", null) {
+                choixExport.launch("kobayashi-antiscam-" + SimpleDateFormat("yyyy-MM-dd", Locale.FRANCE).format(Date()) + ".json")
+            }
+            ligne(c, "Importer", "Restaurer depuis un fichier exporté (fusion, sans doublon)", null) {
+                choixImport.launch(arrayOf("application/json", "text/plain", "application/octet-stream"))
+            }
         }
-        
-        // Allowlist button
-        binding.btnManageAllowlist.setOnClickListener {
-            showAllowlistDialog()
-        }
-        
-        // Export/Import buttons
-        binding.btnExport.setOnClickListener {
-            exportData()
-        }
-        
-        binding.btnImport.setOnClickListener {
-            importData()
+
+        section(zone, "Application")
+        carte(zone).let { c ->
+            ligne(c, "Mise à jour", "Vérifier et installer la dernière version", null) { startActivity(Intent(this, UpdateActivity::class.java)) }
+            ligne(c, "Diagnostic et tests", "État complet, tester une notification, relever, simuler un appel", null) { afficherDiagnostic() }
+            ligne(c, "Crédits et à propos", "Auteur, services, bibliothèques, vie privée", null) { afficherCredits() }
         }
     }
-    
-    @Suppress("DEPRECATION")
-    private fun afficherModules() {
-        val liste = binding.listeModules
-        liste.removeAllViews()
-        val dp = resources.displayMetrics.density
-        val gris = ContextCompat.getColor(this, R.color.ink3)
-        val rouge = ContextCompat.getColor(this, R.color.red)
-        fun alerte(texte: String, action: () -> Unit) = liste.addView(TextView(this).apply {
-            text = texte
-            textSize = 14f
-            setTypeface(typeface, Typeface.BOLD)
-            setTextColor(rouge)
-            setPadding(0, (10 * dp).toInt(), 0, 0)
-            setOnClickListener { action() }
+
+    private fun etat(ok: Boolean) = if (ok) R.color.succes else R.color.red
+
+    private fun section(zone: LinearLayout, titre: String) = zone.addView(TextView(this).apply {
+        text = titre
+        textSize = 13f
+        setTypeface(typeface, Typeface.BOLD)
+        setTextColor(ContextCompat.getColor(context, R.color.ink3))
+        setPadding((4 * dp).toInt(), (18 * dp).toInt(), 0, (6 * dp).toInt())
+    })
+
+    private fun carte(zone: LinearLayout): LinearLayout {
+        val col = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(0, (4 * dp).toInt(), 0, (4 * dp).toInt()) }
+        zone.addView(MaterialCardView(this).apply { radius = 16 * dp; cardElevation = 0f; addView(col) })
+        return col
+    }
+
+    private fun textes(titre: String, sous: String, couleurSous: Int?) = LinearLayout(this).apply {
+        orientation = LinearLayout.VERTICAL
+        addView(TextView(context).apply { text = titre; textSize = 15f; setTypeface(typeface, Typeface.BOLD) })
+        addView(TextView(context).apply {
+            text = sous
+            textSize = 12.5f
+            setTextColor(ContextCompat.getColor(context, couleurSous ?: R.color.ink3))
         })
-        if (!roleFiltrage()) alerte("Filtrage des appels inactif : l'app ne voit aucun appel, donc ni filtre ni alerte. Touche ici pour l'activer.") { requestCallFilterRole() }
-        if (!Notifs.autorisees(this)) alerte("Notifications bloquées : aucune alerte ne s'affichera. Touche ici pour les autoriser.") {
-            startActivity(Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).putExtra(Settings.EXTRA_APP_PACKAGE, packageName))
+    }
+
+    private fun ligne(c: LinearLayout, titre: String, sous: String, couleurSous: Int?, action: () -> Unit) {
+        val rangee = LinearLayout(this).apply {
+            gravity = Gravity.CENTER_VERTICAL
+            setPadding((16 * dp).toInt(), (12 * dp).toInt(), (12 * dp).toInt(), (12 * dp).toInt())
+            isClickable = true
+            setOnClickListener { action() }
         }
-        if (!isNotificationServiceEnabled()) alerte("Lecture des SMS inactive : pas d'anti-arnaque SMS. Touche ici pour l'activer.") { requestNotificationAccess() }
-        Module.values().groupBy { it.section }.forEach { (section, modules) ->
-            liste.addView(TextView(this).apply {
-                text = section
-                textSize = 13f
-                setTypeface(typeface, Typeface.BOLD)
-                setTextColor(gris)
-                setPadding(0, (14 * dp).toInt(), 0, 0)
-            })
-            modules.forEach { m ->
-                liste.addView(MaterialSwitch(this).apply {
-                    text = m.titre
-                    textSize = 15f
-                    isChecked = m.actif(context)
-                    setOnCheckedChangeListener { _, actif ->
-                        m.regler(context, actif)
-                        if (m == Module.ECOUTE) Ecoute.appliquer(context)
-                    }
-                })
-                liste.addView(TextView(this).apply {
-                    text = m.description
-                    textSize = 12f
-                    setTextColor(gris)
-                })
-            }
+        rangee.addView(textes(titre, sous, couleurSous), LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+        rangee.addView(ImageView(this).apply {
+            setImageResource(R.drawable.ic_chevron_right)
+            imageTintList = android.content.res.ColorStateList.valueOf(ContextCompat.getColor(context, R.color.ink3))
+        })
+        c.addView(rangee)
+    }
+
+    private fun interrupteur(c: LinearLayout, titre: String, sous: String, valeur: Boolean, changer: (Boolean) -> Unit) {
+        val rangee = LinearLayout(this).apply {
+            gravity = Gravity.CENTER_VERTICAL
+            setPadding((16 * dp).toInt(), (10 * dp).toInt(), (12 * dp).toInt(), (10 * dp).toInt())
+        }
+        rangee.addView(textes(titre, sous, null), LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+        val bascule = MaterialSwitch(this).apply { isChecked = valeur; setOnCheckedChangeListener { _, v -> changer(v) } }
+        rangee.addView(bascule)
+        rangee.setOnClickListener { bascule.toggle() }
+        c.addView(rangee)
+    }
+
+    private fun ouvrirNotifs() =
+        startActivity(Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).putExtra(Settings.EXTRA_APP_PACKAGE, packageName))
+
+    /** Gestion du lancement des apps Honor ; à défaut, la fiche de l'app dans les réglages Android */
+    private fun ouvrirLancementHonor() {
+        val candidats = listOf(
+            ComponentName("com.hihonor.systemmanager", "com.hihonor.systemmanager.startupmgr.ui.StartupNormalAppListActivity"),
+            ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.startupmgr.ui.StartupNormalAppListActivity"),
+        )
+        val ouvert = candidats.any { runCatching { startActivity(Intent().setComponent(it)) }.isSuccess }
+        if (!ouvert) {
+            startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:$packageName")))
+            Toast.makeText(this, "Batterie, puis Lancement des applications : gestion manuelle, tout autoriser", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -266,88 +355,7 @@ class SettingsActivity : BaseActivity() {
             startActivity(intent)
         }
     }
-    
-    private fun toggleStrictMode() {
-        val isEnabled = ContactsHelper.isStrictModeEnabled(this)
-        ContactsHelper.setStrictModeEnabled(this, !isEnabled)
-        updateStatus()
-        Toast.makeText(
-            this,
-            if (!isEnabled) "Mode strict ACTIVÉ: bloquer tous sauf contacts" else "Mode strict désactivé",
-            Toast.LENGTH_SHORT
-        ).show()
-    }
-    
-    private fun showNeutralListDialog() {
-        val neutralList = ContactsHelper.getNeutralList(this).toMutableList()
-        val items = arrayOf("Ajouter un numéro", "Retirer un numéro", "Voir la liste")
-        
-        AlertDialog.Builder(this)
-            .setTitle("Liste neutre (bloqués même s'ils sont dans les contacts)")
-            .setItems(items) { _, which ->
-                when (which) {
-                    0 -> showAddNeutralDialog()
-                    1 -> showRemoveNeutralDialog()
-                    2 -> showNeutralList()
-                }
-            }
-            .setNegativeButton("Annuler", null)
-            .show()
-    }
-    
-    private fun showAddNeutralDialog() {
-        val editText = android.widget.EditText(this)
-        editText.hint = "Numéro à bloquer (ex: +33612345678)"
-        
-        AlertDialog.Builder(this)
-            .setTitle("Ajouter à la liste neutre")
-            .setView(editText)
-            .setPositiveButton("Ajouter") { _, _ ->
-                val number = editText.text.toString()
-                if (number.isNotBlank()) {
-                    ContactsHelper.addToNeutralList(this, number)
-                    Toast.makeText(this, "Numéro ajouté à la liste neutre", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(this, "Numéro vide", Toast.LENGTH_SHORT).show()
-                }
-            }
-            .setNegativeButton("Annuler", null)
-            .show()
-    }
-    
-    private fun showRemoveNeutralDialog() {
-        val neutralList = ContactsHelper.getNeutralList(this)
-        if (neutralList.isEmpty()) {
-            Toast.makeText(this, "Liste neutre vide", Toast.LENGTH_SHORT).show()
-            return
-        }
-        
-        AlertDialog.Builder(this)
-            .setTitle("Retirer de la liste neutre")
-            .setItems(neutralList.toTypedArray()) { _, which ->
-                val number = neutralList.elementAt(which)
-                ContactsHelper.removeFromNeutralList(this, number)
-                Toast.makeText(this, "Numéro retiré", Toast.LENGTH_SHORT).show()
-            }
-            .setNegativeButton("Annuler", null)
-            .show()
-    }
-    
-    private fun showNeutralList() {
-        val neutralList = ContactsHelper.getNeutralList(this)
-        if (neutralList.isEmpty()) {
-            Toast.makeText(this, "Liste neutre vide", Toast.LENGTH_SHORT).show()
-            return
-        }
-        
-        val message = neutralList.joinToString("\n")
-        AlertDialog.Builder(this)
-            .setTitle("Liste neutre (${neutralList.size} numéros)")
-            .setMessage(message)
-            .setPositiveButton("OK", null)
-            .show()
-    }
-    
+
     private fun showAllowlistDialog() {
         val items = arrayOf("Ajouter un contact", "Retirer un contact", "Voir la liste", "Ajouter tous les contacts")
         
@@ -431,69 +439,7 @@ class SettingsActivity : BaseActivity() {
         
         Toast.makeText(this, "Tous les contacts ajoutés à la liste blanche (${allContacts.size})", Toast.LENGTH_SHORT).show()
     }
-    
-    private fun toggleVoicemailSetting() {
-        val isEnabled = ContactsHelper.isVoicemailEnabled(this)
-        ContactsHelper.setVoicemailEnabled(this, !isEnabled)
-        updateStatus()
-        Toast.makeText(
-            this,
-            if (!isEnabled) "Inconnus envoyés directement en messagerie" else "Inconnus : sonnerie coupée, l'appel reste affiché",
-            Toast.LENGTH_SHORT
-        ).show()
-    }
-    
-    private fun updateStatus() {
-        binding.btnRequestCallFilterRole.text = if (roleFiltrage()) "Filtrage actif" else "Activer le rôle"
-        
-        // Notification Access
-        val hasNotificationAccess = isNotificationServiceEnabled()
-        binding.btnRequestNotificationAccess.text = if (hasNotificationAccess) "Accès activé" else "Activer l'accès"
-        
-        // Battery Optimization
-        val isBatteryOptimized = isBatteryOptimized()
-        binding.btnDisableBatteryOptimization.text = if (!isBatteryOptimized) "Optimisation désactivée" else "Désactiver"
-    }
-    
-    private fun exportData() {
-        try {
-            val allowlist = ContactsHelper.getAllowlist(this)
-            val neutralList = ContactsHelper.getNeutralList(this)
-            val strictMode = ContactsHelper.isStrictModeEnabled(this)
-            val voicemailEnabled = ContactsHelper.isVoicemailEnabled(this)
-            
-            // Créer un JSON simple
-            val json = StringBuilder().apply {
-                append("{\n")
-                append("  \"export_date\": ${System.currentTimeMillis()},\n")
-                append("  \"allowlist\": [")
-                append(allowlist.joinToString(", ") { "\"$it\"" })
-                append("],\n")
-                append("  \"neutral_list\": [")
-                append(neutralList.joinToString(", ") { "\"$it\"" })
-                append("],\n")
-                append("  \"strict_mode\": $strictMode,\n")
-                append("  \"voicemail_enabled\": $voicemailEnabled\n")
-                append("}")
-            }.toString()
-            
-            // Sauvegarder dans un fichier
-            val file = File(getExternalFilesDir(null), "shield_backup_${System.currentTimeMillis()}.json")
-            file.writeText(json)
-            
-            Toast.makeText(this, "Données exportées vers ${file.name}", Toast.LENGTH_LONG).show()
-            
-        } catch (e: Exception) {
-            Log.e("SettingsActivity", "Error exporting data", e)
-            Toast.makeText(this, "Erreur d'export: ${e.message}", Toast.LENGTH_SHORT).show()
-        }
-    }
-    
-    private fun importData() {
-        // TODO: Implémenter l'import
-        Toast.makeText(this, "Fonctionnalité d'import à venir", Toast.LENGTH_SHORT).show()
-    }
-    
+
     // L'ancienne version passait par une méthode cachée d'Android et répondait toujours non
     private fun isNotificationServiceEnabled(): Boolean =
         androidx.core.app.NotificationManagerCompat.getEnabledListenerPackages(this).contains(packageName)
@@ -506,9 +452,5 @@ class SettingsActivity : BaseActivity() {
         } else {
             false
         }
-    }
-    
-    companion object {
-        private const val REQUEST_CALL_FILTER_ROLE = 1001
     }
 }

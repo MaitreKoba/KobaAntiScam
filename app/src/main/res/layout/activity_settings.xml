@@ -1,306 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- FICHIER : activity_settings.xml | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/res/layout/activity_settings.xml
-     LIGNES : 306 | RÔLE : Écran Réglages : accès au répondeur, rôle, notifications, batterie, mises à jour, modes, listes, crédits
-     DATE : 2026-10-31 | VERSION : 1.13.2 | ORIGINE : Texte de la liste neutre corrigé
+     LIGNES : 50 | RÔLE : Écran Réglages : en-tête et zone défilante remplie par SettingsActivity (sections et cartes)
+     DATE : 2026-10-31 | VERSION : 1.16.0 | ORIGINE : Refonte (anciens boutons, liste neutre et champ GitHub retirés)
      AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : themes.xml | LIEN : SettingsActivity.kt | NOTES : - -->
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingHorizontal="16dp"
+    android:paddingTop="12dp"
     tools:context=".SettingsActivity">
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp">
-
-    <TextView
-        android:id="@+id/settingsTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/settings_title"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="24dp" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnRepondeurReglages"
-        style="@style/Widget.Material3.Button.TonalButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Répondeur : boîte mail, clé Groq, renvois"
-        android:textAllCaps="false"
-        app:icon="@drawable/ic_voicemail" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnCredits"
-        style="@style/Widget.Material3.Button.TonalButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Crédits et à propos"
-        android:textAllCaps="false" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnDiagnostic"
-        style="@style/Widget.Material3.Button.TonalButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Diagnostic et tests (notifications, relève, appel simulé)"
-        android:textAllCaps="false"
-        android:layout_marginBottom="16dp" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Modules"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="Active ou coupe chaque règle et chaque alerte. Tout est actif par défaut." />
-
-    <LinearLayout
-        android:id="@+id/listeModules"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:orientation="vertical" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginBottom="16dp">
+        android:gravity="center_vertical">
+
+        <ImageButton
+            android:id="@+id/btnRetour"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Retour"
+            android:src="@drawable/ic_arrow_back"
+            app:tint="?android:attr/textColorPrimary" />
+
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/settings_call_filter_role"
-            android:textStyle="bold" />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/settings_call_filter_desc"
-            android:layout_marginTop="4dp" />
-        <Button
-            android:id="@+id/btnRequestCallFilterRole"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Activer le rôle de filtrage"
-            android:textAllCaps="false"
-            android:layout_marginTop="8dp" />
+            android:layout_marginStart="6dp"
+            android:text="Réglages"
+            android:textAppearance="?attr/textAppearanceHeadlineMedium"
+            android:textSize="24sp" />
     </LinearLayout>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginBottom="16dp">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/settings_notification_access"
-            android:textStyle="bold" />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/settings_notification_desc"
-            android:layout_marginTop="4dp" />
-        <Button
-            android:id="@+id/btnRequestNotificationAccess"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Activer l'accès aux notifications"
-            android:textAllCaps="false"
-            android:layout_marginTop="8dp" />
-    </LinearLayout>
+        android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginBottom="16dp">
-        <TextView
+        <LinearLayout
+            android:id="@+id/contenuReglages"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/settings_battery_optimization"
-            android:textStyle="bold" />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/settings_battery_desc"
-            android:layout_marginTop="4dp" />
-        <Button
-            android:id="@+id/btnDisableBatteryOptimization"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Désactiver l'optimisation batterie"
-            android:textAllCaps="false"
-            android:layout_marginTop="8dp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginBottom="16dp">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="GitHub Repository"
-            android:textStyle="bold" />
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etGithubRepo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="ex: kobayashi/shield" />
-        </com.google.android.material.textfield.TextInputLayout>
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/btnCheckUpdate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/settings_check_update"
-        android:textAllCaps="false" />
-
-    <CheckBox
-        android:id="@+id/cbAutoCheck"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/settings_auto_check"
-        android:layout_marginTop="8dp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="16dp">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Mode Strict"
-            android:textStyle="bold" />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Bloquer tous les numéros sauf ceux dans vos contacts"
-            android:layout_marginTop="4dp" />
-        <Button
-            android:id="@+id/btnStrictMode"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Activer le mode strict"
-            android:textAllCaps="false"
-            android:layout_marginTop="8dp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginBottom="16dp">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Liste Neutre"
-            android:textStyle="bold" />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Sans effet sur un numéro enregistré dans tes contacts : Android fait sonner les contacts sans consulter l'app."
-            android:layout_marginTop="4dp" />
-        <Button
-            android:id="@+id/btnManageNeutralList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Gérer la liste neutre"
-            android:textAllCaps="false"
-            android:layout_marginTop="8dp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginBottom="16dp">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Inconnus et numéros masqués"
-            android:textStyle="bold" />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Activé : ils partent au répondeur sans sonner. Désactivé : ça ne sonne pas mais l'appel reste affiché."
-            android:layout_marginTop="4dp" />
-        <Button
-            android:id="@+id/btnToggleCallback"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Messagerie directe ou sonnerie coupée"
-            android:textAllCaps="false"
-            android:layout_marginTop="8dp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginBottom="16dp">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Liste Blanche"
-            android:textStyle="bold" />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Numéros qui sonnent toujours, même inconnus"
-            android:layout_marginTop="4dp" />
-        <Button
-            android:id="@+id/btnManageAllowlist"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Gérer la liste blanche"
-            android:textAllCaps="false"
-            android:layout_marginTop="8dp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="16dp"
-        android:gravity="center">
-        
-        <Button
-            android:id="@+id/btnExport"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Exporter"
-            android:textAllCaps="false"
-            android:layout_marginRight="8dp" />
-        
-        <Button
-            android:id="@+id/btnImport"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Importer"
-            android:textAllCaps="false"
-            android:layout_marginLeft="8dp" />
-    </LinearLayout>
-
+            android:orientation="vertical"
+            android:paddingBottom="24dp" />
+    </ScrollView>
 </LinearLayout>
-</ScrollView>

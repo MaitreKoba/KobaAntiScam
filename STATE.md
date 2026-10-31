@@ -10,6 +10,10 @@
 
 Dernière mise à jour : 2026-10-30
 
+## 1.16.0 (2026-10-31) : accueil Modes, Réglages refaits, import/export
+- [x] Section Modes sur l'accueil, Réglages en sections construites par le code, Sauvegarde (SAF, JSON, fusion)
+- [ ] Historique vide au Honor sur appel d'un non-contact : besoin des journaux USB (rôle ? MagicOS ?)
+
 ## 1.15.0 (2026-10-31) : tri des photos
 - [x] TriPhotosActivity : dossiers (MediaStore BUCKET), consulter, mode suppression par glissement, vérification, createDeleteRequest (Android 11+)
 - [ ] Non testé sur appareil ; Android 10 : suppression en lot non proposée

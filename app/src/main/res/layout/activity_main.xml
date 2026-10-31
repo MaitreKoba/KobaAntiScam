@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- FICHIER : activity_main.xml | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/res/layout/activity_main.xml
-     LIGNES : 365 | RÔLE : Accueil : en-tête, carte d'état (interrupteur, compteurs du jour), dernière activité avec raisons,
-     raccourcis à icônes, état des services | DATE : 2026-10-30 | VERSION : 1.15.0 | ORIGINE : Tuile Tri des photos
+     LIGNES : 388 | RÔLE : Accueil : en-tête, carte d'état (interrupteur, compteurs du jour), dernière activité avec raisons,
+     raccourcis à icônes, état des services | DATE : 2026-10-30 | VERSION : 1.16.0 | ORIGINE : Section Modes, tuile Photos en haut
      AUTEUR : Maitre Kobayashi | STATUT : STABLE | DÉPENDANCES : themes.xml, bg_hero.xml, item_tuile.xml, item_log.xml
      LIEN : MainActivity.kt | NOTES : la grille passe en liste selon Apparence -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -244,6 +244,29 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="6dp"
+            android:text="Modes"
+            android:textAppearance="?attr/textAppearanceTitleMedium" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp">
+
+            <LinearLayout
+                android:id="@+id/listeModes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingVertical="4dp" />
+        </com.google.android.material.card.MaterialCardView>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -319,12 +342,12 @@
 
             <include android:id="@+id/btnLogs" layout="@layout/item_tuile" />
             <include android:id="@+id/btnRepondeur" layout="@layout/item_tuile" />
+            <include android:id="@+id/btnPhotos" layout="@layout/item_tuile" />
             <include android:id="@+id/btnRules" layout="@layout/item_tuile" />
             <include android:id="@+id/btnStats" layout="@layout/item_tuile" />
             <include android:id="@+id/btnSettings" layout="@layout/item_tuile" />
             <include android:id="@+id/btnApparence" layout="@layout/item_tuile" />
             <include android:id="@+id/btnUpdate" layout="@layout/item_tuile" />
-            <include android:id="@+id/btnPhotos" layout="@layout/item_tuile" />
         </GridLayout>
 
         <TextView
