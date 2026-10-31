@@ -1,7 +1,7 @@
 /*
  * FICHIER : SmsNotificationListener.kt | CHEMIN : D:/Kobayashi/Developpement/KobayashiAntiScam/app/src/main/java/fr/kobayashi/shield/service/SmsNotificationListener.kt
- * LIGNES : 214 | RÔLE : Notifications des SMS : règles perso, puis anti-arnaque (lien désarmé, score, signalement 33700)
- * DATE : 2026-10-31 | VERSION : 1.12.0 | ORIGINE : Anti-arnaque, plantage à chaque SMS corrigé (regex) | AUTEUR : Maitre Kobayashi
+ * LIGNES : 206 | RÔLE : Notifications des SMS : règles perso, puis anti-arnaque (lien désarmé, score, signalement 33700)
+ * DATE : 2026-10-31 | VERSION : 1.12.1 | ORIGINE : SMS ordinaires plus enregistrés dans l'historique | AUTEUR : Maitre Kobayashi
  * STATUT : STABLE | DÉPENDANCES : SmsAnalyse.kt, Notifs.kt, Decision.kt, RuleDatabase | LIEN : LogsActivity.kt
  * NOTES : une app non définie par défaut ne bloque pas le SMS : elle masque sa notification et en poste une autre.
  *         Le SMS reste lisible dans Messages. Build debug : com.android.shell accepté pour les tests adb.
@@ -98,16 +98,8 @@ class SmsNotificationListener : NotificationListenerService() {
         
         Log.d(tag, "Extracted phone number: $number")
         
-        // Log la réception du SMS
+        // Les SMS ordinaires ne vont pas à l'historique : seuls les suspects et ceux bloqués par une règle y figurent
         val logDao = RuleDatabase.getDatabase().logDao()
-        logDao.insert(
-            LogEntry(
-                type = LogType.SMS_RECEIVED,
-                phoneNumber = number,
-                message = text,
-                details = "Package: $packageName"
-            )
-        )
         
         // Vérifier les règles
         val rules = RuleDatabase.getDatabase().ruleDao().getActiveRulesByType(RuleType.SMS)

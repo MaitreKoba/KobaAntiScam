@@ -10,6 +10,10 @@
 
 Dernière mise à jour : 2026-10-30
 
+## 1.12.1 (2026-10-31) : historique des SMS lisible
+- [x] SMS ordinaires plus journalisés, expéditeur lisible, texte désarmé et actions sur les SMS suspects
+- [ ] Vérification visuelle (émulateur arrêté faute de mémoire) et sur le Honor
+
 ## 1.12.0 (2026-10-31) : notifications, SMS anti-arnaque, diagnostic
 - [x] Cause probable des notifications absentes sur le Honor : permission Android 13 vérifiée même sur Android 12-, et plantage de l'app à chaque SMS (regex)
 - [x] Émulateur : faux SMS « Colis… https://bit.ly/x1 » intercepté, alerte 95/100, original masqué ; simulation 09 48 : REJET + notification, rien d'enregistré

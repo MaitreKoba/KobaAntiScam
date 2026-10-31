@@ -10,6 +10,12 @@
 
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr-FR/1.0.0/).
 
+## [1.12.1] - 2026-10-31
+### Corrigé
+- Historique : les SMS ordinaires (proches compris) n'y sont plus enregistrés, avec leur raison technique « Package: … ». Seuls les SMS suspects et ceux bloqués par une règle y figurent.
+- Historique : expéditeur court ou nommé (36105, AMELI) affiché tel quel au lieu de « +36105 ».
+- Historique : un SMS suspect montre son score et son texte désarmé ; le toucher propose « Signaler au 33700 » et « Copier le texte ».
+
 ## [1.12.0] - 2026-10-31
 ### Corrigé
 - Plantage de l'app à chaque notification de SMS : l'expression régulière d'extraction du numéro (`[\s+()-"]`) est invalide sur Android. Le plantage arrêtait tout le processus, filtrage d'appels et répondeur compris. Le traitement des SMS ne peut plus faire tomber l'app.
